@@ -599,16 +599,20 @@ const AdminVisitors = () => {
     const isOpen = openSections[sectionKey] ?? true;
     const sm = compact ? "text-[11px]" : "text-[12px]";
     return (
-      <div className={`border ${borderColor} rounded-xl overflow-hidden`}>
+      <div className={`border ${borderColor} rounded-xl overflow-hidden transition-all duration-200`}>
         <button
           onClick={() => toggleSection(sectionKey)}
           className={`w-full ${bgColor} px-3 py-2 flex items-center gap-1.5 hover:opacity-80 transition-opacity`}
         >
-          <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
+          <Icon className={`w-3.5 h-3.5 ${iconColor} transition-transform duration-200`} />
           <span className={`${sm} font-semibold ${iconColor} flex-1 text-right`}>{title} ({count})</span>
-          {isOpen ? <ChevronUp className={`w-3.5 h-3.5 ${iconColor}`} /> : <ChevronDown className={`w-3.5 h-3.5 ${iconColor}`} />}
+          <ChevronDown className={`w-3.5 h-3.5 ${iconColor} transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
         </button>
-        {isOpen && children}
+        <div
+          className={`transition-all duration-300 ease-in-out ${isOpen ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}
+        >
+          {children}
+        </div>
       </div>
     );
   };
