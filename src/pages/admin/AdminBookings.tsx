@@ -35,10 +35,13 @@ const AdminBookings = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
   const [showClearAll, setShowClearAll] = useState(false);
+  const [redFlash, setRedFlash] = useState(false);
 
   const clearAllBookings = async () => {
     playChime("delete");
     if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+    setRedFlash(true);
+    setTimeout(() => setRedFlash(false), 600);
     try {
       await supabase.from("restaurant_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       setBookings([]);
@@ -102,7 +105,8 @@ const AdminBookings = () => {
   ];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 relative">
+      {redFlash && <div className="fixed inset-0 bg-red-500/20 z-[100] pointer-events-none animate-[flash_0.6s_ease-out_forwards]" />}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
