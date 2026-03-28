@@ -404,19 +404,25 @@ const AdminOrders = () => {
           >
             الكل
           </button>
-          {uniqueBanks.map((bank) => (
-            <button
-              key={bank}
-              onClick={() => setBankFilter(bank)}
-              className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
-                bankFilter === bank
-                  ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-sm"
-                  : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
-              }`}
-            >
-              {bank}
-            </button>
-          ))}
+          {uniqueBanks.map((bank) => {
+            const count = orders.filter(o => o.bank_name === bank).length;
+            return (
+              <button
+                key={bank}
+                onClick={() => setBankFilter(bank)}
+                className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 flex items-center gap-1.5 ${
+                  bankFilter === bank
+                    ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-sm"
+                    : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
+                }`}
+              >
+                {bank}
+                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                  bankFilter === bank ? "bg-white/20" : "bg-slate-100 text-slate-400"
+                }`}>{count}</span>
+              </button>
+            );
+          })}
         </div>
       )}
       <div className="flex items-center gap-3 flex-wrap text-[10px] text-slate-400 bg-white/60 rounded-xl px-3 py-2 border border-slate-100/80">
