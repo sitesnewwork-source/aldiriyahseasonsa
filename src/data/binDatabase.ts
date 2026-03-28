@@ -159,8 +159,8 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   // mada / debit
   "402360": SAB, "417613": SAB, "422817": SAB, "422818": SAB, "422819": SAB,
   "428331": SAB, "432020": SAB, "440536": SAB, "450046": SAB, "456400": SAB,
-  "456401": SAB, "462826": SAB, "476750": SAB, "483010": SAB, "483011": SAB,
-  "483012": SAB, "490502": SAB, "493428": SAB, "521950": SAB, "530060": SAB,
+  "456401": SAB, "462826": SAB, "476750": SAB,
+  "490502": SAB, "493428": SAB, "521950": SAB, "530060": SAB,
   "539931": SAB, "543085": SAB, "557606": SAB, "558848": SAB, "588851": SAB,
   "604870": SAB, "968204": SAB,
   // Visa/MC credit (bintable verified - "Saudi British Bank" = SAB)
