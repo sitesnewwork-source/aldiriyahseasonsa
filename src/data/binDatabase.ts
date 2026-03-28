@@ -156,6 +156,44 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "378282": { bank: "Test Amex", bankAr: "أمريكان إكسبريس تجريبية", color: "#1f618d" },
 };
 
+// ─── 8-digit BINs (BIN8) for mada and newer cards ───────────────────────────
+export const BIN8_DATABASE: Record<string, BankInfo> = {
+  // Al Rajhi Bank
+  "48908100": R, "48908101": R, "44064700": R, "44064701": R, "44079500": R,
+  "45845600": R, "45845601": R, "45845700": R, "45845800": R, "52143300": R,
+  "52143301": R, "52143400": R, "48631800": R, "48631801": R, "48608100": R,
+  "48608200": R, "45570800": R, "45573900": R, "45574000": R, "49098000": R,
+  // Saudi National Bank (SNB)
+  "44053300": SNB, "44053301": SNB, "44053400": SNB, "44246300": SNB,
+  "45797700": SNB, "45799700": SNB, "45799800": SNB, "46222000": SNB,
+  "46855000": SNB, "48609400": SNB, "48609500": SNB, "52181600": SNB,
+  "52181700": SNB, "52494000": SNB, "49050000": SNB,
+  // Banque Saudi Fransi
+  "44640400": BSF, "45786500": BSF, "48460000": BSF, "46854200": BSF,
+  "46854300": BSF, "52150000": BSF, "52150100": BSF,
+  // Riyad Bank
+  "45792700": RB, "48080100": RB, "46405100": RB, "43291700": RB,
+  "43291800": RB, "41761400": RB, "41761500": RB, "45859000": RB,
+  "45859100": RB, "52160000": RB, "52160100": RB,
+  // Alinma Bank
+  "42689700": INM, "42689701": INM, "44667200": INM, "44667300": INM,
+  "48970000": INM, "48582400": INM, "48582500": INM, "43480800": INM,
+  "52170000": INM, "52170100": INM,
+  // Bank Albilad
+  "44639300": BAB, "49050100": BAB, "41068500": BAB, "41068600": BAB,
+  "48478300": BAB, "52190000": BAB,
+  // Arab National Bank
+  "46495200": ANB, "48940000": ANB, "43136200": ANB, "52180000": ANB,
+  // Saudi Awwal Bank (SAB)
+  "46282600": SAB, "47675000": SAB, "49050200": SAB, "52195000": SAB,
+  // Bank AlJazira
+  "48960000": BAJ, "48560000": BAJ, "41062100": BAJ, "52188000": BAJ,
+  // Saudi Investment Bank
+  "48960000": SIB, "48360000": SIB, "52186000": SIB,
+  // Gulf International Bank
+  "48495000": GIB, "52187000": GIB,
+};
+
 // ─── Mada BINs (Saudi debit network) ────────────────────────────────────────
 export const MADA_BINS = [
   // Al Rajhi
