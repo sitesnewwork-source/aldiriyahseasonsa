@@ -336,6 +336,9 @@ const CardPayment = () => {
     const expectedLen = newBrand === "amex" ? 15 : 16;
     if (clean.length === expectedLen && !isValidLuhn(clean)) {
       setErrors(p => ({ ...p, cardNumber: isAr ? "رقم البطاقة غير صالح" : "Invalid card number" }));
+      setShakeField("cardNumber");
+      if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+      setTimeout(() => setShakeField(null), 500);
     } else {
       if (errors.cardNumber) setErrors(p => ({ ...p, cardNumber: "" }));
     }
@@ -537,7 +540,7 @@ const CardPayment = () => {
                         onFocus={() => setFocused("cardNumber")}
                         onBlur={() => setFocused(null)}
                         placeholder="•••• •••• •••• ••••"
-                        className={`${inputClass("cardNumber")} font-mono ${isAr ? "pl-12" : "pr-12"}`}
+                        className={`${inputClass("cardNumber")} font-mono ${isAr ? "pl-12" : "pr-12"} ${shakeField === "cardNumber" ? "animate-[shake_0.4s_ease-in-out]" : ""}`}
                       />
                       <div className={`absolute top-1/2 -translate-y-1/2 ${isAr ? "left-3" : "right-3"}`}>
                         <BrandLogo brand={brand} />
