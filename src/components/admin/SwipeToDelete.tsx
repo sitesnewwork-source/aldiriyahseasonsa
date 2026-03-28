@@ -15,14 +15,17 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
   const directionLocked = useRef(false);
   const [offset, setOffset] = useState(0);
   const [showDelete, setShowDelete] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const beginSwipe = useCallback((clientX: number) => {
+    if (deleting) return;
     startX.current = clientX;
     isSwiping.current = false;
     directionLocked.current = false;
-  }, []);
+  }, [deleting]);
 
   const moveSwipe = useCallback((clientX: number) => {
+    if (deleting) return;
     const dx = clientX - startX.current;
     if (!directionLocked.current && Math.abs(dx) > 8) {
       directionLocked.current = true;
@@ -32,10 +35,10 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
     const clampedDx = Math.min(Math.abs(dx), 120);
     currentX.current = clampedDx;
     setOffset(clampedDx);
-  }, []);
+  }, [deleting]);
 
   const endSwipe = useCallback(() => {
-    if (!isSwiping.current) return;
+    if (!isSwiping.current || deleting) return;
     if (currentX.current > 60) {
       setShowDelete(true);
       setOffset(80);
@@ -47,12 +50,12 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
     isSwiping.current = false;
     isMouseDown.current = false;
     currentX.current = 0;
-  }, []);
+  }, [deleting]);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => beginSwipe(e.touches[0].clientX), [beginSwipe]);
   const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (deleting) return;
     const dx = e.touches[0].clientX - startX.current;
-    const dy = e.touches[0].clientY - (startX.current); // approximate
     if (!directionLocked.current && Math.abs(dx) > 8) {
       directionLocked.current = true;
       isSwiping.current = true;
@@ -62,13 +65,14 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
     const clampedDx = Math.min(Math.abs(dx), 120);
     currentX.current = clampedDx;
     setOffset(clampedDx);
-  }, []);
+  }, [deleting]);
   const handleTouchEnd = useCallback(() => endSwipe(), [endSwipe]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if (deleting) return;
     isMouseDown.current = true;
     beginSwipe(e.clientX);
-  }, [beginSwipe]);
+  }, [beginSwipe, deleting]);
   const handleMouseMove = useCallback((e: React.MouseEvent) => {
     if (!isMouseDown.current) return;
     moveSwipe(e.clientX);
@@ -77,59 +81,78 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
   const handleMouseLeave = useCallback(() => { if (isMouseDown.current) endSwipe(); }, [endSwipe]);
 
   const handleDelete = useCallback(() => {
-    setOffset(300);
+    setDeleting(true);
+    if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
     setTimeout(() => {
       onDelete();
-      setOffset(0);
-      setShowDelete(false);
-    }, 250);
+    }, 400);
   }, [onDelete]);
 
   const handleCancel = useCallback(() => {
+    if (deleting) return;
     setOffset(0);
     setShowDelete(false);
-  }, []);
+  }, [deleting]);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl select-none">
-      <div
-        className="absolute inset-y-0 left-0 flex items-center justify-start rounded-2xl transition-colors"
-        style={{
-          width: Math.max(offset, 80),
-          background: showDelete
-            ? "linear-gradient(135deg, #ef4444, #dc2626)"
-            : "linear-gradient(135deg, #f87171, #ef4444)",
-          opacity: Math.min(offset / 40, 1),
-        }}
-      >
-        {showDelete ? (
-          <button onClick={handleDelete} className="flex flex-col items-center gap-0.5 px-4 text-white animate-[shake_0.3s_ease-in-out]">
-            <Trash2 className="w-5 h-5" />
-            <span className="text-[9px] font-bold">{label}</span>
-          </button>
-        ) : (
-          <div className="flex flex-col items-center gap-0.5 px-4 text-white/80">
-            <Trash2 className="w-4 h-4" />
-          </div>
-        )}
-      </div>
+    <div
+      className="relative select-none"
+      style={{
+        maxHeight: deleting ? 0 : 500,
+        opacity: deleting ? 0 : 1,
+        marginBottom: deleting ? 0 : undefined,
+        overflow: "hidden",
+        transition: deleting
+          ? "max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out, margin-bottom 0.35s ease"
+          : "none",
+      }}
+    >
+      <div className="relative overflow-hidden rounded-2xl">
+        <div
+          className="absolute inset-y-0 left-0 flex items-center justify-start rounded-2xl transition-colors"
+          style={{
+            width: Math.max(offset, 80),
+            background: showDelete
+              ? "linear-gradient(135deg, #ef4444, #dc2626)"
+              : "linear-gradient(135deg, #f87171, #ef4444)",
+            opacity: Math.min(offset / 40, 1),
+          }}
+        >
+          {showDelete ? (
+            <button onClick={handleDelete} className="flex flex-col items-center gap-0.5 px-4 text-white animate-[shake_0.3s_ease-in-out]">
+              <Trash2 className="w-5 h-5" />
+              <span className="text-[9px] font-bold">{label}</span>
+            </button>
+          ) : (
+            <div className="flex flex-col items-center gap-0.5 px-4 text-white/80">
+              <Trash2 className="w-4 h-4" />
+            </div>
+          )}
+        </div>
 
-      <div
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
-        onMouseLeave={handleMouseLeave}
-        onClick={showDelete ? handleCancel : undefined}
-        style={{
-          transform: `translateX(-${offset}px)`,
-          transition: isSwiping.current ? "none" : "transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)",
-          cursor: "grab",
-        }}
-      >
-        {children}
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseLeave}
+          onClick={showDelete ? handleCancel : undefined}
+          style={{
+            transform: deleting
+              ? "translateX(-100%)"
+              : `translateX(-${offset}px)`,
+            transition: isSwiping.current
+              ? "none"
+              : deleting
+                ? "transform 0.35s cubic-bezier(0.4, 0, 0.2, 1)"
+                : "transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)",
+            cursor: deleting ? "default" : "grab",
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
