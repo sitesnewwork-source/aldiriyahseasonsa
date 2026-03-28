@@ -1205,8 +1205,11 @@ const AdminVisitors = () => {
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
                   return (
-                    <div
+                    <SwipeToDelete
                       key={visitor.id}
+                      onDelete={() => deleteSingle(visitor.id)}
+                    >
+                    <div
                       onClick={() => {
                         if (!selectMode) {
                           playChime(isSelected ? "whoosh" : "pop");
@@ -1253,6 +1256,7 @@ const AdminVisitors = () => {
                         </div>
                       </div>
                     </div>
+                    </SwipeToDelete>
                   );
                 })}
                 {!filtered.length && (
