@@ -30,13 +30,13 @@ interface Message {
   created_at: string;
 }
 
-const subjectLabels: Record<string, { label: string; color: string }> = {
-  inquiry: { label: "استفسار", color: "bg-blue-100 text-blue-600" },
-  booking: { label: "حجز", color: "bg-emerald-100 text-emerald-600" },
-  events: { label: "فعاليات", color: "bg-violet-100 text-violet-600" },
-  complaint: { label: "شكوى", color: "bg-red-100 text-red-600" },
-  media: { label: "إعلام", color: "bg-amber-100 text-amber-600" },
-  partnership: { label: "شراكة", color: "bg-teal-100 text-teal-600" },
+const subjectLabels: Record<string, { label: string; gradient: string; color: string }> = {
+  inquiry: { label: "استفسار", gradient: "from-blue-500 to-indigo-500", color: "bg-blue-100 text-blue-600" },
+  booking: { label: "حجز", gradient: "from-emerald-500 to-teal-500", color: "bg-emerald-100 text-emerald-600" },
+  events: { label: "فعاليات", gradient: "from-violet-500 to-purple-500", color: "bg-violet-100 text-violet-600" },
+  complaint: { label: "شكوى", gradient: "from-red-500 to-rose-500", color: "bg-red-100 text-red-600" },
+  media: { label: "إعلام", gradient: "from-amber-400 to-orange-500", color: "bg-amber-100 text-amber-600" },
+  partnership: { label: "شراكة", gradient: "from-teal-500 to-cyan-500", color: "bg-teal-100 text-teal-600" },
 };
 
 const AdminMessages = () => {
@@ -167,10 +167,18 @@ const AdminMessages = () => {
   ];
 
   return (
-    <div className="space-y-4">
-      {/* Export */}
+    <div className="space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <span className="text-[13px] font-semibold text-slate-700">رسائل التواصل</span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Mail className="w-4.5 h-4.5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-[15px] font-bold text-slate-800">رسائل التواصل</h2>
+            <p className="text-[10px] text-slate-400">{filtered.length} رسالة • {unreadCount} غير مقروءة</p>
+          </div>
+        </div>
         <ExportButtons
           data={filtered}
           filename="messages"
@@ -186,13 +194,15 @@ const AdminMessages = () => {
           ]}
         />
       </div>
-      <div className="flex gap-1 bg-white rounded-xl border border-slate-200 p-1">
+
+      {/* Inbox / Archive Toggle */}
+      <div className="flex gap-2">
         <button
           onClick={() => { setViewMode("inbox"); setSelectMode(false); setSelectedIds(new Set()); setFilter("all"); }}
-          className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 rounded-xl text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${
             viewMode === "inbox"
-              ? "bg-blue-500 text-white shadow-sm"
-              : "text-slate-500 hover:bg-slate-50"
+              ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md shadow-blue-500/20"
+              : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
           }`}
         >
           <Mail className="w-4 h-4" />
@@ -200,10 +210,10 @@ const AdminMessages = () => {
         </button>
         <button
           onClick={() => { setViewMode("archived"); setSelectMode(false); setSelectedIds(new Set()); setFilter("all"); }}
-          className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 rounded-xl text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${
             viewMode === "archived"
-              ? "bg-amber-500 text-white shadow-sm"
-              : "text-slate-500 hover:bg-slate-50"
+              ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/20"
+              : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
           }`}
         >
           <Archive className="w-4 h-4" />
@@ -219,20 +229,20 @@ const AdminMessages = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="بحث في الرسائل..."
-          className="w-full bg-white border border-slate-200 rounded-xl pr-10 pl-4 py-2.5 text-[16px] sm:text-[13px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+          className="w-full bg-white border border-slate-200/80 rounded-xl pr-10 pl-4 py-2.5 text-[16px] sm:text-[13px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all shadow-sm"
         />
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white rounded-xl border border-slate-200 p-1">
+      <div className="flex gap-2 flex-wrap">
         {tabs.map(tab => (
           <button
             key={tab.key}
             onClick={() => setFilter(tab.key)}
-            className={`flex-1 py-2 rounded-lg text-[12px] font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
               filter === tab.key
-                ? "bg-blue-500 text-white shadow-sm"
-                : "text-slate-500 hover:bg-slate-50"
+                ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm"
+                : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
             }`}
           >
             {tab.label} ({tab.count})
@@ -241,7 +251,7 @@ const AdminMessages = () => {
       </div>
 
       {/* Action bar */}
-      <div className="flex items-center gap-2 text-[11px] text-slate-400 flex-wrap">
+      <div className="flex items-center gap-2 text-[10px] text-slate-400 flex-wrap bg-white/60 rounded-xl px-3 py-2 border border-slate-100/80">
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-red-400" />
           غير مقروءة
@@ -327,10 +337,13 @@ const AdminMessages = () => {
               <div
                 key={msg.id}
                 onClick={() => markAsRead(msg)}
-                className={`w-full text-right bg-white rounded-2xl border transition-all duration-200 hover:shadow-md hover:shadow-slate-200/50 hover:-translate-y-0.5 cursor-pointer ${
-                  !msg.is_read ? "border-blue-200 bg-blue-50/30" : "border-slate-100"
+                className={`w-full text-right bg-white rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer ${
+                  !msg.is_read ? "border-blue-200/80 shadow-sm shadow-blue-100/50" : "border-slate-100/80"
                 } ${viewMode === "archived" ? "opacity-80" : ""}`}
               >
+                {/* Gradient strip for unread */}
+                {!msg.is_read && <div className="h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />}
+
                 <div className="p-4">
                   <div className="flex items-start gap-3">
                     {/* Select checkbox */}
@@ -345,8 +358,8 @@ const AdminMessages = () => {
 
                     {/* Avatar */}
                     <div className="relative shrink-0">
-                      <div className={`w-11 h-11 rounded-full flex items-center justify-center text-[15px] font-bold ${
-                        !msg.is_read ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-500"
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-[15px] font-bold shadow-md ${
+                        !msg.is_read ? "bg-gradient-to-br from-blue-500 to-indigo-500 text-white" : "bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600"
                       }`}>
                         {msg.name.charAt(0)}
                       </div>

@@ -604,8 +604,10 @@ const AdminVisitors = () => {
           onClick={() => toggleSection(sectionKey)}
           className={`w-full ${bgColor} px-3 py-2 flex items-center gap-1.5 hover:opacity-80 transition-opacity`}
         >
-          <Icon className={`w-3.5 h-3.5 ${iconColor} transition-transform duration-200`} />
-          <span className={`${sm} font-semibold ${iconColor} flex-1 text-right`}>{title} ({count})</span>
+          <div className={`w-5 h-5 rounded-md bg-gradient-to-br ${iconColor.replace("text-", "from-")} to-transparent/50 flex items-center justify-center`}>
+            <Icon className={`w-3 h-3 text-white`} />
+          </div>
+          <span className={`${sm} font-bold ${iconColor} flex-1 text-right`}>{title} ({count})</span>
           <ChevronDown className={`w-3.5 h-3.5 ${iconColor} transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`} />
         </button>
         <div
@@ -1022,7 +1024,10 @@ const AdminVisitors = () => {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-120px)]">
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <div className="relative w-10 h-10 mx-auto mb-3">
+            <div className="absolute inset-0 border-3 border-violet-500/30 rounded-full" />
+            <div className="absolute inset-0 border-3 border-violet-500 border-t-transparent rounded-full animate-spin" />
+          </div>
           <p className="text-[13px] text-slate-400">جاري تحميل الزوار...</p>
         </div>
       </div>
@@ -1065,24 +1070,29 @@ const AdminVisitors = () => {
 
         {/* شريط المعلومات العلوي */}
         <div className="flex items-center justify-between gap-3 shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-white border border-emerald-100 rounded-xl px-4 py-2.5 shadow-sm">
-              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span className="text-[13px] font-bold text-emerald-600">{onlineCount}</span>
-              <span className="text-[11px] text-slate-400">متصل الآن</span>
+          <div className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20">
+              <Users className="w-4.5 h-4.5 text-white" />
             </div>
-            <div className="flex items-center gap-2 bg-white border border-blue-100 rounded-xl px-4 py-2.5 shadow-sm">
-              <Users className="w-3.5 h-3.5 text-blue-400" />
-              <span className="text-[13px] font-bold text-blue-600">{visitors.length}</span>
-              <span className="text-[11px] text-slate-400">إجمالي الزوار</span>
-            </div>
-            {pendingOtps.length > 0 && (
-              <div className="flex items-center gap-2 bg-white border border-violet-200 rounded-xl px-4 py-2.5 shadow-sm animate-pulse">
-                <Shield className="w-3.5 h-3.5 text-violet-500" />
-                <span className="text-[13px] font-bold text-violet-600">{pendingOtps.length}</span>
-                <span className="text-[11px] text-violet-400">OTP ينتظر</span>
+            <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-100/80">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[12px] font-bold text-emerald-600">{onlineCount}</span>
+                <span className="text-[10px] text-slate-400">متصل</span>
               </div>
-            )}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-100/80">
+                <Users className="w-3 h-3 text-blue-400" />
+                <span className="text-[12px] font-bold text-blue-600">{visitors.length}</span>
+                <span className="text-[10px] text-slate-400">إجمالي</span>
+              </div>
+              {pendingOtps.length > 0 && (
+                <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-violet-50 to-purple-50 border border-violet-200/80 animate-pulse">
+                  <Shield className="w-3 h-3 text-violet-500" />
+                  <span className="text-[12px] font-bold text-violet-600">{pendingOtps.length}</span>
+                  <span className="text-[10px] text-violet-400">OTP</span>
+                </div>
+              )}
+            </div>
           </div>
           <div className="flex items-center gap-2">
             <button
