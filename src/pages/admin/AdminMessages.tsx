@@ -358,8 +358,8 @@ const AdminMessages = () => {
 
                     {/* Avatar */}
                     <div className="relative shrink-0">
-                      <div className={`w-11 h-11 rounded-full flex items-center justify-center text-[15px] font-bold ${
-                        !msg.is_read ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-500"
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-[15px] font-bold shadow-md ${
+                        !msg.is_read ? "bg-gradient-to-br from-blue-500 to-indigo-500 text-white" : "bg-gradient-to-br from-slate-200 to-slate-300 text-slate-600"
                       }`}>
                         {msg.name.charAt(0)}
                       </div>
