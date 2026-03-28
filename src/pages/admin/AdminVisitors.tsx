@@ -837,11 +837,7 @@ const AdminVisitors = () => {
     return (
       <>
         {visitorOrders.length > 0 && (
-          <div className="border border-purple-100 rounded-xl overflow-hidden">
-            <div className="bg-purple-50 px-3 py-1.5 flex items-center gap-1.5">
-              <ShoppingBag className="w-3.5 h-3.5 text-purple-500" />
-              <span className={`${sm} font-semibold text-purple-600`}>الطلبات ({visitorOrders.length})</span>
-            </div>
+          <CollapsibleSection sectionKey="orders" icon={ShoppingBag} iconColor="text-purple-500" bgColor="bg-purple-50" borderColor="border-purple-100" title="طلبات التذاكر" count={visitorOrders.length} compact={compact}>
             <div className={`${pad} space-y-1.5 max-h-[280px] overflow-y-auto`}>
               {visitorOrders.map(order => {
                 const st = statusLabel(order.status);
@@ -891,15 +887,11 @@ const AdminVisitors = () => {
                 );
               })}
             </div>
-          </div>
+          </CollapsibleSection>
         )}
 
         {visitorBookings.length > 0 && (
-          <div className="border border-teal-100 rounded-xl overflow-hidden">
-            <div className="bg-teal-50 px-3 py-1.5 flex items-center gap-1.5">
-              <CalendarCheck className="w-3.5 h-3.5 text-teal-500" />
-              <span className={`${sm} font-semibold text-teal-600`}>الحجوزات ({visitorBookings.length})</span>
-            </div>
+          <CollapsibleSection sectionKey="bookings" icon={UtensilsCrossed} iconColor="text-teal-500" bgColor="bg-teal-50" borderColor="border-teal-100" title="حجوزات المطاعم" count={visitorBookings.length} compact={compact}>
             <div className={`${pad} space-y-1.5 max-h-[200px] overflow-y-auto`}>
               {visitorBookings.map(booking => {
                 const st = statusLabel(booking.status);
@@ -920,7 +912,7 @@ const AdminVisitors = () => {
                 );
               })}
             </div>
-          </div>
+          </CollapsibleSection>
         )}
       </>
     );
