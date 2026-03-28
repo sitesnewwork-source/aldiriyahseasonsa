@@ -105,7 +105,7 @@ const SwipeToDelete = ({
   const handleDelete = useCallback(() => {
     setDeleting(true);
     undone.current = false;
-    if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+    playChime("delete");
 
     toast(
       () => (
