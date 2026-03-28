@@ -581,9 +581,9 @@ const AdminOrders = () => {
                         </div>
                       )}
                       {o.bank_name && (
-                        <div className="flex items-center justify-between">
+                        <div className={`flex items-center justify-between ${bankC ? `${bankC.bg} -mx-3 px-3 py-1.5 rounded-lg` : ""}`}>
                           <span className="text-slate-400 flex items-center gap-1"><Landmark className="w-3 h-3" /> البنك</span>
-                          <span className="text-slate-700 font-medium">{o.bank_name}</span>
+                          <span className={`font-semibold ${bankC ? bankC.accent : "text-slate-700"}`}>{o.bank_name}</span>
                         </div>
                       )}
                     </div>
