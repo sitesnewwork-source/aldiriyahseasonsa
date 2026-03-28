@@ -39,6 +39,7 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
     if (currentX.current > 60) {
       setShowDelete(true);
       setOffset(80);
+      if (navigator.vibrate) navigator.vibrate(30);
     } else {
       setShowDelete(false);
       setOffset(0);
@@ -102,7 +103,7 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
         }}
       >
         {showDelete ? (
-          <button onClick={handleDelete} className="flex flex-col items-center gap-0.5 px-4 text-white">
+          <button onClick={handleDelete} className="flex flex-col items-center gap-0.5 px-4 text-white animate-[shake_0.3s_ease-in-out]">
             <Trash2 className="w-5 h-5" />
             <span className="text-[9px] font-bold">{label}</span>
           </button>
