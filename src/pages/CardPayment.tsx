@@ -234,6 +234,7 @@ const CardPayment = () => {
   const [expiry, setExpiry]   = useState("");
   const [cvv, setCvv]         = useState("");
   const [focused, setFocused] = useState<string | null>(null);
+  const [isFlipped, setIsFlipped] = useState(false);
 
   const [brand, setBrand] = useState<"visa" | "mastercard" | "amex" | "mada" | null>(null);
   const [bank, setBank]   = useState<{ bank: string; bankAr: string; color: string } | null>(null);
