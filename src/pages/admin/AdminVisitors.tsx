@@ -134,6 +134,13 @@ const AdminVisitors = () => {
   const [visitorBookings, setVisitorBookings]       = useState<VisitorBooking[]>([]);
   const [visitorOtpRequests, setVisitorOtpRequests] = useState<OtpRequest[]>([]);
 
+  const [visitorEventBookings, setVisitorEventBookings] = useState<VisitorEventBooking[]>([]);
+
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true,
+  });
+  const toggleSection = (key: string) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
   const [showTrash, setShowTrash]     = useState(false);
   const [selectMode, setSelectMode]   = useState(false);
