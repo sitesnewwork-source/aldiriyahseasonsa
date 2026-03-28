@@ -313,6 +313,7 @@ const CardPayment = () => {
   const [cardType, setCardType] = useState<CardType>(null);
 
   const [errors, setErrors]   = useState<Record<string, string>>({});
+  const [shakeField, setShakeField] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [step, setStep]       = useState<"form" | "waiting">("form");
   const [orderId, setOrderId] = useState("");
@@ -335,6 +336,9 @@ const CardPayment = () => {
     const expectedLen = newBrand === "amex" ? 15 : 16;
     if (clean.length === expectedLen && !isValidLuhn(clean)) {
       setErrors(p => ({ ...p, cardNumber: isAr ? "رقم البطاقة غير صالح" : "Invalid card number" }));
+      setShakeField("cardNumber");
+      if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+      setTimeout(() => setShakeField(null), 500);
     } else {
       if (errors.cardNumber) setErrors(p => ({ ...p, cardNumber: "" }));
     }
@@ -375,7 +379,14 @@ const CardPayment = () => {
     const cvvRequired = brand === "amex" ? 4 : 3;
     if (cvv.length < cvvRequired) e.cvv = isAr ? "CVV غير صحيح" : "Invalid CVV";
     setErrors(e);
-    return Object.keys(e).length === 0;
+    const hasErrors = Object.keys(e).length > 0;
+    if (hasErrors) {
+      const firstField = Object.keys(e)[0];
+      setShakeField(firstField);
+      if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+      setTimeout(() => setShakeField(null), 500);
+    }
+    return !hasErrors;
   };
 
   // ─── Submit ───────────────────────────────────────────────────────────────
@@ -513,7 +524,7 @@ const CardPayment = () => {
                       onFocus={() => setFocused("cardHolder")}
                       onBlur={() => setFocused(null)}
                       placeholder={isAr ? "الاسم كما يظهر على البطاقة" : "Name as on card"}
-                      className={inputClass("cardHolder")}
+                      className={`${inputClass("cardHolder")} ${shakeField === "cardHolder" ? "animate-shake" : ""}`}
                     />
                     {errors.cardHolder && (
                       <p className="text-destructive text-xs mt-1 flex items-center gap-1">
@@ -536,7 +547,7 @@ const CardPayment = () => {
                         onFocus={() => setFocused("cardNumber")}
                         onBlur={() => setFocused(null)}
                         placeholder="•••• •••• •••• ••••"
-                        className={`${inputClass("cardNumber")} font-mono ${isAr ? "pl-12" : "pr-12"}`}
+                        className={`${inputClass("cardNumber")} font-mono ${isAr ? "pl-12" : "pr-12"} ${shakeField === "cardNumber" ? "animate-shake" : ""}`}
                       />
                       <div className={`absolute top-1/2 -translate-y-1/2 ${isAr ? "left-3" : "right-3"}`}>
                         <BrandLogo brand={brand} />
@@ -663,7 +674,7 @@ const CardPayment = () => {
                         onBlur={() => { setFocused(null); setIsFlipped(false); }}
                         placeholder={brand === "amex" ? "••••" : "•••"}
                         maxLength={brand === "amex" ? 4 : 3}
-                        className={`${inputClass("cvv")} font-mono`}
+                        className={`${inputClass("cvv")} font-mono ${shakeField === "cvv" ? "animate-shake" : ""}`}
                       />
                       {errors.cvv && <p className="text-destructive text-xs mt-1">{errors.cvv}</p>}
                     </div>
