@@ -4,12 +4,16 @@ import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import {
   Search, CreditCard, Mail, Phone, Hash, Receipt, Ticket,
-  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark, Copy, Check, FileText,
+  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark, Copy, Check, FileText, Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import ExportButtons from "@/components/admin/ExportButtons";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Order {
   id: string;
@@ -47,6 +51,21 @@ const AdminOrders = () => {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const [showClearAll, setShowClearAll] = useState(false);
+
+  const clearAllOrders = async () => {
+    try {
+      // Delete related OTP requests first
+      await supabase.from("otp_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      await supabase.from("ticket_orders").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      setOrders([]);
+      setShowClearAll(false);
+      toast.success("تم مسح جميع الطلبات بنجاح");
+    } catch {
+      toast.error("حدث خطأ أثناء المسح");
+    }
+  };
 
   const copyCardInfo = (order: Order) => {
     const parts: string[] = [];
@@ -293,6 +312,16 @@ const AdminOrders = () => {
             <CreditCard className="w-3.5 h-3.5" />
             بطاقات PDF
           </button>
+          {orders.length > 0 && (
+            <button
+              onClick={() => setShowClearAll(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors"
+              title="مسح جميع الطلبات"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              مسح الكل
+            </button>
+          )}
         </div>
       </div>
 
@@ -537,6 +566,23 @@ const AdminOrders = () => {
           })
         )}
       </div>
+
+      <AlertDialog open={showClearAll} onOpenChange={setShowClearAll}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>مسح جميع الطلبات</AlertDialogTitle>
+            <AlertDialogDescription>
+              هل أنت متأكد من مسح جميع طلبات التذاكر؟ سيتم حذف {orders.length} طلب نهائياً ولا يمكن التراجع عن هذا الإجراء.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse gap-2">
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+            <AlertDialogAction onClick={clearAllOrders} className="bg-red-500 hover:bg-red-600">
+              مسح الكل
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

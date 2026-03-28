@@ -4,6 +4,10 @@ import { CalendarCheck, Trash2, Check, X, Users, Phone, Mail, Clock, StickyNote,
 import ExportButtons from "@/components/admin/ExportButtons";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 
@@ -30,6 +34,18 @@ const AdminEventBookings = () => {
   const [bookings, setBookings] = useState<EventBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
+  const [showClearAll, setShowClearAll] = useState(false);
+
+  const clearAllEventBookings = async () => {
+    try {
+      await supabase.from("event_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      setBookings([]);
+      setShowClearAll(false);
+      toast({ title: "تم المسح", description: "تم مسح جميع حجوزات الفعاليات بنجاح" });
+    } catch {
+      toast({ title: "خطأ", description: "حدث خطأ أثناء المسح", variant: "destructive" });
+    }
+  };
 
   const fetchBookings = useCallback(async () => {
     const { data } = await supabase
@@ -91,8 +107,8 @@ const AdminEventBookings = () => {
   }
 
   return (
+    <>
     <div className="space-y-5">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/20">
@@ -103,21 +119,32 @@ const AdminEventBookings = () => {
             <p className="text-[10px] text-slate-400">{stats.total} حجز • {stats.totalGuests} ضيف</p>
           </div>
         </div>
-        <ExportButtons
-          data={filtered}
-          filename="event-bookings"
-          title="حجوزات الفعاليات"
-          columns={[
-            { key: "event_title", label: "الفعالية" },
-            { key: "name", label: "الاسم" },
-            { key: "phone", label: "الهاتف" },
-            { key: "email", label: "البريد" },
-            { key: "guests", label: "الأشخاص" },
-            { key: "notes", label: "ملاحظات" },
-            { key: "status", label: "الحالة", format: (v) => statusConfig[v]?.label || v },
-            { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
-          ]}
-        />
+        <div className="flex items-center gap-1.5">
+          <ExportButtons
+            data={filtered}
+            filename="event-bookings"
+            title="حجوزات الفعاليات"
+            columns={[
+              { key: "event_title", label: "الفعالية" },
+              { key: "name", label: "الاسم" },
+              { key: "phone", label: "الهاتف" },
+              { key: "email", label: "البريد" },
+              { key: "guests", label: "الأشخاص" },
+              { key: "notes", label: "ملاحظات" },
+              { key: "status", label: "الحالة", format: (v) => statusConfig[v]?.label || v },
+              { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+            ]}
+          />
+          {bookings.length > 0 && (
+            <button
+              onClick={() => setShowClearAll(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              مسح الكل
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Stat Cards */}
@@ -260,6 +287,24 @@ const AdminEventBookings = () => {
         </div>
       )}
     </div>
+
+      <AlertDialog open={showClearAll} onOpenChange={setShowClearAll}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>مسح جميع حجوزات الفعاليات</AlertDialogTitle>
+            <AlertDialogDescription>
+              هل أنت متأكد من مسح جميع حجوزات الفعاليات؟ سيتم حذف {bookings.length} حجز نهائياً.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse gap-2">
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+            <AlertDialogAction onClick={clearAllEventBookings} className="bg-red-500 hover:bg-red-600">
+              مسح الكل
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 
