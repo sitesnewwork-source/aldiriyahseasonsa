@@ -275,25 +275,22 @@ const AdminLayout = () => {
           </div>
         </header>
 
-        <PullToRefresh onRefresh={async () => {
-          window.dispatchEvent(new CustomEvent("admin-pull-refresh"));
-          await new Promise(r => setTimeout(r, 600));
-        }}>
+        <SwipeableContent navigate={navigate} currentPath={location.pathname}>
           <AdminInstallPrompt variant="banner" />
           <div className="p-3 sm:p-4 md:p-6 pb-20 lg:pb-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                initial={{ opacity: 0, x: swipeDirection === "left" ? 40 : swipeDirection === "right" ? -40 : 0, y: swipeDirection ? 0 : 8 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                exit={{ opacity: 0, x: swipeDirection === "left" ? -40 : swipeDirection === "right" ? 40 : 0, y: swipeDirection ? 0 : -8 }}
+                transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
               >
                 <Outlet />
               </motion.div>
             </AnimatePresence>
           </div>
-        </PullToRefresh>
+        </SwipeableContent>
       </div>
 
       {/* Mobile Bottom Navigation */}
