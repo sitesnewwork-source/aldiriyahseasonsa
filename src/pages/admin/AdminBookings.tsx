@@ -111,21 +111,32 @@ const AdminBookings = () => {
             <p className="text-[10px] text-slate-400">{filtered.length} حجز • {counts.pending} قيد الانتظار</p>
           </div>
         </div>
-        <ExportButtons
-          data={filtered}
-          filename="bookings"
-          title="حجوزات المطاعم"
-          columns={[
-            { key: "name", label: "الاسم" },
-            { key: "phone", label: "الهاتف" },
-            { key: "restaurant", label: "المطعم" },
-            { key: "booking_date", label: "التاريخ" },
-            { key: "guests", label: "الأشخاص" },
-            { key: "notes", label: "ملاحظات" },
-            { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مؤكد" : v === "cancelled" ? "ملغي" : "قيد الانتظار" },
-            { key: "created_at", label: "تاريخ الطلب", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
-          ]}
-        />
+        <div className="flex items-center gap-1.5">
+          <ExportButtons
+            data={filtered}
+            filename="bookings"
+            title="حجوزات المطاعم"
+            columns={[
+              { key: "name", label: "الاسم" },
+              { key: "phone", label: "الهاتف" },
+              { key: "restaurant", label: "المطعم" },
+              { key: "booking_date", label: "التاريخ" },
+              { key: "guests", label: "الأشخاص" },
+              { key: "notes", label: "ملاحظات" },
+              { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مؤكد" : v === "cancelled" ? "ملغي" : "قيد الانتظار" },
+              { key: "created_at", label: "تاريخ الطلب", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+            ]}
+          />
+          {bookings.length > 0 && (
+            <button
+              onClick={() => setShowClearAll(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              مسح الكل
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Search */}
@@ -292,6 +303,23 @@ const AdminBookings = () => {
           })
         )}
       </div>
+
+      <AlertDialog open={showClearAll} onOpenChange={setShowClearAll}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>مسح جميع الحجوزات</AlertDialogTitle>
+            <AlertDialogDescription>
+              هل أنت متأكد من مسح جميع حجوزات المطاعم؟ سيتم حذف {bookings.length} حجز نهائياً.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse gap-2">
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+            <AlertDialogAction onClick={clearAllBookings} className="bg-red-500 hover:bg-red-600">
+              مسح الكل
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
