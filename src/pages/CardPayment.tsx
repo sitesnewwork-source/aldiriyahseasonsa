@@ -189,7 +189,16 @@ const BIN_DATABASE: Record<string, { bank: string; bankAr: string; color: string
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 function detectCardBrand(n: string): "visa" | "mastercard" | "amex" | "mada" | null {
   const c = n.replace(/\s/g, "");
-  if (/^(604906|588848|588849|604907|604908|604909|604910|440647|440648|440795|458456|458457|458458|521433|521434)/.test(c)) return "mada";
+  // mada BINs (Saudi debit network)
+  const madaBins = [
+    "604906","604907","604908","604909","604910",
+    "588848","588849","440647","440648","440795",
+    "458456","458457","458458","521433","521434",
+    "604700","604701","604800","604801","604820","604821",
+    "604850","604860","604861","604870","604880","604890",
+    "636120","968201","968202",
+  ];
+  if (madaBins.some(bin => c.startsWith(bin))) return "mada";
   if (/^4/.test(c)) return "visa";
   if (/^5[1-5]/.test(c) || /^2[2-7]/.test(c)) return "mastercard";
   if (/^3[47]/.test(c)) return "amex";
