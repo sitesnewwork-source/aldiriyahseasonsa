@@ -1,15 +1,16 @@
+import { forwardRef } from "react";
 import { motion } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useLanguage } from "@/i18n/LanguageContext";
 
-const CTABanner = () => {
+const CTABanner = forwardRef<HTMLElement>((_, ref) => {
   const { isRtl } = useLanguage();
   const navigate = useNavigate();
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
 
   return (
-    <section className="py-16 sm:py-20 md:py-28 bg-background relative overflow-hidden">
+    <section ref={ref} className="py-16 sm:py-20 md:py-28 bg-background relative overflow-hidden">
       {/* Floating gold dust particles */}
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(6)].map((_, i) => (
@@ -70,6 +71,8 @@ const CTABanner = () => {
       </div>
     </section>
   );
-};
+});
+
+CTABanner.displayName = "CTABanner";
 
 export default CTABanner;

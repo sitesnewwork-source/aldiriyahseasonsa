@@ -1,5 +1,5 @@
 import { motion, type Variant } from "framer-motion";
-import { type ReactNode } from "react";
+import { forwardRef, type ReactNode } from "react";
 
 type AnimationType = "fade-up" | "fade-left" | "fade-right" | "zoom" | "fade";
 
@@ -35,16 +35,17 @@ interface ScrollRevealProps {
   once?: boolean;
 }
 
-const ScrollReveal = ({
+const ScrollReveal = forwardRef<HTMLDivElement, ScrollRevealProps>(({
   children,
   animation = "fade-up",
   delay = 0,
   duration = 0.7,
   className = "",
   once = true,
-}: ScrollRevealProps) => {
+}, ref) => {
   return (
     <motion.div
+      ref={ref}
       initial="hidden"
       whileInView="visible"
       viewport={{ once, margin: "-80px" }}
@@ -55,6 +56,8 @@ const ScrollReveal = ({
       {children}
     </motion.div>
   );
-};
+});
+
+ScrollReveal.displayName = "ScrollReveal";
 
 export default ScrollReveal;
