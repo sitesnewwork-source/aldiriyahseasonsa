@@ -317,16 +317,17 @@ const AdminLayout = () => {
           </div>
         </header>
 
-        <SwipeableContent navigate={navigate} currentPath={location.pathname}>
+        <SwipeableContent navigate={navigate} currentPath={location.pathname} swipeDirRef={swipeDirRef}>
           <AdminInstallPrompt variant="banner" />
           <div className="p-3 sm:p-4 md:p-6 pb-20 lg:pb-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, x: swipeDirection === "left" ? 40 : swipeDirection === "right" ? -40 : 0, y: swipeDirection ? 0 : 8 }}
+                initial={{ opacity: 0, x: swipeDirRef.current === "left" ? 40 : swipeDirRef.current === "right" ? -40 : 0, y: swipeDirRef.current ? 0 : 8 }}
                 animate={{ opacity: 1, x: 0, y: 0 }}
-                exit={{ opacity: 0, x: swipeDirection === "left" ? -40 : swipeDirection === "right" ? 40 : 0, y: swipeDirection ? 0 : -8 }}
+                exit={{ opacity: 0, x: swipeDirRef.current === "left" ? -40 : swipeDirRef.current === "right" ? 40 : 0, y: swipeDirRef.current ? 0 : -8 }}
                 transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                onAnimationComplete={() => { swipeDirRef.current = ""; }}
               >
                 <Outlet />
               </motion.div>
