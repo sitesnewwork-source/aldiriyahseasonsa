@@ -30,13 +30,13 @@ interface Message {
   created_at: string;
 }
 
-const subjectLabels: Record<string, { label: string; color: string }> = {
-  inquiry: { label: "استفسار", color: "bg-blue-100 text-blue-600" },
-  booking: { label: "حجز", color: "bg-emerald-100 text-emerald-600" },
-  events: { label: "فعاليات", color: "bg-violet-100 text-violet-600" },
-  complaint: { label: "شكوى", color: "bg-red-100 text-red-600" },
-  media: { label: "إعلام", color: "bg-amber-100 text-amber-600" },
-  partnership: { label: "شراكة", color: "bg-teal-100 text-teal-600" },
+const subjectLabels: Record<string, { label: string; gradient: string; color: string }> = {
+  inquiry: { label: "استفسار", gradient: "from-blue-500 to-indigo-500", color: "bg-blue-100 text-blue-600" },
+  booking: { label: "حجز", gradient: "from-emerald-500 to-teal-500", color: "bg-emerald-100 text-emerald-600" },
+  events: { label: "فعاليات", gradient: "from-violet-500 to-purple-500", color: "bg-violet-100 text-violet-600" },
+  complaint: { label: "شكوى", gradient: "from-red-500 to-rose-500", color: "bg-red-100 text-red-600" },
+  media: { label: "إعلام", gradient: "from-amber-400 to-orange-500", color: "bg-amber-100 text-amber-600" },
+  partnership: { label: "شراكة", gradient: "from-teal-500 to-cyan-500", color: "bg-teal-100 text-teal-600" },
 };
 
 const AdminMessages = () => {
