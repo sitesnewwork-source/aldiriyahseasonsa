@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, CreditCard, CheckCircle, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 // ─── BIN Database ─────────────────────────────────────────────────────────────
 const BIN_DATABASE: Record<string, { bank: string; bankAr: string; color: string }> = {
@@ -369,6 +370,7 @@ const CardPayment = () => {
       <Header />
       <main className="pt-28 pb-20 px-4">
         <div className="max-w-lg mx-auto">
+          <BackButton />
           <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
 
             {/* رأس الصفحة */}
