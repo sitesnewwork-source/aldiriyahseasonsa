@@ -79,6 +79,7 @@ const AdminOrders = () => {
     container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
     container.innerHTML = `
       <div style="text-align:center;margin-bottom:24px;">
+        <img src="/pwa-icon-192.png" style="width:56px;height:56px;border-radius:12px;margin:0 auto 10px;display:block;" />
         <p style="font-size:13px;font-weight:700;color:#d4a843;margin:0 0 4px;letter-spacing:2px;">موسم الدرعية</p>
         <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 4px;">تقرير بيانات البطاقات</h1>
         <p style="font-size:12px;color:#94a3b8;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
