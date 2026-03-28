@@ -107,7 +107,7 @@ const AdminEventBookings = () => {
   }
 
   return (
-    <div className="space-y-5">
+    <>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
@@ -287,7 +287,6 @@ const AdminEventBookings = () => {
         </div>
       )}
     </div>
-
       <AlertDialog open={showClearAll} onOpenChange={setShowClearAll}>
         <AlertDialogContent dir="rtl">
           <AlertDialogHeader>
