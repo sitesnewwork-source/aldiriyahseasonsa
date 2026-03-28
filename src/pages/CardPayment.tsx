@@ -710,7 +710,7 @@ const CardPayment = () => {
                               initial={{ scale: 0, rotate: -180, opacity: 0 }}
                               animate={{ 
                                 scale: [0, 1.3, 1], 
-                                rotate: [−180, 15, 0], 
+                                rotate: [-180, 15, 0], 
                                 opacity: 1,
                               }}
                               exit={{ scale: 0, rotate: 180, opacity: 0 }}
