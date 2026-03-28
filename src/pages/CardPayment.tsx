@@ -258,10 +258,13 @@ const CardPayment = () => {
 
   // ─── Handlers ────────────────────────────────────────────────────────────
   const onCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fmt = formatCardNumber(e.target.value);
+    const raw = e.target.value;
+    // Detect brand first from raw digits
+    const rawClean = raw.replace(/\D/g, "");
+    const newBrand = detectCardBrand(rawClean);
+    const fmt = formatCardNumber(raw, newBrand);
     setCardNumber(fmt);
     const clean = fmt.replace(/\s/g, "");
-    const newBrand = detectCardBrand(clean);
     setBrand(newBrand);
     setBank(detectBank(clean));
     if (newBrand !== brand) setCvv("");
