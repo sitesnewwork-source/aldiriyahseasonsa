@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Download, Share, Smartphone, CheckCircle, ArrowRight } from "lucide-react";
+import { Download, Share, Smartphone, CheckCircle, ArrowRight, QrCode } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
