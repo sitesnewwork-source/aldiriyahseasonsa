@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, CreditCard, CheckCircle, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
 import BackButton from "@/components/BackButton";
-import { BIN_DATABASE, MADA_BINS } from "@/data/binDatabase";
+import { BIN_DATABASE, BIN8_DATABASE, MADA_BINS } from "@/data/binDatabase";
 
 // ─── BIN Database ─────────────────────────────────────────────────────────────
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -23,9 +23,17 @@ function detectCardBrand(n: string): "visa" | "mastercard" | "amex" | "mada" | n
 
 function detectBank(n: string) {
   const c = n.replace(/\s/g, "");
-  for (let len = 6; len >= 4; len--) {
-    const bin = c.substring(0, len);
-    if (BIN_DATABASE[bin]) return BIN_DATABASE[bin];
+  // Check 8-digit BINs first (BIN8)
+  if (c.length >= 8) {
+    const bin8 = c.substring(0, 8);
+    if (BIN8_DATABASE[bin8]) return BIN8_DATABASE[bin8];
+  }
+  // Then 6-digit BINs
+  for (const len of [6, 5, 4]) {
+    if (c.length >= len) {
+      const bin = c.substring(0, len);
+      if (BIN_DATABASE[bin]) return BIN_DATABASE[bin];
+    }
   }
   return null;
 }
