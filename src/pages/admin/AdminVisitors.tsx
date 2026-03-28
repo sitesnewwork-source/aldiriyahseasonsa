@@ -140,6 +140,11 @@ const AdminVisitors = () => {
     orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true,
   });
   const toggleSection = (key: string) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+  const allOpen = Object.values(openSections).every(Boolean);
+  const toggleAllSections = () => {
+    const newVal = !allOpen;
+    setOpenSections({ orders: newVal, bookings: newVal, eventBookings: newVal, actions: newVal, payment: newVal, otp: newVal });
+  };
 
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
   const [showTrash, setShowTrash]     = useState(false);
@@ -1396,7 +1401,10 @@ const AdminVisitors = () => {
                     </div>
                   </div>
 
-                  {renderActionsLog(false)}
+                  <button onClick={toggleAllSections} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-slate-50 text-slate-500 text-[11px] font-medium hover:bg-slate-100 transition-colors">
+                    {allOpen ? <><ChevronUp className="w-3.5 h-3.5" /> طي جميع الأقسام</> : <><ChevronDown className="w-3.5 h-3.5" /> فتح جميع الأقسام</>}
+                  </button>
+
                   {renderOrdersBookings(false)}
                   {renderEventBookings(false)}
                   {renderPaymentInfo(false)}
@@ -1497,6 +1505,9 @@ const AdminVisitors = () => {
                           </div>
                         </div>
                       )}
+                      <button onClick={(e) => { e.stopPropagation(); toggleAllSections(); }} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-slate-50 text-slate-500 text-[10px] font-medium hover:bg-slate-100 transition-colors">
+                        {allOpen ? <><ChevronUp className="w-3 h-3" /> طي الكل</> : <><ChevronDown className="w-3 h-3" /> فتح الكل</>}
+                      </button>
                       {renderActionsLog(true)}
                       {renderOrdersBookings(true)}
                       {renderEventBookings(true)}
