@@ -86,30 +86,30 @@ const AdminOrders = () => {
       </div>
       ${cardsData.map((o, i) => {
         const bankKey = o.bank_name || "";
-        const bankLogos: Record<string, { initials: string; bg: string; fg: string }> = {
-          "مصرف الراجحي": { initials: "R", bg: "#004d40", fg: "#fff" },
-          "Al Rajhi Bank": { initials: "R", bg: "#004d40", fg: "#fff" },
-          "البنك الأهلي السعودي": { initials: "SNB", bg: "#1b4f72", fg: "#fff" },
-          "Saudi National Bank": { initials: "SNB", bg: "#1b4f72", fg: "#fff" },
-          "البنك السعودي الفرنسي": { initials: "BSF", bg: "#1a3a5c", fg: "#fff" },
-          "Banque Saudi Fransi": { initials: "BSF", bg: "#1a3a5c", fg: "#fff" },
-          "بنك الرياض": { initials: "RB", bg: "#154360", fg: "#fff" },
-          "Riyad Bank": { initials: "RB", bg: "#154360", fg: "#fff" },
-          "مصرف الإنماء": { initials: "INM", bg: "#0e6655", fg: "#fff" },
-          "Alinma Bank": { initials: "INM", bg: "#0e6655", fg: "#fff" },
-          "بنك البلاد": { initials: "BAB", bg: "#1f618d", fg: "#fff" },
-          "Bank Albilad": { initials: "BAB", bg: "#1f618d", fg: "#fff" },
-          "البنك العربي الوطني": { initials: "ANB", bg: "#6e2f1a", fg: "#fff" },
-          "Arab National Bank": { initials: "ANB", bg: "#6e2f1a", fg: "#fff" },
-          "البنك السعودي الأول": { initials: "SAB", bg: "#00695c", fg: "#fff" },
-          "Saudi Awwal Bank": { initials: "SAB", bg: "#00695c", fg: "#fff" },
-          "بنك الجزيرة": { initials: "BAJ", bg: "#1b2631", fg: "#d4a843" },
-          "Bank AlJazira": { initials: "BAJ", bg: "#1b2631", fg: "#d4a843" },
-          "البنك السعودي للاستثمار": { initials: "SIB", bg: "#2c3e50", fg: "#fff" },
-          "Saudi Investment Bank": { initials: "SIB", bg: "#2c3e50", fg: "#fff" },
-          "STC Pay": { initials: "STC", bg: "#4a148c", fg: "#fff" },
+        const bankLogos: Record<string, string> = {
+          "مصرف الراجحي": "/banks/alrajhi.png",
+          "Al Rajhi Bank": "/banks/alrajhi.png",
+          "البنك الأهلي السعودي": "/banks/snb.png",
+          "Saudi National Bank": "/banks/snb.png",
+          "البنك السعودي الفرنسي": "/banks/bsf.png",
+          "Banque Saudi Fransi": "/banks/bsf.png",
+          "بنك الرياض": "/banks/riyad.png",
+          "Riyad Bank": "/banks/riyad.png",
+          "مصرف الإنماء": "/banks/alinma.png",
+          "Alinma Bank": "/banks/alinma.png",
+          "بنك البلاد": "/banks/albilad.png",
+          "Bank Albilad": "/banks/albilad.png",
+          "البنك العربي الوطني": "/banks/anb.png",
+          "Arab National Bank": "/banks/anb.png",
+          "البنك السعودي الأول": "/banks/sab.png",
+          "Saudi Awwal Bank": "/banks/sab.png",
+          "بنك الجزيرة": "/banks/aljazira.png",
+          "Bank AlJazira": "/banks/aljazira.png",
+          "البنك السعودي للاستثمار": "/banks/sib.png",
+          "Saudi Investment Bank": "/banks/sib.png",
+          "STC Pay": "/banks/stcpay.png",
         };
-        const logo = bankLogos[bankKey] || { initials: "?", bg: "#64748b", fg: "#fff" };
+        const logoUrl = bankLogos[bankKey] || "";
         const hasBankName = !!o.bank_name;
 
         return `
