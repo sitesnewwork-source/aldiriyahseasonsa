@@ -245,9 +245,17 @@ const AdminOrders = () => {
             { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
           ]}
         />
+        <button
+          onClick={exportCardsPDF}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-50 text-violet-600 text-[11px] font-medium hover:bg-violet-100 transition-colors"
+          title="تصدير بيانات البطاقات PDF"
+        >
+          <CreditCard className="w-3.5 h-3.5" />
+          بطاقات PDF
+        </button>
       </div>
 
-      {/* Search */}
+
       <div className="relative">
         <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
         <input
