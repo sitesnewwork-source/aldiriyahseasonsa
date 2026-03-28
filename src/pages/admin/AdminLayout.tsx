@@ -26,13 +26,11 @@ const bottomNavItems = navItems.slice(0, 4);
 const swipePages = ["/admin", ...bottomNavItems.map(i => i.path)];
 
 // Swipeable wrapper for mobile gesture navigation
-const SwipeableContent = ({ children, navigate, currentPath }: { children: React.ReactNode; navigate: (path: string) => void; currentPath: string }) => {
+const SwipeableContent = ({ children, navigate, currentPath, swipeDirRef }: { children: React.ReactNode; navigate: (path: string) => void; currentPath: string; swipeDirRef: React.MutableRefObject<string> }) => {
   const touchStart = useRef<{ x: number; y: number } | null>(null);
-  const swiping = useRef(false);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    swiping.current = false;
   }, []);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
@@ -41,19 +39,19 @@ const SwipeableContent = ({ children, navigate, currentPath }: { children: React
     const dy = e.changedTouches[0].clientY - touchStart.current.y;
     touchStart.current = null;
 
-    // Only horizontal swipe (dx > dy, min 80px)
     if (Math.abs(dx) < 80 || Math.abs(dy) > Math.abs(dx) * 0.7) return;
 
     const currentIndex = swipePages.indexOf(currentPath);
     if (currentIndex === -1) return;
 
-    // RTL: swipe left = next, swipe right = prev (reversed)
     if (dx < 0 && currentIndex < swipePages.length - 1) {
+      swipeDirRef.current = "left";
       navigate(swipePages[currentIndex + 1]);
     } else if (dx > 0 && currentIndex > 0) {
+      swipeDirRef.current = "right";
       navigate(swipePages[currentIndex - 1]);
     }
-  }, [currentPath, navigate]);
+  }, [currentPath, navigate, swipeDirRef]);
 
   return (
     <PullToRefresh onRefresh={async () => {
