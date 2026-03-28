@@ -729,7 +729,18 @@ const CardPayment = () => {
                           </div>
                           <div className="text-right">
                             <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "الانتهاء" : "Expires"}</p>
-                            <p className="text-white text-sm font-medium font-mono">{expiry || "MM/YY"}</p>
+                            <AnimatePresence mode="wait">
+                              <motion.p
+                                key={expiry || "placeholder"}
+                                initial={{ y: -10, opacity: 0, scale: 0.9 }}
+                                animate={{ y: 0, opacity: 1, scale: 1 }}
+                                exit={{ y: 10, opacity: 0, scale: 0.9 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
+                                className={`text-sm font-medium font-mono ${expiry && expiry !== "/" ? "text-white drop-shadow-[0_0_8px_rgba(212,175,55,0.6)]" : "text-white"}`}
+                              >
+                                {expiry && expiry !== "/" ? expiry : "MM/YY"}
+                              </motion.p>
+                            </AnimatePresence>
                           </div>
                         </div>
 
