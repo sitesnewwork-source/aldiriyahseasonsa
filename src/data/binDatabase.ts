@@ -157,7 +157,7 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   // Qatar National Bank
   "428900": QNB, "423854": QNB, "489316": QNB, "431370": QNB,
   // National Bank of Bahrain
-  "421635": NBB, "428300": NBB, "431374": NBB,
+  "421635": NBB, "428300": NBB, "431374": NBB, "521076": NBB,
   // Bank Muscat
   "418230": BM, "422068": BM, "431376": BM,
 
