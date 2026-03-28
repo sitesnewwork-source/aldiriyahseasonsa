@@ -123,43 +123,45 @@ interface SideAlert {
   timestamp: number;
 }
 
-// Swipe-to-delete component for visitor cards
+// Swipe-to-delete component for visitor cards (supports touch + mouse)
 const SwipeToDelete = ({ children, onDelete }: { children: React.ReactNode; onDelete: () => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const startX = useRef(0);
   const startY = useRef(0);
   const currentX = useRef(0);
   const isSwiping = useRef(false);
+  const isMouseDown = useRef(false);
+  const directionLocked = useRef(false);
   const [offset, setOffset] = useState(0);
   const [showDelete, setShowDelete] = useState(false);
 
-  const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    startX.current = e.touches[0].clientX;
-    startY.current = e.touches[0].clientY;
+  const beginSwipe = useCallback((clientX: number, clientY: number) => {
+    startX.current = clientX;
+    startY.current = clientY;
     isSwiping.current = false;
+    directionLocked.current = false;
   }, []);
 
-  const handleTouchMove = useCallback((e: React.TouchEvent) => {
-    const dx = e.touches[0].clientX - startX.current;
-    const dy = e.touches[0].clientY - startY.current;
+  const moveSwipe = useCallback((clientX: number) => {
+    const dx = clientX - startX.current;
+    const dy = 0; // mouse doesn't need vertical check after lock
 
-    // Determine if horizontal swipe (only on first significant movement)
-    if (!isSwiping.current && Math.abs(dx) > 10) {
-      if (Math.abs(dy) > Math.abs(dx) * 0.5) return; // Too vertical
+    if (!directionLocked.current && Math.abs(dx) > 8) {
+      directionLocked.current = true;
       isSwiping.current = true;
     }
     if (!isSwiping.current) return;
 
-    e.preventDefault();
-    // RTL: swipe right reveals delete (positive dx)
-    const clampedDx = Math.max(0, Math.min(dx, 120));
+    // Support both directions: positive (RTL right swipe) or negative (LTR left swipe)
+    const absDx = Math.abs(dx);
+    const clampedDx = Math.min(absDx, 120);
     currentX.current = clampedDx;
     setOffset(clampedDx);
   }, []);
 
-  const handleTouchEnd = useCallback(() => {
+  const endSwipe = useCallback(() => {
     if (!isSwiping.current) return;
-    if (currentX.current > 80) {
+    if (currentX.current > 60) {
       setShowDelete(true);
       setOffset(80);
     } else {
@@ -167,8 +169,51 @@ const SwipeToDelete = ({ children, onDelete }: { children: React.ReactNode; onDe
       setOffset(0);
     }
     isSwiping.current = false;
+    isMouseDown.current = false;
     currentX.current = 0;
   }, []);
+
+  // Touch handlers
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    beginSwipe(e.touches[0].clientX, e.touches[0].clientY);
+  }, [beginSwipe]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const dx = e.touches[0].clientX - startX.current;
+    const dy = e.touches[0].clientY - startY.current;
+    if (!directionLocked.current && Math.abs(dx) > 8) {
+      if (Math.abs(dy) > Math.abs(dx) * 0.6) { isSwiping.current = false; return; }
+      directionLocked.current = true;
+      isSwiping.current = true;
+    }
+    if (!isSwiping.current) return;
+    e.preventDefault();
+    const clampedDx = Math.min(Math.abs(dx), 120);
+    currentX.current = clampedDx;
+    setOffset(clampedDx);
+  }, []);
+
+  const handleTouchEnd = useCallback(() => endSwipe(), [endSwipe]);
+
+  // Mouse handlers (for desktop)
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    isMouseDown.current = true;
+    beginSwipe(e.clientX, e.clientY);
+  }, [beginSwipe]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!isMouseDown.current) return;
+    moveSwipe(e.clientX);
+  }, [moveSwipe]);
+
+  const handleMouseUp = useCallback(() => {
+    if (!isMouseDown.current) return;
+    endSwipe();
+  }, [endSwipe]);
+
+  const handleMouseLeave = useCallback(() => {
+    if (isMouseDown.current) endSwipe();
+  }, [endSwipe]);
 
   const handleDelete = useCallback(() => {
     setOffset(300);
@@ -185,16 +230,16 @@ const SwipeToDelete = ({ children, onDelete }: { children: React.ReactNode; onDe
   }, []);
 
   return (
-    <div ref={containerRef} className="relative overflow-hidden rounded-xl">
+    <div ref={containerRef} className="relative overflow-hidden rounded-xl select-none">
       {/* Delete background */}
       <div
-        className="absolute inset-y-0 right-0 flex items-center justify-end rounded-xl transition-colors"
+        className="absolute inset-y-0 left-0 flex items-center justify-start rounded-xl transition-colors"
         style={{
           width: Math.max(offset, 80),
           background: showDelete
             ? "linear-gradient(135deg, #ef4444, #dc2626)"
             : "linear-gradient(135deg, #f87171, #ef4444)",
-          opacity: Math.min(offset / 60, 1),
+          opacity: Math.min(offset / 40, 1),
         }}
       >
         {showDelete ? (
@@ -214,10 +259,15 @@ const SwipeToDelete = ({ children, onDelete }: { children: React.ReactNode; onDe
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
         onClick={showDelete ? handleCancel : undefined}
         style={{
-          transform: `translateX(${offset}px)`,
+          transform: `translateX(-${offset}px)`,
           transition: isSwiping.current ? "none" : "transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)",
+          cursor: "grab",
         }}
       >
         {children}
