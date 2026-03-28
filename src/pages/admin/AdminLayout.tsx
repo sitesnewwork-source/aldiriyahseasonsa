@@ -249,6 +249,7 @@ const AdminLayout = () => {
             </h1>
           </div>
           <div className="mr-auto flex items-center gap-1.5 sm:gap-2">
+            <NotificationPanel inline />
             <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100/80">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-[11px] font-bold">{onlineCount}</span>
@@ -322,7 +323,7 @@ const AdminLayout = () => {
         </div>
       </nav>
 
-      <NotificationPanel />
+      
     </div>
   );
 };

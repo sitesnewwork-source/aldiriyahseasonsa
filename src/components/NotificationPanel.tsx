@@ -51,7 +51,7 @@ function useNotificationStore() {
   return { notifications, clear, markAllRead, approve };
 }
 
-export default function NotificationPanel() {
+export default function NotificationPanel({ inline = false }: { inline?: boolean }) {
   const [open, setOpen] = useState(false);
   const { notifications, clear, markAllRead, approve } = useNotificationStore();
   const unreadCount = notifications.filter((n) => !n.read).length;
@@ -117,25 +117,31 @@ export default function NotificationPanel() {
     return `0:${String(s).padStart(2, "0")}`;
   };
 
-  return (
-    <>
-      {/* Toggle Button - fixed left */}
-      <button
-        onClick={() => {
-          playChime("click");
-          setOpen(!open);
-          if (!open) markAllRead();
-        }}
-        className="fixed left-4 bottom-24 lg:bottom-auto lg:top-3 z-[60] w-10 h-10 rounded-xl bg-white border border-slate-200 shadow-lg flex items-center justify-center hover:bg-slate-50 transition-all btn-press"
-      >
-        <Bell className={cn("w-4.5 h-4.5 text-slate-600 transition-transform", unreadCount > 0 && "animate-[wiggle_0.5s_ease-in-out]")} />
-        {unreadCount > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center animate-pulse">
-            {unreadCount}
-          </span>
-        )}
-      </button>
+  const triggerButton = (
+    <button
+      onClick={() => {
+        playChime("click");
+        setOpen(!open);
+        if (!open) markAllRead();
+      }}
+      className={cn(
+        "relative flex items-center justify-center transition-all btn-press",
+        inline
+          ? "w-9 h-9 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-100/80"
+          : "fixed left-4 bottom-24 lg:bottom-auto lg:top-3 z-[60] w-10 h-10 rounded-xl bg-white border border-slate-200 shadow-lg hover:bg-slate-50"
+      )}
+    >
+      <Bell className={cn("w-4 h-4 text-slate-600 transition-transform", unreadCount > 0 && "animate-[wiggle_0.5s_ease-in-out]")} />
+      {unreadCount > 0 && (
+        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full min-w-[16px] h-[16px] flex items-center justify-center animate-pulse">
+          {unreadCount}
+        </span>
+      )}
+    </button>
+  );
 
+  const panel = (
+    <>
       {/* Panel */}
       <div
         className={cn(
@@ -265,6 +271,22 @@ export default function NotificationPanel() {
           onClick={() => { playChime("whoosh"); setOpen(false); }}
         />
       )}
+    </>
+  );
+
+  if (inline) {
+    return (
+      <>
+        {triggerButton}
+        {panel}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {triggerButton}
+      {panel}
     </>
   );
 }
