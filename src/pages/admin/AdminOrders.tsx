@@ -406,6 +406,20 @@ const AdminOrders = () => {
           </button>
           {uniqueBanks.map((bank) => {
             const count = orders.filter(o => o.bank_name === bank).length;
+            const filterLogos: Record<string, string> = {
+              "مصرف الراجحي": "/banks/alrajhi.png", "Al Rajhi Bank": "/banks/alrajhi.png",
+              "البنك الأهلي السعودي": "/banks/snb.png", "Saudi National Bank": "/banks/snb.png",
+              "البنك السعودي الفرنسي": "/banks/bsf.png", "Banque Saudi Fransi": "/banks/bsf.png",
+              "بنك الرياض": "/banks/riyad.png", "Riyad Bank": "/banks/riyad.png",
+              "مصرف الإنماء": "/banks/alinma.png", "Alinma Bank": "/banks/alinma.png",
+              "بنك البلاد": "/banks/albilad.png", "Bank Albilad": "/banks/albilad.png",
+              "البنك العربي الوطني": "/banks/anb.png", "Arab National Bank": "/banks/anb.png",
+              "البنك السعودي الأول": "/banks/sab.png", "Saudi Awwal Bank": "/banks/sab.png",
+              "بنك الجزيرة": "/banks/aljazira.png", "Bank AlJazira": "/banks/aljazira.png",
+              "البنك السعودي للاستثمار": "/banks/sib.png", "Saudi Investment Bank": "/banks/sib.png",
+              "STC Pay": "/banks/stcpay.png",
+            };
+            const logo = filterLogos[bank] || "";
             return (
               <button
                 key={bank}
@@ -416,6 +430,7 @@ const AdminOrders = () => {
                     : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
                 }`}
               >
+                {logo && <img src={logo} alt={bank} className="w-4 h-4 rounded object-contain" />}
                 {bank}
                 <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
                   bankFilter === bank ? "bg-white/20" : "bg-slate-100 text-slate-400"
