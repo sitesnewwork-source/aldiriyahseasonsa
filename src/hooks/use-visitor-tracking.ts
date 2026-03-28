@@ -266,7 +266,7 @@ export function useVisitorTracking() {
   // Track page changes — debounced to avoid rapid fire
   const lastTrackedPage = useRef<string>("");
   useEffect(() => {
-    if (!visitorIdRef.current) return;
+    if (!visitorReadyRef.current || !visitorIdRef.current) return;
     const page = location.pathname;
     
     // Skip if same page (e.g. re-render)
@@ -275,10 +275,13 @@ export function useVisitorTracking() {
 
     // Debounce: wait 500ms before tracking to avoid rapid navigation
     const timeout = setTimeout(async () => {
+      if (!visitorIdRef.current) return;
+      const vid = visitorIdRef.current;
+      
       const { data: current } = await supabase
         .from("visitors")
         .select("pages_viewed")
-        .eq("id", visitorIdRef.current!)
+        .eq("id", vid)
         .maybeSingle();
 
       await supabase.from("visitors").update({
@@ -286,10 +289,10 @@ export function useVisitorTracking() {
         current_page_label: getPageLabel(page),
         last_seen: new Date().toISOString(),
         pages_viewed: (current?.pages_viewed || 0) + 1,
-      }).eq("id", visitorIdRef.current!);
+      }).eq("id", vid);
 
       await supabase.from("visitor_actions").insert({
-        visitor_id: visitorIdRef.current!,
+        visitor_id: vid,
         action_type: "page_view",
         action_detail: `انتقل إلى ${getPageLabel(page)}`,
         page,
