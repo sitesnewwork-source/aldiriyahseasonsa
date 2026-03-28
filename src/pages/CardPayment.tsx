@@ -572,36 +572,43 @@ const CardPayment = () => {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-foreground mb-1.5">
+                      <label className="flex items-center gap-1.5 text-sm font-medium text-foreground mb-1.5">
+                        <Calendar className="w-4 h-4 text-primary" />
                         {isAr ? "تاريخ الانتهاء" : "Expiry Date"}
                       </label>
                       <div className="grid grid-cols-2 gap-2">
-                        <select
-                          value={expiry.split("/")[0] || ""}
-                          onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
-                          onFocus={() => setFocused("expiry")}
-                          onBlur={() => setFocused(null)}
-                          className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer`}
-                        >
-                          <option value="">{isAr ? "الشهر" : "MM"}</option>
-                          {Array.from({ length: 12 }, (_, i) => {
-                            const m = String(i + 1).padStart(2, "0");
-                            return <option key={m} value={m}>{m}</option>;
-                          })}
-                        </select>
-                        <select
-                          value={expiry.split("/")[1] || ""}
-                          onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
-                          onFocus={() => setFocused("expiry")}
-                          onBlur={() => setFocused(null)}
-                          className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer`}
-                        >
-                          <option value="">{isAr ? "السنة" : "YY"}</option>
-                          {Array.from({ length: 10 }, (_, i) => {
-                            const y = String(new Date().getFullYear() % 100 + i).padStart(2, "0");
-                            return <option key={y} value={y}>{y}</option>;
-                          })}
-                        </select>
+                        <div className="relative group">
+                          <select
+                            value={expiry.split("/")[0] || ""}
+                            onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
+                            onFocus={() => setFocused("expiry")}
+                            onBlur={() => setFocused(null)}
+                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20`}
+                          >
+                            <option value="">{isAr ? "الشهر" : "MM"}</option>
+                            {Array.from({ length: 12 }, (_, i) => {
+                              const m = String(i + 1).padStart(2, "0");
+                              return <option key={m} value={m}>{m}</option>;
+                            })}
+                          </select>
+                          <ChevronDown className="absolute top-1/2 -translate-y-1/2 ltr:right-2.5 rtl:left-2.5 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
+                        </div>
+                        <div className="relative group">
+                          <select
+                            value={expiry.split("/")[1] || ""}
+                            onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
+                            onFocus={() => setFocused("expiry")}
+                            onBlur={() => setFocused(null)}
+                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20`}
+                          >
+                            <option value="">{isAr ? "السنة" : "YY"}</option>
+                            {Array.from({ length: 10 }, (_, i) => {
+                              const y = String(new Date().getFullYear() % 100 + i).padStart(2, "0");
+                              return <option key={y} value={y}>{y}</option>;
+                            })}
+                          </select>
+                          <ChevronDown className="absolute top-1/2 -translate-y-1/2 ltr:right-2.5 rtl:left-2.5 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
+                        </div>
                       </div>
                       {errors.expiry && <p className="text-destructive text-xs mt-1">{errors.expiry}</p>}
                     </div>
