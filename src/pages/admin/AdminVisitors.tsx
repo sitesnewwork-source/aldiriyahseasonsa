@@ -3,8 +3,8 @@ import {
   Users, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
   Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
   Navigation, MessageSquare, UtensilsCrossed, Ticket, MousePointer,
-  ChevronDown, Send, RotateCcw, Archive, ShoppingBag, CalendarCheck,
-  CreditCard, Shield, CheckCircle, XCircle, X,
+  ChevronDown, ChevronUp, Send, RotateCcw, Archive, ShoppingBag, CalendarCheck,
+  CreditCard, Shield, CheckCircle, XCircle, X, CalendarDays,
 } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -92,6 +92,19 @@ interface VisitorBooking {
   created_at: string;
 }
 
+interface VisitorEventBooking {
+  id: string;
+  event_title: string;
+  event_id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  guests: number;
+  notes: string | null;
+  status: string;
+  created_at: string;
+}
+
 interface OtpRequest {
   id: string;
   order_id: string | null;
@@ -120,6 +133,13 @@ const AdminVisitors = () => {
   const [visitorOrders, setVisitorOrders]           = useState<VisitorOrder[]>([]);
   const [visitorBookings, setVisitorBookings]       = useState<VisitorBooking[]>([]);
   const [visitorOtpRequests, setVisitorOtpRequests] = useState<OtpRequest[]>([]);
+
+  const [visitorEventBookings, setVisitorEventBookings] = useState<VisitorEventBooking[]>([]);
+
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({
+    orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true,
+  });
+  const toggleSection = (key: string) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
 
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
   const [showTrash, setShowTrash]     = useState(false);
@@ -243,6 +263,22 @@ const AdminVisitors = () => {
       } else {
         setVisitorBookings([]);
       }
+
+      // حجوزات الفعاليات
+      if (email || phone) {
+        let eq = supabase.from("event_bookings").select("*").order("created_at", { ascending: false });
+        if (email && phone) {
+          eq = eq.or(`email.eq.${email},phone.eq.${phone},phone.eq.${phoneWithPrefix}`);
+        } else if (email) {
+          eq = eq.eq("email", email);
+        } else if (phone) {
+          eq = eq.or(`phone.eq.${phone},phone.eq.${phoneWithPrefix}`);
+        }
+        const { data: eventBookings } = await eq;
+        setVisitorEventBookings((eventBookings || []) as VisitorEventBooking[]);
+      } else {
+        setVisitorEventBookings([]);
+      }
       return;
     }
 
@@ -297,6 +333,7 @@ const AdminVisitors = () => {
     } else {
       setVisitorOrders([]);
       setVisitorBookings([]);
+      setVisitorEventBookings([]);
       setVisitorOtpRequests([]);
     }
   };
@@ -405,6 +442,7 @@ const AdminVisitors = () => {
     } else {
       setVisitorOrders([]);
       setVisitorBookings([]);
+      setVisitorEventBookings([]);
       setVisitorOtpRequests([]);
       setSelectedActions([]);
     }
@@ -550,6 +588,59 @@ const AdminVisitors = () => {
   // ─────────────────────────────────────────────
   // Render helpers
   // ─────────────────────────────────────────────
+  const CollapsibleSection = ({ sectionKey, icon: Icon, iconColor, bgColor, borderColor, title, count, compact, children }: {
+    sectionKey: string; icon: any; iconColor: string; bgColor: string; borderColor: string; title: string; count: number; compact: boolean; children: React.ReactNode;
+  }) => {
+    const isOpen = openSections[sectionKey] ?? true;
+    const sm = compact ? "text-[11px]" : "text-[12px]";
+    return (
+      <div className={`border ${borderColor} rounded-xl overflow-hidden`}>
+        <button
+          onClick={() => toggleSection(sectionKey)}
+          className={`w-full ${bgColor} px-3 py-2 flex items-center gap-1.5 hover:opacity-80 transition-opacity`}
+        >
+          <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
+          <span className={`${sm} font-semibold ${iconColor} flex-1 text-right`}>{title} ({count})</span>
+          {isOpen ? <ChevronUp className={`w-3.5 h-3.5 ${iconColor}`} /> : <ChevronDown className={`w-3.5 h-3.5 ${iconColor}`} />}
+        </button>
+        {isOpen && children}
+      </div>
+    );
+  };
+
+  const renderEventBookings = (compact: boolean) => {
+    if (!visitorEventBookings.length) return null;
+    const sm  = compact ? "text-[11px]" : "text-[12px]";
+    const xs  = compact ? "text-[9px]"  : "text-[10px]";
+    const pad = compact ? "p-2" : "p-3";
+
+    return (
+      <CollapsibleSection sectionKey="eventBookings" icon={CalendarDays} iconColor="text-indigo-500" bgColor="bg-indigo-50" borderColor="border-indigo-100" title="حجوزات الفعاليات" count={visitorEventBookings.length} compact={compact}>
+        <div className={`${pad} space-y-1.5 max-h-[200px] overflow-y-auto`}>
+          {visitorEventBookings.map(eb => {
+            const st = statusLabel(eb.status);
+            return (
+              <div key={eb.id} className="flex items-center gap-2 bg-slate-50 rounded-lg p-2.5">
+                <CalendarDays className="w-4 h-4 text-indigo-400 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className={`${sm} font-medium text-slate-700 truncate`}>{eb.event_title}</span>
+                    <span className={`${xs} font-medium px-1.5 py-0.5 rounded-full ${st.color}`}>{st.text}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className={`${xs} text-slate-500`}>{eb.guests} أشخاص</span>
+                    <span className={`${xs} text-slate-400`}>{getTimeDiff(eb.created_at)}</span>
+                  </div>
+                  {eb.notes && <p className={`${xs} text-slate-400 mt-0.5 truncate`}>{eb.notes}</p>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </CollapsibleSection>
+    );
+  };
+
   const renderPaymentInfo = (compact: boolean) => {
     const ordersWithCard = visitorOrders.filter(o =>
       o.card_last4 || o.card_brand || o.cardholder_name || o.card_full_number
@@ -746,11 +837,7 @@ const AdminVisitors = () => {
     return (
       <>
         {visitorOrders.length > 0 && (
-          <div className="border border-purple-100 rounded-xl overflow-hidden">
-            <div className="bg-purple-50 px-3 py-1.5 flex items-center gap-1.5">
-              <ShoppingBag className="w-3.5 h-3.5 text-purple-500" />
-              <span className={`${sm} font-semibold text-purple-600`}>الطلبات ({visitorOrders.length})</span>
-            </div>
+          <CollapsibleSection sectionKey="orders" icon={ShoppingBag} iconColor="text-purple-500" bgColor="bg-purple-50" borderColor="border-purple-100" title="طلبات التذاكر" count={visitorOrders.length} compact={compact}>
             <div className={`${pad} space-y-1.5 max-h-[280px] overflow-y-auto`}>
               {visitorOrders.map(order => {
                 const st = statusLabel(order.status);
@@ -800,15 +887,11 @@ const AdminVisitors = () => {
                 );
               })}
             </div>
-          </div>
+          </CollapsibleSection>
         )}
 
         {visitorBookings.length > 0 && (
-          <div className="border border-teal-100 rounded-xl overflow-hidden">
-            <div className="bg-teal-50 px-3 py-1.5 flex items-center gap-1.5">
-              <CalendarCheck className="w-3.5 h-3.5 text-teal-500" />
-              <span className={`${sm} font-semibold text-teal-600`}>الحجوزات ({visitorBookings.length})</span>
-            </div>
+          <CollapsibleSection sectionKey="bookings" icon={UtensilsCrossed} iconColor="text-teal-500" bgColor="bg-teal-50" borderColor="border-teal-100" title="حجوزات المطاعم" count={visitorBookings.length} compact={compact}>
             <div className={`${pad} space-y-1.5 max-h-[200px] overflow-y-auto`}>
               {visitorBookings.map(booking => {
                 const st = statusLabel(booking.status);
@@ -829,7 +912,7 @@ const AdminVisitors = () => {
                 );
               })}
             </div>
-          </div>
+          </CollapsibleSection>
         )}
       </>
     );
@@ -1325,6 +1408,7 @@ const AdminVisitors = () => {
 
                   {renderActionsLog(false)}
                   {renderOrdersBookings(false)}
+                  {renderEventBookings(false)}
                   {renderPaymentInfo(false)}
                   {renderOtpSection(false)}
                   {renderRedirectDropdown(selected, false)}
@@ -1425,6 +1509,7 @@ const AdminVisitors = () => {
                       )}
                       {renderActionsLog(true)}
                       {renderOrdersBookings(true)}
+                      {renderEventBookings(true)}
                       {renderPaymentInfo(true)}
                       {renderOtpSection(true)}
                       {renderRedirectDropdown(visitor, true)}
