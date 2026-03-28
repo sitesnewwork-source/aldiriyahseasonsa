@@ -2,8 +2,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
-import { Check, X, Clock, Search, UtensilsCrossed, Users, Calendar, Phone, StickyNote } from "lucide-react";
+import { Check, X, Clock, Search, UtensilsCrossed, Users, Calendar, Phone, StickyNote, Trash2 } from "lucide-react";
 import ExportButtons from "@/components/admin/ExportButtons";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 interface Booking {
   id: string;
