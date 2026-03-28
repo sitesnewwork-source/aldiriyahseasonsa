@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { CalendarCheck, Trash2, Check, X, Users, Phone, Mail, Clock } from "lucide-react";
+import ExportButtons from "@/components/admin/ExportButtons";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { format } from "date-fns";
@@ -92,7 +93,25 @@ const AdminEventBookings = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      {/* Stats */}
+      {/* Export */}
+      <div className="flex items-center justify-between">
+        <span className="text-[13px] font-semibold text-slate-700">حجوزات الفعاليات</span>
+        <ExportButtons
+          data={filtered}
+          filename="event-bookings"
+          title="حجوزات الفعاليات"
+          columns={[
+            { key: "event_title", label: "الفعالية" },
+            { key: "name", label: "الاسم" },
+            { key: "phone", label: "الهاتف" },
+            { key: "email", label: "البريد" },
+            { key: "guests", label: "الأشخاص" },
+            { key: "notes", label: "ملاحظات" },
+            { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مؤكد" : v === "cancelled" ? "ملغي" : "قيد المراجعة" },
+            { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+          ]}
+        />
+      </div>
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
           { label: "إجمالي الحجوزات", value: stats.total, color: "bg-blue-50 text-blue-700" },
