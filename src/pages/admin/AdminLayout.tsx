@@ -250,6 +250,13 @@ const AdminLayout = () => {
           </div>
           <div className="mr-auto flex items-center gap-1.5 sm:gap-2">
             <NotificationPanel inline />
+            {unreadCount > 0 && (
+              <Link to="/admin/messages" className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-50 text-red-600 border border-red-100/80 hover:bg-red-100 transition-colors">
+                <MessageSquare className="w-3 h-3" />
+                <span className="text-[11px] font-bold">{unreadCount}</span>
+                <span className="text-[10px] hidden sm:inline">غير مقروءة</span>
+              </Link>
+            )}
             <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100/80">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
               <span className="text-[11px] font-bold">{onlineCount}</span>
