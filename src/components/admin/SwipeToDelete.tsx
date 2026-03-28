@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, type ReactNode } from "react";
 import { Trash2, Undo2 } from "lucide-react";
 import { toast } from "sonner";
+import { playChime } from "@/hooks/use-action-sound";
 
 interface SwipeToDeleteProps {
   children: ReactNode;
@@ -104,7 +105,7 @@ const SwipeToDelete = ({
   const handleDelete = useCallback(() => {
     setDeleting(true);
     undone.current = false;
-    if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+    playChime("delete");
 
     toast(
       () => (
