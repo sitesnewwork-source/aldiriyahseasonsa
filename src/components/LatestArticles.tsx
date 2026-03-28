@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { articles } from "@/data/articles";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { ArrowLeft, ArrowRight, Clock, Calendar } from "lucide-react";
+import OptimizedImage from "./OptimizedImage";
 
 const LatestArticles = () => {
   const { lang } = useLanguage();
@@ -37,9 +38,11 @@ const LatestArticles = () => {
               className="group rounded-xl overflow-hidden border border-border bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
             >
               <div className="aspect-[16/10] overflow-hidden">
-                <img
+                <OptimizedImage
                   src={article.image}
                   alt={isAr ? article.title : article.titleEn}
+                  width={640}
+                  height={400}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
               </div>

@@ -258,24 +258,22 @@ export function useVisitorTracking() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Track page changes
+  // Track page changes — debounced to avoid rapid fire
+  const lastTrackedPage = useRef<string>("");
   useEffect(() => {
     if (!visitorIdRef.current) return;
     const page = location.pathname;
+    
+    // Skip if same page (e.g. re-render)
+    if (page === lastTrackedPage.current) return;
+    lastTrackedPage.current = page;
 
-    const update = async () => {
-      // Update pages_viewed
-      const { data: v } = await supabase
-        .from("visitors")
-        .select("pages_viewed")
-        .eq("id", visitorIdRef.current!)
-        .single();
-
+    // Debounce: wait 500ms before tracking to avoid rapid navigation
+    const timeout = setTimeout(async () => {
       await supabase.from("visitors").update({
         current_page: page,
         current_page_label: getPageLabel(page),
         last_seen: new Date().toISOString(),
-        pages_viewed: (v?.pages_viewed || 0) + 1,
       }).eq("id", visitorIdRef.current!);
 
       await supabase.from("visitor_actions").insert({
@@ -284,9 +282,9 @@ export function useVisitorTracking() {
         action_detail: `انتقل إلى ${getPageLabel(page)}`,
         page,
       });
-    };
+    }, 500);
 
-    update();
+    return () => clearTimeout(timeout);
   }, [location.pathname]);
 }
 

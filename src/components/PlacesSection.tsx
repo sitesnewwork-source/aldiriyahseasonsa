@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { places } from "@/data/places";
 import { useLanguage } from "@/i18n/LanguageContext";
+import OptimizedImage from "./OptimizedImage";
 
 const PlacesSection = () => {
   const { t } = useLanguage();
@@ -29,10 +30,9 @@ const PlacesSection = () => {
                 to={`/place/${place.id}`}
                 className="group relative rounded-lg overflow-hidden cursor-pointer aspect-[3/4] block"
               >
-                <img
+                <OptimizedImage
                   src={place.image}
                   alt={place.name}
-                  loading="lazy"
                   width={640}
                   height={800}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"

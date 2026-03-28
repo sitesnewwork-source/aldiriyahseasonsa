@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { restaurants as allRestaurants } from "@/data/restaurants";
 import { useLanguage } from "@/i18n/LanguageContext";
+import OptimizedImage from "./OptimizedImage";
 
 const previewRestaurants = allRestaurants.slice(0, 5);
 
@@ -73,14 +74,13 @@ const RestaurantsPreview = () => {
             >
               <Link to={`/restaurant/${rest.id}`} className="group block">
                 <div className="relative aspect-[4/5] rounded-xl overflow-hidden">
-                  <img
-                    src={rest.image}
-                    alt={rest.name}
-                    loading="lazy"
-                    width={760}
-                    height={950}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  />
+                    <OptimizedImage
+                      src={rest.image}
+                      alt={rest.name}
+                      width={760}
+                      height={950}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
                   <div className="absolute top-4 right-4 sm:top-6 sm:right-6 w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-xl shadow-lg flex items-center justify-center p-2 sm:p-3">
                     <img
                       src={rest.logo}

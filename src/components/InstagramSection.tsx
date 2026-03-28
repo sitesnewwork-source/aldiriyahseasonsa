@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Instagram } from "lucide-react";
 import { useLanguage } from "@/i18n/LanguageContext";
+import OptimizedImage from "./OptimizedImage";
 
 import foodSpread from "@/assets/food-spread.jpg";
 import foodDessert from "@/assets/food-dessert.jpg";
@@ -63,10 +64,9 @@ const InstagramSection = () => {
             transition={{ delay: i * 0.03 }}
             className="aspect-square overflow-hidden group relative"
           >
-            <img
+            <OptimizedImage
               src={img}
               alt=""
-              loading="lazy"
               width={300}
               height={300}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
