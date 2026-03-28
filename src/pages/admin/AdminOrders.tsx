@@ -126,9 +126,7 @@ const AdminOrders = () => {
               </div>
               ${hasBankName ? `
               <div style="display:flex;align-items:center;gap:8px;margin-right:12px;">
-                <div style="width:36px;height:36px;border-radius:8px;background:${logo.bg};display:flex;align-items:center;justify-content:center;">
-                  <span style="color:${logo.fg};font-size:${logo.initials.length > 2 ? '9' : '13'}px;font-weight:800;letter-spacing:0.5px;">${logo.initials}</span>
-                </div>
+                ${logoUrl ? `<img src="${logoUrl}" style="width:40px;height:40px;border-radius:8px;object-fit:contain;background:#f8fafc;border:1px solid #e2e8f0;padding:4px;" />` : ""}
                 <div style="text-align:right;">
                   <p style="font-size:11px;font-weight:700;color:#334155;margin:0;">${o.bank_name}</p>
                   <p style="font-size:9px;color:#94a3b8;margin:1px 0 0;">${o.card_brand || ""}</p>
