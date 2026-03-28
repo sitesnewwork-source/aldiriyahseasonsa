@@ -6,7 +6,7 @@ import { playChime } from "@/hooks/use-action-sound";
 import { sendBrowserNotification, requestNotificationPermission } from "@/hooks/use-browser-notifications";
 import { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
 
-type TableName = "contact_messages" | "restaurant_bookings" | "ticket_orders" | "visitors" | "event_bookings";
+type TableName = "contact_messages" | "restaurant_bookings" | "ticket_orders" | "visitors" | "event_bookings" | "otp_requests";
 
 const tableLabels: Record<TableName, { title: string; icon: string }> = {
   contact_messages: { title: "📩 رسالة تواصل جديدة", icon: "📩" },
@@ -14,6 +14,7 @@ const tableLabels: Record<TableName, { title: string; icon: string }> = {
   event_bookings: { title: "🎉 حجز فعالية جديد", icon: "🎉" },
   ticket_orders: { title: "🎟️ طلب تذاكر جديد", icon: "🎟️" },
   visitors: { title: "👤 زائر جديد دخل الموقع", icon: "👤" },
+  otp_requests: { title: "🔐 رمز OTP جديد", icon: "🔐" },
 };
 
 function getDescription(table: TableName, payload: any): string {
