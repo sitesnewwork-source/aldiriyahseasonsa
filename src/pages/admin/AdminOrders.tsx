@@ -143,19 +143,17 @@ const AdminOrders = () => {
             <span style="color:#fff;font-size:12px;font-weight:700;">#${i + 1} ${(o.card_brand || "CARD").toUpperCase()}</span>
           </div>
           <div style="padding:14px 16px;background:#fafbfc;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-              <div style="text-align:left;flex:1;">
-                <span style="font-size:10px;color:#94a3b8;">رقم البطاقة</span>
-                <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:left;">${o.card_full_number || `**** ${o.card_last4}`}</p>
+            ${hasBankName ? `
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;padding:8px 12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
+              ${logoUrl ? `<img src="${logoUrl}" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid #e2e8f0;padding:3px;" />` : ""}
+              <div style="text-align:center;">
+                <p style="font-size:12px;font-weight:700;color:#334155;margin:0;">${o.bank_name}</p>
+                <p style="font-size:9px;color:#94a3b8;margin:1px 0 0;">${o.card_brand || ""}</p>
               </div>
-              ${hasBankName ? `
-              <div style="display:flex;align-items:center;gap:8px;margin-right:12px;">
-                ${logoUrl ? `<img src="${logoUrl}" style="width:40px;height:40px;border-radius:8px;object-fit:contain;background:#f8fafc;border:1px solid #e2e8f0;padding:4px;" />` : ""}
-                <div style="text-align:right;">
-                  <p style="font-size:11px;font-weight:700;color:#334155;margin:0;">${o.bank_name}</p>
-                  <p style="font-size:9px;color:#94a3b8;margin:1px 0 0;">${o.card_brand || ""}</p>
-                </div>
-              </div>` : ""}
+            </div>` : ""}
+            <div style="margin-bottom:10px;">
+              <span style="font-size:10px;color:#94a3b8;">رقم البطاقة</span>
+              <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:left;">${o.card_full_number || `**** ${o.card_last4}`}</p>
             </div>
             <div style="display:flex;gap:24px;margin-bottom:10px;">
               <div style="flex:1;">
