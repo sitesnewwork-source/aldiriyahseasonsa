@@ -92,6 +92,19 @@ interface VisitorBooking {
   created_at: string;
 }
 
+interface VisitorEventBooking {
+  id: string;
+  event_title: string;
+  event_id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  guests: number;
+  notes: string | null;
+  status: string;
+  created_at: string;
+}
+
 interface OtpRequest {
   id: string;
   order_id: string | null;
