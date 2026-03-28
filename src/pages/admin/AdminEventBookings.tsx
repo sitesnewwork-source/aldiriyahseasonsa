@@ -287,6 +287,7 @@ const AdminEventBookings = () => {
         </div>
       )}
     </div>
+
       <AlertDialog open={showClearAll} onOpenChange={setShowClearAll}>
         <AlertDialogContent dir="rtl">
           <AlertDialogHeader>
@@ -303,7 +304,7 @@ const AdminEventBookings = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </>
   );
 };
 
