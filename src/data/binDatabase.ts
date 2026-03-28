@@ -189,7 +189,7 @@ export const BIN8_DATABASE: Record<string, BankInfo> = {
   // Bank AlJazira
   "48960000": BAJ, "48560000": BAJ, "41062100": BAJ, "52188000": BAJ,
   // Saudi Investment Bank
-  "48960000": SIB, "48360000": SIB, "52186000": SIB,
+  "48960001": SIB, "48360000": SIB, "52186000": SIB,
   // Gulf International Bank
   "48495000": GIB, "52187000": GIB,
 };
