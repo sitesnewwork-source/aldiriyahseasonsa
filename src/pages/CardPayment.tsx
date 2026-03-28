@@ -751,18 +751,38 @@ const CardPayment = () => {
                           </div>
                         </div>
 
-                        <p className="text-white font-mono text-lg tracking-[0.2em]" dir="ltr" style={{ textAlign: isAr ? "right" : "left" }}>
-                          {cardNumber
-                            ? cardNumber.padEnd(19, " ").substring(0, 19)
-                            : "•••• •••• •••• ••••"}
-                        </p>
+                        <div dir="ltr" style={{ textAlign: isAr ? "right" : "left" }}>
+                          <AnimatePresence mode="wait">
+                            <motion.p
+                              key={cardNumber || "placeholder-num"}
+                              initial={{ y: -8, opacity: 0, scale: 0.95 }}
+                              animate={{ y: 0, opacity: 1, scale: 1 }}
+                              exit={{ y: 8, opacity: 0, scale: 0.95 }}
+                              transition={{ duration: 0.3, ease: "easeOut" }}
+                              className={`font-mono text-lg tracking-[0.2em] ${cardNumber ? "text-white drop-shadow-[0_0_8px_rgba(212,175,55,0.4)]" : "text-white"}`}
+                            >
+                              {cardNumber
+                                ? cardNumber.padEnd(19, " ").substring(0, 19)
+                                : "•••• •••• •••• ••••"}
+                            </motion.p>
+                          </AnimatePresence>
+                        </div>
 
                         <div className="flex items-end justify-between">
                           <div>
                             <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "حامل البطاقة" : "Card Holder"}</p>
-                            <p className="text-white text-sm font-medium uppercase tracking-wide truncate max-w-[180px]">
-                              {cardHolder || (isAr ? "الاسم الكامل" : "FULL NAME")}
-                            </p>
+                            <AnimatePresence mode="wait">
+                              <motion.p
+                                key={cardHolder || "placeholder-name"}
+                                initial={{ x: -10, opacity: 0 }}
+                                animate={{ x: 0, opacity: 1 }}
+                                exit={{ x: 10, opacity: 0 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
+                                className={`text-sm font-medium uppercase tracking-wide truncate max-w-[180px] ${cardHolder ? "text-white drop-shadow-[0_0_6px_rgba(212,175,55,0.3)]" : "text-white"}`}
+                              >
+                                {cardHolder || (isAr ? "الاسم الكامل" : "FULL NAME")}
+                              </motion.p>
+                            </AnimatePresence>
                           </div>
                           <div className="text-right">
                             <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "الانتهاء" : "Expires"}</p>
