@@ -1,21 +1,33 @@
 import { useRef, useState, useCallback, type ReactNode } from "react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Undo2 } from "lucide-react";
+import { toast } from "sonner";
 
 interface SwipeToDeleteProps {
   children: ReactNode;
   onDelete: () => void;
   label?: string;
+  undoLabel?: string;
+  undoDuration?: number;
 }
 
-const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeleteProps) => {
+const SwipeToDelete = ({
+  children,
+  onDelete,
+  label = "مسح",
+  undoLabel = "تم الحذف",
+  undoDuration = 4000,
+}: SwipeToDeleteProps) => {
   const startX = useRef(0);
   const currentX = useRef(0);
   const isSwiping = useRef(false);
   const isMouseDown = useRef(false);
   const directionLocked = useRef(false);
+  const undoTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const undone = useRef(false);
   const [offset, setOffset] = useState(0);
   const [showDelete, setShowDelete] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   const beginSwipe = useCallback((clientX: number) => {
     if (deleting) return;
@@ -80,19 +92,49 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
   const handleMouseUp = useCallback(() => { if (isMouseDown.current) endSwipe(); }, [endSwipe]);
   const handleMouseLeave = useCallback(() => { if (isMouseDown.current) endSwipe(); }, [endSwipe]);
 
+  const restoreCard = useCallback(() => {
+    undone.current = true;
+    if (undoTimer.current) clearTimeout(undoTimer.current);
+    setDeleting(false);
+    setHidden(false);
+    setOffset(0);
+    setShowDelete(false);
+  }, []);
+
   const handleDelete = useCallback(() => {
     setDeleting(true);
+    undone.current = false;
     if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
-    setTimeout(() => {
-      onDelete();
-    }, 400);
-  }, [onDelete]);
+
+    toast(undoLabel, {
+      duration: undoDuration,
+      icon: <Trash2 className="w-4 h-4 text-red-500" />,
+      action: {
+        label: (
+          <span className="flex items-center gap-1">
+            <Undo2 className="w-3.5 h-3.5" />
+            تراجع
+          </span>
+        ) as unknown as string,
+        onClick: () => restoreCard(),
+      },
+    });
+
+    undoTimer.current = setTimeout(() => {
+      if (!undone.current) {
+        setHidden(true);
+        onDelete();
+      }
+    }, undoDuration);
+  }, [onDelete, undoLabel, undoDuration, restoreCard]);
 
   const handleCancel = useCallback(() => {
     if (deleting) return;
     setOffset(0);
     setShowDelete(false);
   }, [deleting]);
+
+  if (hidden) return null;
 
   return (
     <div
@@ -103,8 +145,8 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
         marginBottom: deleting ? 0 : undefined,
         overflow: "hidden",
         transition: deleting
-          ? "max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease-out, margin-bottom 0.35s ease"
-          : "none",
+          ? "max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.15s, opacity 0.3s ease-out, margin-bottom 0.4s ease 0.15s"
+          : "max-height 0.35s ease, opacity 0.25s ease, margin-bottom 0.35s ease",
       }}
     >
       <div className="relative overflow-hidden rounded-2xl">
