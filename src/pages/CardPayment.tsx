@@ -628,21 +628,51 @@ const CardPayment = () => {
                             : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
                         }}
                       >
+                        {/* Glow pulse when bank detected */}
+                        {bank && (
+                          <motion.div
+                            className="absolute inset-0 rounded-2xl pointer-events-none"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: [0, 0.4, 0] }}
+                            transition={{ duration: 1.2, ease: "easeOut" }}
+                            style={{ boxShadow: `0 0 40px 10px ${bank.color}88, inset 0 0 30px ${bank.color}33` }}
+                          />
+                        )}
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
-                            <BankIconBadge bankName={bank?.bank || null} />
+                            <motion.div
+                              key={bank?.bank || "none"}
+                              initial={{ scale: 0, rotate: -180 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                            >
+                              <BankIconBadge bankName={bank?.bank || null} />
+                            </motion.div>
                             <div>
-                              <p className="text-white font-semibold text-sm">
+                              <motion.p
+                                key={bank?.bankAr || "default"}
+                                initial={{ opacity: 0, x: isAr ? 20 : -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                                className="text-white font-semibold text-sm"
+                              >
                                 {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
-                              </p>
+                              </motion.p>
+                              <AnimatePresence>
                               {cardType && (
-                                <p className="text-white/60 text-[9px] mt-0.5">
+                                <motion.p
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  className="text-white/60 text-[9px] mt-0.5"
+                                >
                                   {isAr
                                     ? cardType === "debit" ? "بطاقة خصم" : cardType === "prepaid" ? "مسبقة الدفع" : "بطاقة ائتمان"
                                     : cardType === "debit" ? "Debit Card" : cardType === "prepaid" ? "Prepaid" : "Credit Card"
                                   }
-                                </p>
+                                </motion.p>
                               )}
+                              </AnimatePresence>
                             </div>
                           </div>
                           <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
