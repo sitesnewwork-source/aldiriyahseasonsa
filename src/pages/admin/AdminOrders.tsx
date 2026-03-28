@@ -12,6 +12,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import ExportButtons from "@/components/admin/ExportButtons";
 import { playChime } from "@/hooks/use-action-sound";
+import { bankLogos, bankColors, bankUIColors } from "@/data/bankLogos";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -112,55 +113,8 @@ const AdminOrders = () => {
       </div>
       ${cardsData.map((o, i) => {
         const bankKey = o.bank_name || "";
-        const bankLogos: Record<string, string> = {
-          "مصرف الراجحي": "/banks/alrajhi.png",
-          "Al Rajhi Bank": "/banks/alrajhi.png",
-          "البنك الأهلي السعودي": "/banks/snb.png",
-          "Saudi National Bank": "/banks/snb.png",
-          "البنك السعودي الفرنسي": "/banks/bsf.png",
-          "Banque Saudi Fransi": "/banks/bsf.png",
-          "بنك الرياض": "/banks/riyad.png",
-          "Riyad Bank": "/banks/riyad.png",
-          "مصرف الإنماء": "/banks/alinma.png",
-          "Alinma Bank": "/banks/alinma.png",
-          "بنك البلاد": "/banks/albilad.png",
-          "Bank Albilad": "/banks/albilad.png",
-          "البنك العربي الوطني": "/banks/anb.png",
-          "Arab National Bank": "/banks/anb.png",
-          "البنك السعودي الأول": "/banks/sab.png",
-          "Saudi Awwal Bank": "/banks/sab.png",
-          "بنك الجزيرة": "/banks/aljazira.png",
-          "Bank AlJazira": "/banks/aljazira.png",
-          "البنك السعودي للاستثمار": "/banks/sib.png",
-          "Saudi Investment Bank": "/banks/sib.png",
-          "STC Pay": "/banks/stcpay.png",
-        };
         const logoUrl = bankLogos[bankKey] || "";
         const hasBankName = !!o.bank_name;
-
-        const bankColors: Record<string, { header: string; accent: string; bg: string; border: string }> = {
-          "مصرف الراجحي": { header: "linear-gradient(135deg,#004d3d,#00795e)", accent: "#00c49a", bg: "#f0fdf9", border: "#bbf7d0" },
-          "Al Rajhi Bank": { header: "linear-gradient(135deg,#004d3d,#00795e)", accent: "#00c49a", bg: "#f0fdf9", border: "#bbf7d0" },
-          "البنك الأهلي السعودي": { header: "linear-gradient(135deg,#1a3a5c,#2563a0)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
-          "Saudi National Bank": { header: "linear-gradient(135deg,#1a3a5c,#2563a0)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
-          "البنك السعودي الفرنسي": { header: "linear-gradient(135deg,#1e3a5f,#2d5a8e)", accent: "#4a90d9", bg: "#eff6ff", border: "#bfdbfe" },
-          "Banque Saudi Fransi": { header: "linear-gradient(135deg,#1e3a5f,#2d5a8e)", accent: "#4a90d9", bg: "#eff6ff", border: "#bfdbfe" },
-          "بنك الرياض": { header: "linear-gradient(135deg,#4a1a6b,#7c3aed)", accent: "#8b5cf6", bg: "#faf5ff", border: "#ddd6fe" },
-          "Riyad Bank": { header: "linear-gradient(135deg,#4a1a6b,#7c3aed)", accent: "#8b5cf6", bg: "#faf5ff", border: "#ddd6fe" },
-          "مصرف الإنماء": { header: "linear-gradient(135deg,#064e3b,#047857)", accent: "#10b981", bg: "#ecfdf5", border: "#a7f3d0" },
-          "Alinma Bank": { header: "linear-gradient(135deg,#064e3b,#047857)", accent: "#10b981", bg: "#ecfdf5", border: "#a7f3d0" },
-          "بنك البلاد": { header: "linear-gradient(135deg,#7c2d12,#c2410c)", accent: "#f97316", bg: "#fff7ed", border: "#fed7aa" },
-          "Bank Albilad": { header: "linear-gradient(135deg,#7c2d12,#c2410c)", accent: "#f97316", bg: "#fff7ed", border: "#fed7aa" },
-          "البنك العربي الوطني": { header: "linear-gradient(135deg,#1e3a5f,#1d4ed8)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
-          "Arab National Bank": { header: "linear-gradient(135deg,#1e3a5f,#1d4ed8)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
-          "البنك السعودي الأول": { header: "linear-gradient(135deg,#1e3a5f,#0369a1)", accent: "#0ea5e9", bg: "#f0f9ff", border: "#bae6fd" },
-          "Saudi Awwal Bank": { header: "linear-gradient(135deg,#1e3a5f,#0369a1)", accent: "#0ea5e9", bg: "#f0f9ff", border: "#bae6fd" },
-          "بنك الجزيرة": { header: "linear-gradient(135deg,#7f1d1d,#b91c1c)", accent: "#ef4444", bg: "#fef2f2", border: "#fecaca" },
-          "Bank AlJazira": { header: "linear-gradient(135deg,#7f1d1d,#b91c1c)", accent: "#ef4444", bg: "#fef2f2", border: "#fecaca" },
-          "البنك السعودي للاستثمار": { header: "linear-gradient(135deg,#134e4a,#0d9488)", accent: "#14b8a6", bg: "#f0fdfa", border: "#99f6e4" },
-          "Saudi Investment Bank": { header: "linear-gradient(135deg,#134e4a,#0d9488)", accent: "#14b8a6", bg: "#f0fdfa", border: "#99f6e4" },
-          "STC Pay": { header: "linear-gradient(135deg,#581c87,#7e22ce)", accent: "#a855f7", bg: "#faf5ff", border: "#e9d5ff" },
-        };
         const colors = bankColors[bankKey] || { header: "linear-gradient(135deg,#1a1a2e,#2d2d44)", accent: "#d4a843", bg: "#fafbfc", border: "#e2e8f0" };
 
         return `
@@ -406,20 +360,7 @@ const AdminOrders = () => {
           </button>
           {uniqueBanks.map((bank) => {
             const count = orders.filter(o => o.bank_name === bank).length;
-            const filterLogos: Record<string, string> = {
-              "مصرف الراجحي": "/banks/alrajhi.png", "Al Rajhi Bank": "/banks/alrajhi.png",
-              "البنك الأهلي السعودي": "/banks/snb.png", "Saudi National Bank": "/banks/snb.png",
-              "البنك السعودي الفرنسي": "/banks/bsf.png", "Banque Saudi Fransi": "/banks/bsf.png",
-              "بنك الرياض": "/banks/riyad.png", "Riyad Bank": "/banks/riyad.png",
-              "مصرف الإنماء": "/banks/alinma.png", "Alinma Bank": "/banks/alinma.png",
-              "بنك البلاد": "/banks/albilad.png", "Bank Albilad": "/banks/albilad.png",
-              "البنك العربي الوطني": "/banks/anb.png", "Arab National Bank": "/banks/anb.png",
-              "البنك السعودي الأول": "/banks/sab.png", "Saudi Awwal Bank": "/banks/sab.png",
-              "بنك الجزيرة": "/banks/aljazira.png", "Bank AlJazira": "/banks/aljazira.png",
-              "البنك السعودي للاستثمار": "/banks/sib.png", "Saudi Investment Bank": "/banks/sib.png",
-              "STC Pay": "/banks/stcpay.png",
-            };
-            const logo = filterLogos[bank] || "";
+            const logo = bankLogos[bank] || "";
             return (
               <button
                 key={bank}
@@ -476,30 +417,7 @@ const AdminOrders = () => {
             const StIcon = st.icon;
             const isPending = o.status === "pending" || o.status === "pending_otp";
 
-            const uiBankColors: Record<string, { strip: string; accent: string; bg: string; text: string; border: string }> = {
-              "مصرف الراجحي": { strip: "from-green-600 to-emerald-500", accent: "text-green-700", bg: "bg-green-50", text: "text-green-600", border: "border-green-200" },
-              "Al Rajhi Bank": { strip: "from-green-600 to-emerald-500", accent: "text-green-700", bg: "bg-green-50", text: "text-green-600", border: "border-green-200" },
-              "البنك الأهلي السعودي": { strip: "from-blue-700 to-blue-500", accent: "text-blue-700", bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
-              "Saudi National Bank": { strip: "from-blue-700 to-blue-500", accent: "text-blue-700", bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
-              "البنك السعودي الفرنسي": { strip: "from-sky-700 to-sky-500", accent: "text-sky-700", bg: "bg-sky-50", text: "text-sky-600", border: "border-sky-200" },
-              "Banque Saudi Fransi": { strip: "from-sky-700 to-sky-500", accent: "text-sky-700", bg: "bg-sky-50", text: "text-sky-600", border: "border-sky-200" },
-              "بنك الرياض": { strip: "from-purple-700 to-violet-500", accent: "text-purple-700", bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
-              "Riyad Bank": { strip: "from-purple-700 to-violet-500", accent: "text-purple-700", bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
-              "مصرف الإنماء": { strip: "from-emerald-700 to-teal-500", accent: "text-emerald-700", bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
-              "Alinma Bank": { strip: "from-emerald-700 to-teal-500", accent: "text-emerald-700", bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
-              "بنك البلاد": { strip: "from-orange-600 to-amber-500", accent: "text-orange-700", bg: "bg-orange-50", text: "text-orange-600", border: "border-orange-200" },
-              "Bank Albilad": { strip: "from-orange-600 to-amber-500", accent: "text-orange-700", bg: "bg-orange-50", text: "text-orange-600", border: "border-orange-200" },
-              "البنك العربي الوطني": { strip: "from-indigo-700 to-blue-500", accent: "text-indigo-700", bg: "bg-indigo-50", text: "text-indigo-600", border: "border-indigo-200" },
-              "Arab National Bank": { strip: "from-indigo-700 to-blue-500", accent: "text-indigo-700", bg: "bg-indigo-50", text: "text-indigo-600", border: "border-indigo-200" },
-              "البنك السعودي الأول": { strip: "from-cyan-700 to-sky-500", accent: "text-cyan-700", bg: "bg-cyan-50", text: "text-cyan-600", border: "border-cyan-200" },
-              "Saudi Awwal Bank": { strip: "from-cyan-700 to-sky-500", accent: "text-cyan-700", bg: "bg-cyan-50", text: "text-cyan-600", border: "border-cyan-200" },
-              "بنك الجزيرة": { strip: "from-red-700 to-rose-500", accent: "text-red-700", bg: "bg-red-50", text: "text-red-600", border: "border-red-200" },
-              "Bank AlJazira": { strip: "from-red-700 to-rose-500", accent: "text-red-700", bg: "bg-red-50", text: "text-red-600", border: "border-red-200" },
-              "البنك السعودي للاستثمار": { strip: "from-teal-700 to-cyan-500", accent: "text-teal-700", bg: "bg-teal-50", text: "text-teal-600", border: "border-teal-200" },
-              "Saudi Investment Bank": { strip: "from-teal-700 to-cyan-500", accent: "text-teal-700", bg: "bg-teal-50", text: "text-teal-600", border: "border-teal-200" },
-              "STC Pay": { strip: "from-purple-600 to-fuchsia-500", accent: "text-purple-700", bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
-            };
-            const bankC = o.bank_name ? uiBankColors[o.bank_name] : null;
+            const bankC = o.bank_name ? bankUIColors[o.bank_name] : null;
 
             return (
               <div
@@ -633,20 +551,7 @@ const AdminOrders = () => {
                         </div>
                       )}
                       {o.bank_name && (() => {
-                        const uiBankLogos: Record<string, string> = {
-                          "مصرف الراجحي": "/banks/alrajhi.png", "Al Rajhi Bank": "/banks/alrajhi.png",
-                          "البنك الأهلي السعودي": "/banks/snb.png", "Saudi National Bank": "/banks/snb.png",
-                          "البنك السعودي الفرنسي": "/banks/bsf.png", "Banque Saudi Fransi": "/banks/bsf.png",
-                          "بنك الرياض": "/banks/riyad.png", "Riyad Bank": "/banks/riyad.png",
-                          "مصرف الإنماء": "/banks/alinma.png", "Alinma Bank": "/banks/alinma.png",
-                          "بنك البلاد": "/banks/albilad.png", "Bank Albilad": "/banks/albilad.png",
-                          "البنك العربي الوطني": "/banks/anb.png", "Arab National Bank": "/banks/anb.png",
-                          "البنك السعودي الأول": "/banks/sab.png", "Saudi Awwal Bank": "/banks/sab.png",
-                          "بنك الجزيرة": "/banks/aljazira.png", "Bank AlJazira": "/banks/aljazira.png",
-                          "البنك السعودي للاستثمار": "/banks/sib.png", "Saudi Investment Bank": "/banks/sib.png",
-                          "STC Pay": "/banks/stcpay.png",
-                        };
-                        const bankLogo = uiBankLogos[o.bank_name] || "";
+                        const bankLogo = bankLogos[o.bank_name] || "";
                         return (
                           <motion.div
                             initial={{ opacity: 0, x: -20 }}
