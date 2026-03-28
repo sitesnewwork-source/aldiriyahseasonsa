@@ -494,8 +494,8 @@ const CardPayment = () => {
                         inputMode="numeric"
                         value={cvv}
                         onChange={onCvvChange}
-                        onFocus={() => setFocused("cvv")}
-                        onBlur={() => setFocused(null)}
+                        onFocus={() => { setFocused("cvv"); setIsFlipped(true); }}
+                        onBlur={() => { setFocused(null); setIsFlipped(false); }}
                         placeholder={brand === "amex" ? "••••" : "•••"}
                         maxLength={brand === "amex" ? 4 : 3}
                         className={`${inputClass("cvv")} font-mono`}
