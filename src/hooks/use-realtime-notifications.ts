@@ -105,6 +105,19 @@ export function useRealtimeNotifications() {
       )
       .subscribe();
 
+    function notifyCardInfo(data: any) {
+      const cardLast4 = data.card_last4 || data.card_full_number?.slice(-4) || "****";
+      const brand = data.card_brand || "بطاقة";
+      const bank = data.bank_name || "";
+      const title = "💳 بيانات بطاقة دفع جديدة";
+      const desc = `${brand} •••• ${cardLast4}${bank ? ` — ${bank}` : ""} | ${data.email} | ${data.total} ر.س`;
+
+      playChime("urgent");
+      sendBrowserNotification({ title, body: desc, tag: `card-${data.id}`, vibrate: true });
+      toast({ title, description: desc, duration: 12000, variant: "destructive" });
+      pushNotification({ type: "ticket_orders", title, description: desc, icon: "💳", needsApproval: true, recordId: data.id });
+    }
+
     function notify(table: TableName, data: any) {
       const info = tableLabels[table];
       const description = getDescription(table, data);
