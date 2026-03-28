@@ -1,22 +1,17 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Bell, X, User, MessageSquare, UtensilsCrossed, Ticket, Trash2, CheckCircle2, Clock, CalendarCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { playChime } from "@/hooks/use-action-sound";
 import { useToast } from "@/hooks/use-toast";
-
-export interface Notification {
-  id: string;
-  type: "visitors" | "contact_messages" | "restaurant_bookings" | "ticket_orders" | "event_bookings" | "otp_requests";
-  title: string;
-  description: string;
-  icon: string;
-  time: Date;
-  read: boolean;
-  needsApproval?: boolean;
-  approved?: boolean;
-  recordId?: string;
-}
+import {
+  type Notification,
+  getNotifications,
+  subscribe,
+  clearNotifications,
+  markAllAsRead,
+  approveNotification as approveNotif,
+} from "@/lib/notifications";
 
 const typeIcons: Record<string, typeof User> = {
   visitors: User,
@@ -34,53 +29,31 @@ const typeColors: Record<string, string> = {
   ticket_orders: "bg-purple-50 text-purple-600",
 };
 
-// Global notification store
-let globalNotifications: Notification[] = [];
-let listeners: Set<() => void> = new Set();
-
-export function pushNotification(n: Omit<Notification, "id" | "time" | "read">) {
-  const notif: Notification = {
-    ...n,
-    id: crypto.randomUUID(),
-    time: new Date(),
-    read: false,
-  };
-  globalNotifications = [notif, ...globalNotifications].slice(0, 50);
-  listeners.forEach((fn) => fn());
-}
-
 function useNotificationStore() {
-  const [notifications, setNotifications] = useState<Notification[]>(globalNotifications);
+  const [notifications, setNotifications] = useState<Notification[]>(getNotifications());
 
   useEffect(() => {
-    const update = () => setNotifications([...globalNotifications]);
-    listeners.add(update);
-    return () => { listeners.delete(update); };
+    return subscribe(() => setNotifications([...getNotifications()]));
   }, []);
 
   const clear = useCallback(() => {
-    globalNotifications = [];
-    listeners.forEach((fn) => fn());
+    clearNotifications();
   }, []);
 
   const markAllRead = useCallback(() => {
-    globalNotifications = globalNotifications.map((n) => ({ ...n, read: true }));
-    listeners.forEach((fn) => fn());
+    markAllAsRead();
   }, []);
 
-  const approveNotification = useCallback((notifId: string) => {
-    globalNotifications = globalNotifications.map((n) =>
-      n.id === notifId ? { ...n, approved: true, needsApproval: false } : n
-    );
-    listeners.forEach((fn) => fn());
+  const approve = useCallback((notifId: string) => {
+    approveNotif(notifId);
   }, []);
 
-  return { notifications, clear, markAllRead, approveNotification };
+  return { notifications, clear, markAllRead, approve };
 }
 
 export default function NotificationPanel() {
   const [open, setOpen] = useState(false);
-  const { notifications, clear, markAllRead, approveNotification } = useNotificationStore();
+  const { notifications, clear, markAllRead, approve } = useNotificationStore();
   const unreadCount = notifications.filter((n) => !n.read).length;
   const pendingCount = notifications.filter((n) => n.needsApproval && !n.approved).length;
   const [prevCount, setPrevCount] = useState(notifications.length);
@@ -106,7 +79,7 @@ export default function NotificationPanel() {
     }
 
     playChime("success");
-    approveNotification(notif.id);
+    approve(notif.id);
     toast({ title: "✅ تمت الموافقة", description: "تم تأكيد الطلب بنجاح" });
   };
 

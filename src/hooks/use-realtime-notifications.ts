@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { pushNotification } from "@/components/NotificationPanel";
+import { pushNotification } from "@/lib/notifications";
 import { playChime } from "@/hooks/use-action-sound";
 import { sendBrowserNotification, requestNotificationPermission } from "@/hooks/use-browser-notifications";
 import { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
