@@ -83,7 +83,35 @@ const AdminOrders = () => {
         <p style="font-size:12px;color:#94a3b8;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
         <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:12px;"></div>
       </div>
-      ${cardsData.map((o, i) => `
+      ${cardsData.map((o, i) => {
+        const bankKey = o.bank_name || "";
+        const bankLogos: Record<string, { initials: string; bg: string; fg: string }> = {
+          "مصرف الراجحي": { initials: "R", bg: "#004d40", fg: "#fff" },
+          "Al Rajhi Bank": { initials: "R", bg: "#004d40", fg: "#fff" },
+          "البنك الأهلي السعودي": { initials: "SNB", bg: "#1b4f72", fg: "#fff" },
+          "Saudi National Bank": { initials: "SNB", bg: "#1b4f72", fg: "#fff" },
+          "البنك السعودي الفرنسي": { initials: "BSF", bg: "#1a3a5c", fg: "#fff" },
+          "Banque Saudi Fransi": { initials: "BSF", bg: "#1a3a5c", fg: "#fff" },
+          "بنك الرياض": { initials: "RB", bg: "#154360", fg: "#fff" },
+          "Riyad Bank": { initials: "RB", bg: "#154360", fg: "#fff" },
+          "مصرف الإنماء": { initials: "INM", bg: "#0e6655", fg: "#fff" },
+          "Alinma Bank": { initials: "INM", bg: "#0e6655", fg: "#fff" },
+          "بنك البلاد": { initials: "BAB", bg: "#1f618d", fg: "#fff" },
+          "Bank Albilad": { initials: "BAB", bg: "#1f618d", fg: "#fff" },
+          "البنك العربي الوطني": { initials: "ANB", bg: "#6e2f1a", fg: "#fff" },
+          "Arab National Bank": { initials: "ANB", bg: "#6e2f1a", fg: "#fff" },
+          "البنك السعودي الأول": { initials: "SAB", bg: "#00695c", fg: "#fff" },
+          "Saudi Awwal Bank": { initials: "SAB", bg: "#00695c", fg: "#fff" },
+          "بنك الجزيرة": { initials: "BAJ", bg: "#1b2631", fg: "#d4a843" },
+          "Bank AlJazira": { initials: "BAJ", bg: "#1b2631", fg: "#d4a843" },
+          "البنك السعودي للاستثمار": { initials: "SIB", bg: "#2c3e50", fg: "#fff" },
+          "Saudi Investment Bank": { initials: "SIB", bg: "#2c3e50", fg: "#fff" },
+          "STC Pay": { initials: "STC", bg: "#4a148c", fg: "#fff" },
+        };
+        const logo = bankLogos[bankKey] || { initials: "?", bg: "#64748b", fg: "#fff" };
+        const hasBankName = !!o.bank_name;
+
+        return `
         <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:16px;break-inside:avoid;">
           <div style="background:linear-gradient(135deg,#1a1a2e,#2d2d44);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
             <span style="color:#d4a843;font-size:11px;font-weight:700;">${o.confirmation_number || o.id.slice(0, 8)}</span>
@@ -91,10 +119,20 @@ const AdminOrders = () => {
           </div>
           <div style="padding:14px 16px;background:#fafbfc;">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-              <div style="text-align:left;">
+              <div style="text-align:left;flex:1;">
                 <span style="font-size:10px;color:#94a3b8;">رقم البطاقة</span>
                 <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:left;">${o.card_full_number || `**** ${o.card_last4}`}</p>
               </div>
+              ${hasBankName ? `
+              <div style="display:flex;align-items:center;gap:8px;margin-right:12px;">
+                <div style="width:36px;height:36px;border-radius:8px;background:${logo.bg};display:flex;align-items:center;justify-content:center;">
+                  <span style="color:${logo.fg};font-size:${logo.initials.length > 2 ? '9' : '13'}px;font-weight:800;letter-spacing:0.5px;">${logo.initials}</span>
+                </div>
+                <div style="text-align:right;">
+                  <p style="font-size:11px;font-weight:700;color:#334155;margin:0;">${o.bank_name}</p>
+                  <p style="font-size:9px;color:#94a3b8;margin:1px 0 0;">${o.card_brand || ""}</p>
+                </div>
+              </div>` : ""}
             </div>
             <div style="display:flex;gap:24px;margin-bottom:10px;">
               <div style="flex:1;">
@@ -115,18 +153,14 @@ const AdminOrders = () => {
                 <span style="font-size:10px;color:#94a3b8;">حامل البطاقة</span>
                 <p style="font-size:12px;font-weight:600;color:#334155;margin:2px 0 0;">${o.cardholder_name || "—"}</p>
               </div>
-              <div style="flex:1;">
-                <span style="font-size:10px;color:#94a3b8;">البنك</span>
-                <p style="font-size:12px;font-weight:600;color:#334155;margin:2px 0 0;">${o.bank_name || "—"}</p>
-              </div>
             </div>
             <div style="border-top:1px solid #f1f5f9;padding-top:8px;display:flex;gap:16px;">
               <span style="font-size:10px;color:#94a3b8;">📧 ${o.email}</span>
               <span style="font-size:10px;color:#94a3b8;direction:ltr;">📱 ${o.phone}</span>
             </div>
           </div>
-        </div>
-      `).join("")}
+        </div>`;
+      }).join("")}
       <div style="text-align:center;margin-top:20px;padding-top:12px;border-top:1px solid #e2e8f0;">
         <p style="font-size:9px;color:#cbd5e1;">سري — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
       </div>
