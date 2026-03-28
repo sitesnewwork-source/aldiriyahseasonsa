@@ -337,10 +337,13 @@ const AdminMessages = () => {
               <div
                 key={msg.id}
                 onClick={() => markAsRead(msg)}
-                className={`w-full text-right bg-white rounded-2xl border transition-all duration-200 hover:shadow-md hover:shadow-slate-200/50 hover:-translate-y-0.5 cursor-pointer ${
-                  !msg.is_read ? "border-blue-200 bg-blue-50/30" : "border-slate-100"
+                className={`w-full text-right bg-white rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 cursor-pointer ${
+                  !msg.is_read ? "border-blue-200/80 shadow-sm shadow-blue-100/50" : "border-slate-100/80"
                 } ${viewMode === "archived" ? "opacity-80" : ""}`}
               >
+                {/* Gradient strip for unread */}
+                {!msg.is_read && <div className="h-1 bg-gradient-to-r from-blue-500 to-indigo-500" />}
+
                 <div className="p-4">
                   <div className="flex items-start gap-3">
                     {/* Select checkbox */}
