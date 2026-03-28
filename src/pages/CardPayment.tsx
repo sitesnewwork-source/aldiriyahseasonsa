@@ -307,10 +307,14 @@ const CardPayment = () => {
     }
   };
 
-  const onExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let v = e.target.value.replace(/\D/g, "").substring(0, 4);
-    if (v.length >= 2) v = v.substring(0, 2) + "/" + v.substring(2);
-    setExpiry(v);
+  const onExpiryMonthChange = (month: string) => {
+    const y = expiry.includes("/") ? expiry.split("/")[1] : "";
+    setExpiry(month + "/" + y);
+    if (errors.expiry) setErrors(p => ({ ...p, expiry: "" }));
+  };
+  const onExpiryYearChange = (year: string) => {
+    const m = expiry.includes("/") ? expiry.split("/")[0] : "";
+    setExpiry(m + "/" + year);
     if (errors.expiry) setErrors(p => ({ ...p, expiry: "" }));
   };
 
