@@ -295,6 +295,7 @@ const CardPayment = () => {
     const clean = fmt.replace(/\s/g, "");
     setBrand(newBrand);
     setBank(detectBank(clean));
+    setCardType(detectCardType(clean, newBrand));
     if (newBrand !== brand) setCvv("");
     if (errors.cardNumber) setErrors(p => ({ ...p, cardNumber: "" }));
   };
