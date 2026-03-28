@@ -704,14 +704,42 @@ const CardPayment = () => {
                         )}
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
+                            <AnimatePresence mode="wait">
                             <motion.div
                               key={bank?.bank || "none"}
-                              initial={{ scale: 0, rotate: -180 }}
-                              animate={{ scale: 1, rotate: 0 }}
-                              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                              initial={{ scale: 0, rotate: -180, opacity: 0 }}
+                              animate={{ 
+                                scale: [0, 1.3, 1], 
+                                rotate: [−180, 15, 0], 
+                                opacity: 1,
+                              }}
+                              exit={{ scale: 0, rotate: 180, opacity: 0 }}
+                              transition={{ 
+                                type: "spring", 
+                                stiffness: 400, 
+                                damping: 12,
+                                mass: 0.8,
+                              }}
+                              whileHover={{ scale: 1.15, rotate: 5 }}
+                              className="relative"
                             >
+                              {bank?.bank && (
+                                <motion.div
+                                  className="absolute inset-0 rounded-lg"
+                                  initial={{ boxShadow: "0 0 0px rgba(212,168,67,0)" }}
+                                  animate={{ 
+                                    boxShadow: [
+                                      "0 0 0px rgba(212,168,67,0)",
+                                      "0 0 12px rgba(212,168,67,0.6)",
+                                      "0 0 4px rgba(212,168,67,0.2)",
+                                    ]
+                                  }}
+                                  transition={{ duration: 0.8, ease: "easeOut" }}
+                                />
+                              )}
                               <BankIconBadge bankName={bank?.bank || null} />
                             </motion.div>
+                            </AnimatePresence>
                             <div>
                               <motion.p
                                 key={bank?.bankAr || "default"}
