@@ -105,11 +105,11 @@ const Dashboard = () => {
     fetchStats();
     const channel = supabase
       .channel("dashboard-stats")
-      .on("postgres_changes" as any, { event: "INSERT", schema: "public", table: "contact_messages" }, () => fetchStats())
-      .on("postgres_changes" as any, { event: "INSERT", schema: "public", table: "restaurant_bookings" }, () => fetchStats())
-      .on("postgres_changes" as any, { event: "INSERT", schema: "public", table: "ticket_orders" }, () => fetchStats())
-      .on("postgres_changes" as any, { event: "INSERT", schema: "public", table: "event_bookings" }, () => fetchStats())
-      .on("postgres_changes" as any, { event: "INSERT", schema: "public", table: "newsletter_subscribers" }, () => fetchStats())
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "contact_messages" }, () => fetchStats())
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "restaurant_bookings" }, () => fetchStats())
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "ticket_orders" }, () => fetchStats())
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "event_bookings" }, () => fetchStats())
+      .on("postgres_changes" as any, { event: "*", schema: "public", table: "newsletter_subscribers" }, () => fetchStats())
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, []);
