@@ -39,6 +39,7 @@ const AdminEventBookings = () => {
 
   const clearAllEventBookings = async () => {
     playChime("delete");
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
     try {
       await supabase.from("event_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       setBookings([]);
