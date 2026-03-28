@@ -295,9 +295,12 @@ const AdminOrders = () => {
     setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
   };
 
+  const uniqueBanks = [...new Set(orders.map(o => o.bank_name).filter(Boolean))] as string[];
+
   const filtered = orders.filter(o => {
     if (statusFilter === "confirmed" && o.status !== "confirmed") return false;
     if (statusFilter === "unconfirmed" && o.status === "confirmed") return false;
+    if (bankFilter !== "all" && (o.bank_name || "") !== bankFilter) return false;
     if (!search) return true;
     const q = search.toLowerCase();
     return o.email.toLowerCase().includes(q) || o.phone.includes(q) || (o.confirmation_number || "").includes(q);
