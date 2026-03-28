@@ -97,6 +97,8 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "437978": BSF, "437977": BSF, "437976": BSF, "437975": BSF, "437974": BSF,
   "428275": BSF, "428274": BSF, "425871": BSF, "401884": BSF, "401883": BSF,
   "401812": BSF, "401978": BSF, "475558": BSF, "444445": BSF, "437980": BSF,
+  // Additional BSF (bincheck.org)
+  "540930": BSF, "547043": BSF,
 
   // ══════════════════════════════════════════════════════════════════════════
   // بنك الرياض - Riyad Bank
