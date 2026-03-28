@@ -167,10 +167,18 @@ const AdminMessages = () => {
   ];
 
   return (
-    <div className="space-y-4">
-      {/* Export */}
+    <div className="space-y-5">
+      {/* Header */}
       <div className="flex items-center justify-between">
-        <span className="text-[13px] font-semibold text-slate-700">رسائل التواصل</span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Mail className="w-4.5 h-4.5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-[15px] font-bold text-slate-800">رسائل التواصل</h2>
+            <p className="text-[10px] text-slate-400">{filtered.length} رسالة • {unreadCount} غير مقروءة</p>
+          </div>
+        </div>
         <ExportButtons
           data={filtered}
           filename="messages"
@@ -186,13 +194,15 @@ const AdminMessages = () => {
           ]}
         />
       </div>
-      <div className="flex gap-1 bg-white rounded-xl border border-slate-200 p-1">
+
+      {/* Inbox / Archive Toggle */}
+      <div className="flex gap-2">
         <button
           onClick={() => { setViewMode("inbox"); setSelectMode(false); setSelectedIds(new Set()); setFilter("all"); }}
-          className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 rounded-xl text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${
             viewMode === "inbox"
-              ? "bg-blue-500 text-white shadow-sm"
-              : "text-slate-500 hover:bg-slate-50"
+              ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md shadow-blue-500/20"
+              : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
           }`}
         >
           <Mail className="w-4 h-4" />
@@ -200,10 +210,10 @@ const AdminMessages = () => {
         </button>
         <button
           onClick={() => { setViewMode("archived"); setSelectMode(false); setSelectedIds(new Set()); setFilter("all"); }}
-          className={`flex-1 py-2.5 rounded-lg text-[13px] font-medium transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-2.5 rounded-xl text-[12px] font-semibold transition-all flex items-center justify-center gap-2 ${
             viewMode === "archived"
-              ? "bg-amber-500 text-white shadow-sm"
-              : "text-slate-500 hover:bg-slate-50"
+              ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md shadow-amber-500/20"
+              : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
           }`}
         >
           <Archive className="w-4 h-4" />
@@ -219,20 +229,20 @@ const AdminMessages = () => {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="بحث في الرسائل..."
-          className="w-full bg-white border border-slate-200 rounded-xl pr-10 pl-4 py-2.5 text-[16px] sm:text-[13px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all"
+          className="w-full bg-white border border-slate-200/80 rounded-xl pr-10 pl-4 py-2.5 text-[16px] sm:text-[13px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 transition-all shadow-sm"
         />
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-1 bg-white rounded-xl border border-slate-200 p-1">
+      <div className="flex gap-2 flex-wrap">
         {tabs.map(tab => (
           <button
             key={tab.key}
             onClick={() => setFilter(tab.key)}
-            className={`flex-1 py-2 rounded-lg text-[12px] font-medium transition-all ${
+            className={`px-3.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
               filter === tab.key
-                ? "bg-blue-500 text-white shadow-sm"
-                : "text-slate-500 hover:bg-slate-50"
+                ? "bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-sm"
+                : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
             }`}
           >
             {tab.label} ({tab.count})
