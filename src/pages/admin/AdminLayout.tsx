@@ -22,6 +22,7 @@ const navItems = [
   { label: "الإعدادات", icon: Settings, path: "/admin/settings", gradient: "from-slate-500 to-slate-700" },
 ];
 
+const bottomNavItems = navItems.slice(0, 4);
 const swipePages = ["/admin", ...bottomNavItems.map(i => i.path)];
 
 // Swipeable wrapper for mobile gesture navigation
