@@ -1,11 +1,58 @@
 import { useRef, useState, useMemo } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { experiences } from "@/data/experiences";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { actionNotify } from "@/hooks/use-action-notify";
 import OptimizedImage from "./OptimizedImage";
+import { useIsMobile } from "@/hooks/use-mobile";
+
+const ExpCard = ({ exp, index }: { exp: typeof import("@/data/experiences").experiences[0]; index: number }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+  const imgY = useTransform(scrollYProgress, [0, 1], [isMobile ? 10 : 20, isMobile ? -10 : -20]);
+
+  return (
+    <motion.div
+      ref={ref}
+      key={exp.id}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ delay: index * 0.1 }}
+      className="flex-shrink-0 w-[240px] sm:w-[300px] md:w-[360px] snap-start"
+    >
+      <Link to={`/experience/${exp.id}`} className="group block">
+        <div className="relative aspect-[4/5] rounded-lg overflow-hidden mb-2 sm:mb-3">
+          <motion.div style={{ y: imgY }} className="absolute inset-0">
+            <OptimizedImage
+              src={exp.image}
+              alt={exp.title}
+              width={800}
+              height={1000}
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          </motion.div>
+          <span className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-muted/90 backdrop-blur-sm text-foreground text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-md z-10">
+            {exp.category}
+          </span>
+        </div>
+        <h3 className="font-display text-base sm:text-lg font-bold text-foreground mb-1 group-hover:text-primary transition-colors">
+          {exp.title}
+        </h3>
+        <p className="text-xs sm:text-sm text-muted-foreground mb-1 sm:mb-2">{exp.schedule}</p>
+        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed line-clamp-2">
+          {exp.description}
+        </p>
+      </Link>
+    </motion.div>
+  );
+};
 
 const ExperienceSection = () => {
   const { t } = useLanguage();
