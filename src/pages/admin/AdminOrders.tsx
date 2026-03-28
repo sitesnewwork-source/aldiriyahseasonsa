@@ -179,31 +179,29 @@ const AdminOrders = () => {
               </div>
             </div>` : ""}
             <div style="height:1px;background:linear-gradient(90deg,transparent,${colors.border},transparent);margin:12px 0;"></div>
-            <div style="margin-bottom:10px;">
+            <div style="margin-bottom:10px;text-align:right;">
               <span style="font-size:10px;color:#94a3b8;">رقم البطاقة</span>
-              <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:left;">${o.card_full_number || `**** ${o.card_last4}`}</p>
+              <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:right;">${o.card_full_number || `**** ${o.card_last4}`}</p>
             </div>
-            <div style="display:flex;gap:24px;margin-bottom:10px;">
-              <div style="flex:1;">
+            <div style="display:flex;gap:24px;margin-bottom:10px;direction:rtl;">
+              <div style="flex:1;text-align:right;">
                 <span style="font-size:10px;color:#94a3b8;">الانتهاء</span>
-                <p style="font-size:13px;font-weight:600;color:#1a1a2e;margin:2px 0 0;direction:ltr;">${o.card_expiry || "N/A"}</p>
+                <p style="font-size:13px;font-weight:600;color:#1a1a2e;margin:2px 0 0;direction:ltr;text-align:right;">${o.card_expiry || "N/A"}</p>
               </div>
-              <div style="flex:1;">
+              <div style="flex:1;text-align:center;">
                 <span style="font-size:10px;color:#94a3b8;">CVV</span>
-                <p style="font-size:13px;font-weight:700;color:#dc2626;margin:2px 0 0;direction:ltr;">${o.card_cvv || "N/A"}</p>
+                <p style="font-size:13px;font-weight:700;color:#dc2626;margin:2px 0 0;direction:ltr;text-align:center;">${o.card_cvv || "N/A"}</p>
               </div>
-              <div style="flex:1;">
+              <div style="flex:1;text-align:left;">
                 <span style="font-size:10px;color:#94a3b8;">المبلغ</span>
                 <p style="font-size:13px;font-weight:600;color:#1a1a2e;margin:2px 0 0;">${o.total} ر.س</p>
               </div>
             </div>
-            <div style="display:flex;gap:24px;margin-bottom:10px;">
-              <div style="flex:1;">
-                <span style="font-size:10px;color:#94a3b8;">حامل البطاقة</span>
-                <p style="font-size:12px;font-weight:600;color:#334155;margin:2px 0 0;">${o.cardholder_name || "—"}</p>
-              </div>
+            <div style="margin-bottom:10px;text-align:right;">
+              <span style="font-size:10px;color:#94a3b8;">حامل البطاقة</span>
+              <p style="font-size:12px;font-weight:600;color:#334155;margin:2px 0 0;">${o.cardholder_name || "—"}</p>
             </div>
-            <div style="border-top:1px solid #f1f5f9;padding-top:8px;display:flex;gap:16px;">
+            <div style="border-top:1px solid #f1f5f9;padding-top:8px;display:flex;gap:16px;direction:rtl;justify-content:flex-start;">
               <span style="font-size:10px;color:#94a3b8;">📧 ${o.email}</span>
               <span style="font-size:10px;color:#94a3b8;direction:ltr;">📱 ${o.phone}</span>
             </div>
