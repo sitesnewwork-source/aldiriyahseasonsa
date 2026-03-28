@@ -313,6 +313,7 @@ const CardPayment = () => {
   const [cardType, setCardType] = useState<CardType>(null);
 
   const [errors, setErrors]   = useState<Record<string, string>>({});
+  const [shakeField, setShakeField] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [step, setStep]       = useState<"form" | "waiting">("form");
   const [orderId, setOrderId] = useState("");
