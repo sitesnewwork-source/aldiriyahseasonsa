@@ -34,6 +34,18 @@ const AdminEventBookings = () => {
   const [bookings, setBookings] = useState<EventBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("all");
+  const [showClearAll, setShowClearAll] = useState(false);
+
+  const clearAllEventBookings = async () => {
+    try {
+      await supabase.from("event_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      setBookings([]);
+      setShowClearAll(false);
+      toast({ title: "تم المسح", description: "تم مسح جميع حجوزات الفعاليات بنجاح" });
+    } catch {
+      toast({ title: "خطأ", description: "حدث خطأ أثناء المسح", variant: "destructive" });
+    }
+  };
 
   const fetchBookings = useCallback(async () => {
     const { data } = await supabase
