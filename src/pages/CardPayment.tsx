@@ -587,9 +587,19 @@ const CardPayment = () => {
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
                             <BankIconBadge bankName={bank?.bank || null} />
-                            <p className="text-white font-semibold text-sm">
-                              {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
-                            </p>
+                            <div>
+                              <p className="text-white font-semibold text-sm">
+                                {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
+                              </p>
+                              {cardType && (
+                                <p className="text-white/60 text-[9px] mt-0.5">
+                                  {isAr
+                                    ? cardType === "debit" ? "بطاقة خصم" : cardType === "prepaid" ? "مسبقة الدفع" : "بطاقة ائتمان"
+                                    : cardType === "debit" ? "Debit Card" : cardType === "prepaid" ? "Prepaid" : "Credit Card"
+                                  }
+                                </p>
+                              )}
+                            </div>
                           </div>
                           <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
                             <BrandLogo brand={brand} />
