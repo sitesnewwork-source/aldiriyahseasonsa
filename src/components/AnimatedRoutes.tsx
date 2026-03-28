@@ -78,6 +78,7 @@ const AnimatedRoutes = forwardRef<HTMLDivElement>((_, ref) => {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="event-bookings" element={<AdminEventBookings />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="install" element={<AdminInstall />} />
           </Route>
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
