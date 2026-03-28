@@ -70,6 +70,7 @@ const AdminLayout = () => {
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const swipeDirRef = useRef("");
   const location = useLocation();
   useRealtimeNotifications();
   const navigate = useNavigate();
