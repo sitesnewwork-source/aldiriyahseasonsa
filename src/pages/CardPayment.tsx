@@ -581,9 +581,9 @@ const CardPayment = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.2 }}
                             className={`${
-                              cardType === "debit" ? "bg-blue-100 text-blue-700" :
-                              cardType === "prepaid" ? "bg-purple-100 text-purple-700" :
-                              "bg-emerald-100 text-emerald-700"
+                              cardType === "debit" ? "bg-primary/15 text-primary border border-primary/25" :
+                              cardType === "prepaid" ? "bg-gold-dark/15 text-gold-dark border border-gold-dark/25" :
+                              "bg-gold-light/15 text-gold-dark border border-gold-light/30"
                             } px-1.5 py-0.5 rounded text-[10px] font-medium`}
                           >
                             {isAr
