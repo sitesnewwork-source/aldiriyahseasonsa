@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,12 +23,54 @@ const navItems = [
 ];
 
 const bottomNavItems = navItems.slice(0, 4);
+const swipePages = ["/admin", ...bottomNavItems.map(i => i.path)];
+
+// Swipeable wrapper for mobile gesture navigation
+const SwipeableContent = ({ children, navigate, currentPath, swipeDirRef }: { children: React.ReactNode; navigate: (path: string) => void; currentPath: string; swipeDirRef: React.MutableRefObject<string> }) => {
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current.x;
+    const dy = e.changedTouches[0].clientY - touchStart.current.y;
+    touchStart.current = null;
+
+    if (Math.abs(dx) < 80 || Math.abs(dy) > Math.abs(dx) * 0.7) return;
+
+    const currentIndex = swipePages.indexOf(currentPath);
+    if (currentIndex === -1) return;
+
+    if (dx < 0 && currentIndex < swipePages.length - 1) {
+      swipeDirRef.current = "left";
+      navigate(swipePages[currentIndex + 1]);
+    } else if (dx > 0 && currentIndex > 0) {
+      swipeDirRef.current = "right";
+      navigate(swipePages[currentIndex - 1]);
+    }
+  }, [currentPath, navigate, swipeDirRef]);
+
+  return (
+    <PullToRefresh onRefresh={async () => {
+      window.dispatchEvent(new CustomEvent("admin-pull-refresh"));
+      await new Promise(r => setTimeout(r, 600));
+    }}>
+      <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        {children}
+      </div>
+    </PullToRefresh>
+  );
+};
 
 const AdminLayout = () => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const swipeDirRef = useRef("");
   const location = useLocation();
   useRealtimeNotifications();
   const navigate = useNavigate();
@@ -275,25 +317,23 @@ const AdminLayout = () => {
           </div>
         </header>
 
-        <PullToRefresh onRefresh={async () => {
-          window.dispatchEvent(new CustomEvent("admin-pull-refresh"));
-          await new Promise(r => setTimeout(r, 600));
-        }}>
+        <SwipeableContent navigate={navigate} currentPath={location.pathname} swipeDirRef={swipeDirRef}>
           <AdminInstallPrompt variant="banner" />
           <div className="p-3 sm:p-4 md:p-6 pb-20 lg:pb-6">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.2, ease: "easeInOut" }}
+                initial={{ opacity: 0, x: swipeDirRef.current === "left" ? 40 : swipeDirRef.current === "right" ? -40 : 0, y: swipeDirRef.current ? 0 : 8 }}
+                animate={{ opacity: 1, x: 0, y: 0 }}
+                exit={{ opacity: 0, x: swipeDirRef.current === "left" ? -40 : swipeDirRef.current === "right" ? 40 : 0, y: swipeDirRef.current ? 0 : -8 }}
+                transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                onAnimationComplete={() => { swipeDirRef.current = ""; }}
               >
                 <Outlet />
               </motion.div>
             </AnimatePresence>
           </div>
-        </PullToRefresh>
+        </SwipeableContent>
       </div>
 
       {/* Mobile Bottom Navigation */}
