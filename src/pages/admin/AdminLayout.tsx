@@ -323,7 +323,7 @@ const AdminLayout = () => {
         </div>
       </nav>
 
-      <NotificationPanel />
+      
     </div>
   );
 };
