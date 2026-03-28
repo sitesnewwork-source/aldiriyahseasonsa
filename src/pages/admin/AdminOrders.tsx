@@ -423,15 +423,41 @@ const AdminOrders = () => {
             const st = statusConfig[o.status] || statusConfig.pending;
             const StIcon = st.icon;
             const isPending = o.status === "pending" || o.status === "pending_otp";
+
+            const uiBankColors: Record<string, { strip: string; accent: string; bg: string; text: string; border: string }> = {
+              "مصرف الراجحي": { strip: "from-green-600 to-emerald-500", accent: "text-green-700", bg: "bg-green-50", text: "text-green-600", border: "border-green-200" },
+              "Al Rajhi Bank": { strip: "from-green-600 to-emerald-500", accent: "text-green-700", bg: "bg-green-50", text: "text-green-600", border: "border-green-200" },
+              "البنك الأهلي السعودي": { strip: "from-blue-700 to-blue-500", accent: "text-blue-700", bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
+              "Saudi National Bank": { strip: "from-blue-700 to-blue-500", accent: "text-blue-700", bg: "bg-blue-50", text: "text-blue-600", border: "border-blue-200" },
+              "البنك السعودي الفرنسي": { strip: "from-sky-700 to-sky-500", accent: "text-sky-700", bg: "bg-sky-50", text: "text-sky-600", border: "border-sky-200" },
+              "Banque Saudi Fransi": { strip: "from-sky-700 to-sky-500", accent: "text-sky-700", bg: "bg-sky-50", text: "text-sky-600", border: "border-sky-200" },
+              "بنك الرياض": { strip: "from-purple-700 to-violet-500", accent: "text-purple-700", bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
+              "Riyad Bank": { strip: "from-purple-700 to-violet-500", accent: "text-purple-700", bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
+              "مصرف الإنماء": { strip: "from-emerald-700 to-teal-500", accent: "text-emerald-700", bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
+              "Alinma Bank": { strip: "from-emerald-700 to-teal-500", accent: "text-emerald-700", bg: "bg-emerald-50", text: "text-emerald-600", border: "border-emerald-200" },
+              "بنك البلاد": { strip: "from-orange-600 to-amber-500", accent: "text-orange-700", bg: "bg-orange-50", text: "text-orange-600", border: "border-orange-200" },
+              "Bank Albilad": { strip: "from-orange-600 to-amber-500", accent: "text-orange-700", bg: "bg-orange-50", text: "text-orange-600", border: "border-orange-200" },
+              "البنك العربي الوطني": { strip: "from-indigo-700 to-blue-500", accent: "text-indigo-700", bg: "bg-indigo-50", text: "text-indigo-600", border: "border-indigo-200" },
+              "Arab National Bank": { strip: "from-indigo-700 to-blue-500", accent: "text-indigo-700", bg: "bg-indigo-50", text: "text-indigo-600", border: "border-indigo-200" },
+              "البنك السعودي الأول": { strip: "from-cyan-700 to-sky-500", accent: "text-cyan-700", bg: "bg-cyan-50", text: "text-cyan-600", border: "border-cyan-200" },
+              "Saudi Awwal Bank": { strip: "from-cyan-700 to-sky-500", accent: "text-cyan-700", bg: "bg-cyan-50", text: "text-cyan-600", border: "border-cyan-200" },
+              "بنك الجزيرة": { strip: "from-red-700 to-rose-500", accent: "text-red-700", bg: "bg-red-50", text: "text-red-600", border: "border-red-200" },
+              "Bank AlJazira": { strip: "from-red-700 to-rose-500", accent: "text-red-700", bg: "bg-red-50", text: "text-red-600", border: "border-red-200" },
+              "البنك السعودي للاستثمار": { strip: "from-teal-700 to-cyan-500", accent: "text-teal-700", bg: "bg-teal-50", text: "text-teal-600", border: "border-teal-200" },
+              "Saudi Investment Bank": { strip: "from-teal-700 to-cyan-500", accent: "text-teal-700", bg: "bg-teal-50", text: "text-teal-600", border: "border-teal-200" },
+              "STC Pay": { strip: "from-purple-600 to-fuchsia-500", accent: "text-purple-700", bg: "bg-purple-50", text: "text-purple-600", border: "border-purple-200" },
+            };
+            const bankC = o.bank_name ? uiBankColors[o.bank_name] : null;
+
             return (
               <div
                 key={o.id}
                 className={`bg-white rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
-                  isPending ? "border-amber-200/80 shadow-sm shadow-amber-100/50" : "border-slate-100/80 hover:shadow-slate-200/60"
+                  isPending ? "border-amber-200/80 shadow-sm shadow-amber-100/50" : bankC ? `${bankC.border}/80` : "border-slate-100/80 hover:shadow-slate-200/60"
                 }`}
               >
                 {/* Gradient top strip */}
-                <div className={`h-1 bg-gradient-to-r ${st.gradient}`} />
+                <div className={`h-1 bg-gradient-to-r ${bankC ? bankC.strip : st.gradient}`} />
 
                 {/* Header */}
                 <div className="p-4">
@@ -491,9 +517,9 @@ const AdminOrders = () => {
                   </div>
 
                   {/* Payment */}
-                  <div className="rounded-xl overflow-hidden border border-slate-100/80">
-                    <div className="bg-gradient-to-l from-violet-50/80 to-transparent px-3 py-2 border-b border-slate-100/50 flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-violet-600 flex items-center gap-1.5">
+                  <div className={`rounded-xl overflow-hidden border ${bankC ? bankC.border : "border-slate-100/80"}`}>
+                    <div className={`${bankC ? bankC.bg : "bg-gradient-to-l from-violet-50/80 to-transparent"} px-3 py-2 border-b ${bankC ? bankC.border + "/50" : "border-slate-100/50"} flex items-center justify-between`}>
+                      <span className={`text-[11px] font-bold ${bankC ? bankC.text : "text-violet-600"} flex items-center gap-1.5`}>
                         <CreditCard className="w-3.5 h-3.5" />
                         بيانات الدفع
                       </span>
@@ -555,9 +581,9 @@ const AdminOrders = () => {
                         </div>
                       )}
                       {o.bank_name && (
-                        <div className="flex items-center justify-between">
+                        <div className={`flex items-center justify-between ${bankC ? `${bankC.bg} -mx-3 px-3 py-1.5 rounded-lg` : ""}`}>
                           <span className="text-slate-400 flex items-center gap-1"><Landmark className="w-3 h-3" /> البنك</span>
-                          <span className="text-slate-700 font-medium">{o.bank_name}</span>
+                          <span className={`font-semibold ${bankC ? bankC.accent : "text-slate-700"}`}>{o.bank_name}</span>
                         </div>
                       )}
                     </div>
