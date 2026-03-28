@@ -628,13 +628,14 @@ const CardPayment = () => {
                       <div className="grid grid-cols-2 gap-2">
                         <div className="relative group">
                           <select
+                            dir="ltr"
                             value={expiry.split("/")[0] || ""}
                             onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
                             onFocus={() => setFocused("expiry")}
                             onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
+                            className={`${inputClass("expiry")} ${isAr ? "font-body" : "font-mono"} tabular-nums appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
                           >
-                            <option value="">{isAr ? "الشهر" : "MM"}</option>
+                            <option value="">{isAr ? "شهر" : "MM"}</option>
                             {Array.from({ length: 12 }, (_, i) => {
                               const m = String(i + 1).padStart(2, "0");
                               return <option key={m} value={m}>{m}</option>;
@@ -644,13 +645,14 @@ const CardPayment = () => {
                         </div>
                         <div className="relative group">
                           <select
+                            dir="ltr"
                             value={expiry.split("/")[1] || ""}
                             onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
                             onFocus={() => setFocused("expiry")}
                             onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
+                            className={`${inputClass("expiry")} ${isAr ? "font-body" : "font-mono"} tabular-nums appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
                           >
-                            <option value="">{isAr ? "السنة" : "YY"}</option>
+                            <option value="">{isAr ? "سنة" : "YY"}</option>
                             {Array.from({ length: 10 }, (_, i) => {
                               const y = String(new Date().getFullYear() % 100 + i).padStart(2, "0");
                               return <option key={y} value={y}>{y}</option>;
