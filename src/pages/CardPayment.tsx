@@ -665,7 +665,8 @@ const CardPayment = () => {
                         }}
                       >
                         <div className="flex items-start justify-between">
-                          <div>
+                          <div className="flex items-center gap-2">
+                            <BankIconBadge bankName={bank?.bank || null} />
                             <p className="text-white font-semibold text-sm">
                               {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
                             </p>
