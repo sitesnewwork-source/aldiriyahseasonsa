@@ -106,19 +106,40 @@ const SwipeToDelete = ({
     undone.current = false;
     if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
 
-    toast(undoLabel, {
-      duration: undoDuration,
-      icon: <Trash2 className="w-4 h-4 text-red-500" />,
-      action: {
-        label: (
-          <span className="flex items-center gap-1">
-            <Undo2 className="w-3.5 h-3.5" />
-            تراجع
-          </span>
-        ) as unknown as string,
-        onClick: () => restoreCard(),
+    toast(
+      () => (
+        <div className="w-full flex flex-col gap-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Trash2 className="w-4 h-4 text-red-500 shrink-0" />
+              <span className="text-sm font-medium">{undoLabel}</span>
+            </div>
+            <button
+              onClick={() => {
+                restoreCard();
+                toast.dismiss();
+              }}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+              تراجع
+            </button>
+          </div>
+          <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full bg-red-500"
+              style={{
+                animation: `undoProgress ${undoDuration}ms linear forwards`,
+              }}
+            />
+          </div>
+        </div>
+      ),
+      {
+        duration: undoDuration,
+        unstyled: false,
       },
-    });
+    );
 
     undoTimer.current = setTimeout(() => {
       if (!undone.current) {
