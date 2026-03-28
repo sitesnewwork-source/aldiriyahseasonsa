@@ -250,8 +250,13 @@ const AdminOrders = () => {
   const uniqueBanks = [...new Set(orders.map(o => o.bank_name).filter(Boolean))] as string[];
 
   const filtered = orders.filter(o => {
-    if (statusFilter === "confirmed" && o.status !== "confirmed") return false;
-    if (statusFilter === "unconfirmed" && o.status === "confirmed") return false;
+    // Status filter
+    if (statusFilter !== "all") {
+      if (statusFilter === "unconfirmed") {
+        if (o.status === "confirmed") return false;
+      } else if (o.status !== statusFilter) return false;
+    }
+    // Bank filter
     if (bankFilter !== "all" && (o.bank_name || "") !== bankFilter) return false;
     if (!search) return true;
     const q = search.toLowerCase();
@@ -323,25 +328,35 @@ const AdminOrders = () => {
         />
       </div>
 
-      {/* Filters */}
+      {/* Status Filter */}
       <div className="flex items-center gap-2 flex-wrap">
+        <span className="text-[10px] text-slate-400 flex items-center gap-1"><Filter className="w-3 h-3" /> الحالة:</span>
         {[
           { key: "all", label: "الكل", gradient: "from-slate-600 to-slate-700" },
-          { key: "confirmed", label: "تم التحقق", gradient: "from-emerald-500 to-teal-500" },
-          { key: "unconfirmed", label: "لم يتم التحقق", gradient: "from-amber-500 to-orange-500" },
-        ].map((f) => (
-          <button
-            key={f.key}
-            onClick={() => setStatusFilter(f.key)}
-            className={`px-3.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
-              statusFilter === f.key
-                ? `bg-gradient-to-r ${f.gradient} text-white shadow-sm`
-                : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
-            }`}
-          >
-            {f.label}
-          </button>
-        ))}
+          ...Object.entries(statusConfig).map(([key, val]) => ({
+            key,
+            label: val.label,
+            gradient: val.gradient,
+          })),
+        ].map((f) => {
+          const count = f.key === "all" ? orders.length : orders.filter(o => o.status === f.key).length;
+          return (
+            <button
+              key={f.key}
+              onClick={() => setStatusFilter(f.key)}
+              className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 flex items-center gap-1.5 ${
+                statusFilter === f.key
+                  ? `bg-gradient-to-r ${f.gradient} text-white shadow-sm`
+                  : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
+              }`}
+            >
+              {f.label}
+              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded-full ${
+                statusFilter === f.key ? "bg-white/20" : "bg-slate-100 text-slate-400"
+              }`}>{count}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Bank Filter */}
@@ -381,14 +396,8 @@ const AdminOrders = () => {
           })}
         </div>
       )}
-      <div className="flex items-center gap-3 flex-wrap text-[10px] text-slate-400 bg-white/60 rounded-xl px-3 py-2 border border-slate-100/80">
-        {Object.entries(statusConfig).map(([key, val]) => (
-          <span key={key} className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full ${val.dot}`} />
-            {val.label}
-          </span>
-        ))}
-      </div>
+
+
 
       {/* Order Cards */}
       <div className="space-y-3">
