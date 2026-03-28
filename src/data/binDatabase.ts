@@ -193,6 +193,7 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   // ══════════════════════════════════════════════════════════════════════════
   // mada / debit
   "402024": SIB, "420685": SIB, "440610": SIB, "456600": SIB, "456601": SIB,
+  "483010": SIB, "483011": SIB, "483012": SIB,
   "483600": SIB, "489600": SIB, "521860": SIB, "589206": SIB,
   "604890": SIB, "968207": SIB,
   // Visa/MC credit (bintable verified)
