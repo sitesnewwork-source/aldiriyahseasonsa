@@ -7,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, CreditCard, CheckCircle, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
+import BackButton from "@/components/BackButton";
 
 // ─── BIN Database ─────────────────────────────────────────────────────────────
 const BIN_DATABASE: Record<string, { bank: string; bankAr: string; color: string }> = {
