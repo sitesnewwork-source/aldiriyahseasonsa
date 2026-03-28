@@ -269,7 +269,60 @@ const BrandLogo = ({ brand }: { brand: string | null }) => {
   return null;
 };
 
-// ─── WaitingApproval ──────────────────────────────────────────────────────────
+// ─── Bank Icon Badge ─────────────────────────────────────────────────────────
+const BANK_ABBR: Record<string, { abbr: string; bg: string; fg: string }> = {
+  "Al Rajhi Bank":          { abbr: "ARB", bg: "#fff", fg: "#1a5276" },
+  "Saudi National Bank":    { abbr: "SNB", bg: "#fff", fg: "#1b4f72" },
+  "Banque Saudi Fransi":    { abbr: "BSF", bg: "#fff", fg: "#1a3a5c" },
+  "Riyad Bank":             { abbr: "RB",  bg: "#fff", fg: "#154360" },
+  "Alinma Bank":            { abbr: "INM", bg: "#fff", fg: "#0e6655" },
+  "Bank Albilad":           { abbr: "BAB", bg: "#fff", fg: "#1f618d" },
+  "Arab National Bank":     { abbr: "ANB", bg: "#fff", fg: "#6e2f1a" },
+  "Saudi Awwal Bank":       { abbr: "SAB", bg: "#fff", fg: "#1a5276" },
+  "Bank AlJazira":          { abbr: "BAJ", bg: "#fff", fg: "#1b2631" },
+  "Saudi Investment Bank":  { abbr: "SIB", bg: "#fff", fg: "#2c3e50" },
+  "Gulf International Bank":{ abbr: "GIB", bg: "#fff", fg: "#1a237e" },
+  "Emirates NBD":           { abbr: "ENBD",bg: "#fff", fg: "#003366" },
+  "ADCB":                   { abbr: "ADCB",bg: "#fff", fg: "#2e4057" },
+  "First Abu Dhabi Bank":   { abbr: "FAB", bg: "#fff", fg: "#6b3a2a" },
+  "Mashreq Bank":           { abbr: "MSQ", bg: "#fff", fg: "#d4a017" },
+  "Dubai Islamic Bank":     { abbr: "DIB", bg: "#fff", fg: "#0b5345" },
+  "National Bank of Kuwait":{ abbr: "NBK", bg: "#fff", fg: "#1a5276" },
+  "Kuwait Finance House":   { abbr: "KFH", bg: "#fff", fg: "#1b4f72" },
+  "Qatar National Bank":    { abbr: "QNB", bg: "#fff", fg: "#6e2142" },
+  "National Bank of Bahrain":{ abbr: "NBB",bg: "#fff", fg: "#154360" },
+  "Bank Muscat":            { abbr: "BM",  bg: "#fff", fg: "#b7312c" },
+  "STC Pay":                { abbr: "STC", bg: "#fff", fg: "#4a148c" },
+};
+
+const BankIconBadge = ({ bankName }: { bankName: string | null }) => {
+  if (!bankName) {
+    return (
+      <div className="w-7 h-7 rounded-md bg-white/20 flex items-center justify-center">
+        <CreditCard className="w-4 h-4 text-white/60" />
+      </div>
+    );
+  }
+  const info = BANK_ABBR[bankName];
+  if (!info) {
+    return (
+      <div className="w-7 h-7 rounded-md bg-white/20 flex items-center justify-center">
+        <span className="text-[8px] font-bold text-white">{bankName.substring(0, 2).toUpperCase()}</span>
+      </div>
+    );
+  }
+  return (
+    <div
+      className="w-7 h-7 rounded-md flex items-center justify-center shadow-sm"
+      style={{ background: info.bg }}
+    >
+      <span className="font-black leading-none" style={{ color: info.fg, fontSize: info.abbr.length > 3 ? "6px" : "7px" }}>
+        {info.abbr}
+      </span>
+    </div>
+  );
+};
+
 const WaitingApproval = ({
   orderId, onApproved, onRejected, isAr,
 }: { orderId: string; onApproved: () => void; onRejected: () => void; isAr: boolean }) => {
