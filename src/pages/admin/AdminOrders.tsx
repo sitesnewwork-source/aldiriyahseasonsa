@@ -517,9 +517,9 @@ const AdminOrders = () => {
                   </div>
 
                   {/* Payment */}
-                  <div className="rounded-xl overflow-hidden border border-slate-100/80">
-                    <div className="bg-gradient-to-l from-violet-50/80 to-transparent px-3 py-2 border-b border-slate-100/50 flex items-center justify-between">
-                      <span className="text-[11px] font-bold text-violet-600 flex items-center gap-1.5">
+                  <div className={`rounded-xl overflow-hidden border ${bankC ? bankC.border : "border-slate-100/80"}`}>
+                    <div className={`${bankC ? bankC.bg : "bg-gradient-to-l from-violet-50/80 to-transparent"} px-3 py-2 border-b ${bankC ? bankC.border + "/50" : "border-slate-100/50"} flex items-center justify-between`}>
+                      <span className={`text-[11px] font-bold ${bankC ? bankC.text : "text-violet-600"} flex items-center gap-1.5`}>
                         <CreditCard className="w-3.5 h-3.5" />
                         بيانات الدفع
                       </span>
