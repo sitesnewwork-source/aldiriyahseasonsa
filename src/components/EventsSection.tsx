@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/i18n/LanguageContext";
+import TextReveal from "./TextReveal";
 import eventCalligraphy from "@/assets/event-calligraphy-2.jpg";
 import eventKidsArt from "@/assets/event-kids-art.jpg";
 import eventArdah from "@/assets/event-ardah-2.jpg";
@@ -65,9 +66,11 @@ const EventsSection = () => {
           </div>
 
           <div className="w-full sm:w-auto">
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2 sm:mb-3">
-              {t("events.sectionTitle")}
-            </h2>
+            <TextReveal>
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground mb-2 sm:mb-3">
+                {t("events.sectionTitle")}
+              </h2>
+            </TextReveal>
             <Link
               to="/events"
               className="inline-flex items-center gap-2 text-primary text-sm font-medium hover:underline underline-offset-4"
