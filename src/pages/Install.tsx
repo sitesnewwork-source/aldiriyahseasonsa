@@ -193,11 +193,46 @@ const Install = () => {
                 </motion.div>
               )}
 
+              {/* QR Code */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="mb-8 bg-gradient-to-br from-primary/5 to-accent/5 border border-primary/20 rounded-2xl p-6 text-center"
+              >
+                <div className="flex items-center justify-center gap-2 mb-4">
+                  <QrCode className="w-5 h-5 text-primary" />
+                  <h3 className="text-lg font-bold text-foreground">
+                    {lang === "ar" ? "شارك رابط التثبيت" : "Share Install Link"}
+                  </h3>
+                </div>
+                <div className="inline-block p-4 bg-white rounded-2xl shadow-lg border border-primary/10">
+                  <QRCodeSVG
+                    value="https://aldiriyahseasonsa.lovable.app/install"
+                    size={180}
+                    bgColor="#ffffff"
+                    fgColor="#1a1a2e"
+                    level="H"
+                    imageSettings={{
+                      src: "/placeholder.svg",
+                      x: undefined,
+                      y: undefined,
+                      height: 30,
+                      width: 30,
+                      excavate: true,
+                    }}
+                  />
+                </div>
+                <p className="text-sm text-foreground/50 mt-3">
+                  {lang === "ar" ? "امسح الرمز لتحميل التطبيق على جهازك" : "Scan to install the app on your device"}
+                </p>
+              </motion.div>
+
               {/* Features */}
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
+                transition={{ delay: 0.3 }}
                 className="grid grid-cols-2 gap-3"
               >
                 {c.features.map((feature, i) => (
