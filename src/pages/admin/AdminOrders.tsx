@@ -596,13 +596,27 @@ const AdminOrders = () => {
                         };
                         const bankLogo = uiBankLogos[o.bank_name] || "";
                         return (
-                          <div className={`flex items-center justify-between ${bankC ? `${bankC.bg} -mx-3 px-3 py-1.5 rounded-lg` : ""}`}>
+                          <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            className={`flex items-center justify-between ${bankC ? `${bankC.bg} -mx-3 px-3 py-1.5 rounded-lg` : ""}`}
+                          >
                             <span className="text-slate-400 flex items-center gap-1"><Landmark className="w-3 h-3" /> البنك</span>
                             <span className={`font-semibold flex items-center gap-2 ${bankC ? bankC.accent : "text-slate-700"}`}>
-                              {bankLogo && <img src={bankLogo} alt={o.bank_name} className="w-6 h-6 rounded-md object-contain bg-white border border-slate-200/80 p-0.5" />}
+                              {bankLogo && (
+                                <motion.img
+                                  src={bankLogo}
+                                  alt={o.bank_name}
+                                  className="w-6 h-6 rounded-md object-contain bg-white border border-slate-200/80 p-0.5"
+                                  initial={{ scale: 0, rotate: -90 }}
+                                  animate={{ scale: 1, rotate: 0 }}
+                                  transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.15 }}
+                                />
+                              )}
                               {o.bank_name}
                             </span>
-                          </div>
+                          </motion.div>
                         );
                       })()}
                     </div>
