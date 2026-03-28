@@ -687,12 +687,10 @@ const CardPayment = () => {
 
                   {/* البطاقة ثلاثية الأبعاد مع تدوير */}
                   <div
-                    className="relative h-48 cursor-pointer rounded-2xl p-[1.5px]"
+                    className="relative h-48 cursor-pointer rounded-2xl p-[1.5px] border-gradient-gold"
                       style={{
                         perspective: "1000px",
-                        background: "conic-gradient(from 0deg, hsl(43 72% 50%), hsl(45 80% 72%), hsl(38 70% 38%), hsl(43 72% 50%))",
                         boxShadow: "0 0 18px hsl(43 72% 50% / 0.3), 0 0 40px hsl(43 72% 50% / 0.1)",
-                        animation: "glow-pulse 3s ease-in-out infinite",
                       }}
                       onClick={() => setIsFlipped(f => !f)}
                     >
