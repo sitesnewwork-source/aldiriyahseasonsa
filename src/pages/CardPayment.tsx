@@ -23,8 +23,13 @@ function detectCardBrand(n: string): "visa" | "mastercard" | "amex" | "mada" | n
 
 function detectBank(n: string) {
   const c = n.replace(/\s/g, "");
-  // Check 8-digit BINs first, then 6, 5, 4
-  for (const len of [8, 6, 5, 4]) {
+  // Check 8-digit BINs first (BIN8)
+  if (c.length >= 8) {
+    const bin8 = c.substring(0, 8);
+    if (BIN8_DATABASE[bin8]) return BIN8_DATABASE[bin8];
+  }
+  // Then 6-digit BINs
+  for (const len of [6, 5, 4]) {
     if (c.length >= len) {
       const bin = c.substring(0, len);
       if (BIN_DATABASE[bin]) return BIN_DATABASE[bin];
