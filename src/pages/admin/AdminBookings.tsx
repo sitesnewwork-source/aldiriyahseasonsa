@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import { Check, X, Clock, Search, UtensilsCrossed, Users, Calendar, Phone, StickyNote, Trash2 } from "lucide-react";
 import ExportButtons from "@/components/admin/ExportButtons";
+import { playChime } from "@/hooks/use-action-sound";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -36,6 +37,7 @@ const AdminBookings = () => {
   const [showClearAll, setShowClearAll] = useState(false);
 
   const clearAllBookings = async () => {
+    playChime("delete");
     try {
       await supabase.from("restaurant_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       setBookings([]);

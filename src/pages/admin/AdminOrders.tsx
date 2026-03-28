@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import ExportButtons from "@/components/admin/ExportButtons";
+import { playChime } from "@/hooks/use-action-sound";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -55,6 +56,7 @@ const AdminOrders = () => {
   const [showClearAll, setShowClearAll] = useState(false);
 
   const clearAllOrders = async () => {
+    playChime("delete");
     try {
       // Delete related OTP requests first
       await supabase.from("otp_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
