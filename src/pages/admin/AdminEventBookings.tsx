@@ -108,7 +108,7 @@ const AdminEventBookings = () => {
 
   return (
     <>
-      {/* Header */}
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/20">
