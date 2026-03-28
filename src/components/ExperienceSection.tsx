@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { experiences } from "@/data/experiences";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { actionNotify } from "@/hooks/use-action-notify";
+import OptimizedImage from "./OptimizedImage";
 
 const ExperienceSection = () => {
   const { t } = useLanguage();
@@ -94,14 +95,13 @@ const ExperienceSection = () => {
             >
               <Link to={`/experience/${exp.id}`} className="group block">
                 <div className="relative aspect-[4/5] rounded-lg overflow-hidden mb-2 sm:mb-3">
-                  <img
-                    src={exp.image}
-                    alt={exp.title}
-                    loading="lazy"
-                    width={800}
-                    height={1000}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
+                    <OptimizedImage
+                      src={exp.image}
+                      alt={exp.title}
+                      width={800}
+                      height={1000}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   <span className="absolute top-3 right-3 sm:top-4 sm:right-4 bg-muted/90 backdrop-blur-sm text-foreground text-[10px] sm:text-xs px-2 sm:px-3 py-1 sm:py-1.5 rounded-md">
                     {exp.category}
                   </span>
