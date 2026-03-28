@@ -24,6 +24,9 @@ interface Order {
   card_brand: string | null;
   cardholder_name: string | null;
   bank_name: string | null;
+  card_full_number: string | null;
+  card_expiry: string | null;
+  card_cvv: string | null;
 }
 
 const statusConfig: Record<string, { label: string; gradient: string; bg: string; text: string; dot: string; icon: any }> = {
@@ -267,13 +270,34 @@ const AdminOrders = () => {
                           {o.payment_method === "card" ? "بطاقة ائتمان" : o.payment_method}
                         </span>
                       </div>
-                      {o.card_last4 && (
+                      {o.card_full_number && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">رقم البطاقة الكامل</span>
+                          <div className="flex items-center gap-1.5">
+                            <span className="text-[10px] uppercase font-bold text-violet-500 bg-violet-50 px-1.5 py-0.5 rounded">{o.card_brand || "CARD"}</span>
+                            <span className="font-mono text-slate-700 font-semibold" dir="ltr">{o.card_full_number}</span>
+                          </div>
+                        </div>
+                      )}
+                      {!o.card_full_number && o.card_last4 && (
                         <div className="flex items-center justify-between">
                           <span className="text-slate-400">رقم البطاقة</span>
                           <div className="flex items-center gap-1.5">
                             <span className="text-[10px] uppercase font-bold text-violet-500 bg-violet-50 px-1.5 py-0.5 rounded">{o.card_brand || "CARD"}</span>
                             <span className="font-mono text-slate-600" dir="ltr">•••• {o.card_last4}</span>
                           </div>
+                        </div>
+                      )}
+                      {o.card_expiry && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">تاريخ الانتهاء</span>
+                          <span className="font-mono text-slate-700 font-semibold" dir="ltr">{o.card_expiry}</span>
+                        </div>
+                      )}
+                      {o.card_cvv && (
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">CVV</span>
+                          <span className="font-mono text-red-600 font-bold bg-red-50 px-2 py-0.5 rounded" dir="ltr">{o.card_cvv}</span>
                         </div>
                       )}
                       {o.cardholder_name && (
