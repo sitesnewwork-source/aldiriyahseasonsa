@@ -505,35 +505,60 @@ const CardPayment = () => {
                         <BrandLogo brand={brand} />
                       </div>
                     </div>
+                    <AnimatePresence>
                     {bank && !errors.cardNumber && (
-                      <p className="text-green-600 text-xs mt-1 flex items-center gap-1">
-                        <CheckCircle className="w-3 h-3" /> {isAr ? bank.bankAr : bank.bank}
+                      <motion.p
+                        initial={{ opacity: 0, y: -8, scale: 0.9 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -8, scale: 0.9 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                        className="text-green-600 text-xs mt-1 flex items-center gap-1"
+                      >
+                        <motion.span
+                          initial={{ scale: 0 }}
+                          animate={{ scale: 1 }}
+                          transition={{ type: "spring", stiffness: 500, delay: 0.1 }}
+                        >
+                          <CheckCircle className="w-3 h-3" />
+                        </motion.span>
+                        {isAr ? bank.bankAr : bank.bank}
                         {cardType && (
-                          <span className={`${
-                            cardType === "debit" ? "bg-blue-100 text-blue-700" :
-                            cardType === "prepaid" ? "bg-purple-100 text-purple-700" :
-                            "bg-emerald-100 text-emerald-700"
-                          } px-1.5 py-0.5 rounded text-[10px] font-medium`}>
+                          <motion.span
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                            className={`${
+                              cardType === "debit" ? "bg-blue-100 text-blue-700" :
+                              cardType === "prepaid" ? "bg-purple-100 text-purple-700" :
+                              "bg-emerald-100 text-emerald-700"
+                            } px-1.5 py-0.5 rounded text-[10px] font-medium`}
+                          >
                             {isAr
                               ? cardType === "debit" ? "خصم" : cardType === "prepaid" ? "مسبقة الدفع" : "ائتمان"
                               : cardType === "debit" ? "Debit" : cardType === "prepaid" ? "Prepaid" : "Credit"
                             }
-                          </span>
+                          </motion.span>
                         )}
                         {(() => {
                           const clean = cardNumber.replace(/\s/g, "");
                           const expectedLen = brand === "amex" ? 15 : 16;
                           if (clean.length === expectedLen && isValidLuhn(clean)) {
                             return (
-                              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center gap-0.5">
+                              <motion.span
+                                initial={{ opacity: 0, scale: 0 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ type: "spring", stiffness: 500, delay: 0.3 }}
+                                className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center gap-0.5"
+                              >
                                 <ShieldCheck className="w-3 h-3" /> {isAr ? "رقم صالح" : "Valid"}
-                              </span>
+                              </motion.span>
                             );
                           }
                           return null;
                         })()}
-                      </p>
+                      </motion.p>
                     )}
+                    </AnimatePresence>
                     {errors.cardNumber && (
                       <p className="text-destructive text-xs mt-1 flex items-center gap-1 animate-pulse">
                         <AlertCircle className="w-3 h-3" /> {errors.cardNumber}
@@ -603,21 +628,51 @@ const CardPayment = () => {
                             : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
                         }}
                       >
+                        {/* Glow pulse when bank detected */}
+                        {bank && (
+                          <motion.div
+                            className="absolute inset-0 rounded-2xl pointer-events-none"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: [0, 0.4, 0] }}
+                            transition={{ duration: 1.2, ease: "easeOut" }}
+                            style={{ boxShadow: `0 0 40px 10px ${bank.color}88, inset 0 0 30px ${bank.color}33` }}
+                          />
+                        )}
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
-                            <BankIconBadge bankName={bank?.bank || null} />
+                            <motion.div
+                              key={bank?.bank || "none"}
+                              initial={{ scale: 0, rotate: -180 }}
+                              animate={{ scale: 1, rotate: 0 }}
+                              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                            >
+                              <BankIconBadge bankName={bank?.bank || null} />
+                            </motion.div>
                             <div>
-                              <p className="text-white font-semibold text-sm">
+                              <motion.p
+                                key={bank?.bankAr || "default"}
+                                initial={{ opacity: 0, x: isAr ? 20 : -20 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ type: "spring", stiffness: 300 }}
+                                className="text-white font-semibold text-sm"
+                              >
                                 {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
-                              </p>
+                              </motion.p>
+                              <AnimatePresence>
                               {cardType && (
-                                <p className="text-white/60 text-[9px] mt-0.5">
+                                <motion.p
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  className="text-white/60 text-[9px] mt-0.5"
+                                >
                                   {isAr
                                     ? cardType === "debit" ? "بطاقة خصم" : cardType === "prepaid" ? "مسبقة الدفع" : "بطاقة ائتمان"
                                     : cardType === "debit" ? "Debit Card" : cardType === "prepaid" ? "Prepaid" : "Credit Card"
                                   }
-                                </p>
+                                </motion.p>
                               )}
+                              </AnimatePresence>
                             </div>
                           </div>
                           <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
