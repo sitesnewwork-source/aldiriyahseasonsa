@@ -140,6 +140,11 @@ const AdminVisitors = () => {
     orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true,
   });
   const toggleSection = (key: string) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
+  const allOpen = Object.values(openSections).every(Boolean);
+  const toggleAllSections = () => {
+    const newVal = !allOpen;
+    setOpenSections({ orders: newVal, bookings: newVal, eventBookings: newVal, actions: newVal, payment: newVal, otp: newVal });
+  };
 
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
   const [showTrash, setShowTrash]     = useState(false);
