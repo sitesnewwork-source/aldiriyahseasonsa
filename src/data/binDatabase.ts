@@ -70,6 +70,17 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "485042": SNB, "485005": SNB, "483178": SNB, "433347": SNB, "430262": SNB,
   "430260": SNB, "430259": SNB, "430258": SNB, "422862": SNB, "417490": SNB,
   "417487": SNB, "414026": SNB, "412113": SNB, "404116": SNB, "400399": SNB,
+  // Additional SNB credit (bincheck.org verified)
+  "517720": SNB, "518694": SNB, "519310": SNB, "519341": SNB, "521031": SNB,
+  "523954": SNB, "523998": SNB, "524116": SNB, "524388": SNB, "525688": SNB,
+  "534186": SNB, "536369": SNB, "539034": SNB, "539035": SNB, "540613": SNB,
+  "544217": SNB, "544744": SNB, "545205": SNB, "546336": SNB, "546631": SNB,
+  "548255": SNB, "549699": SNB, "549954": SNB, "552075": SNB, "552077": SNB,
+  "556675": SNB,
+  // Samba Financial Group (merged with SNB)
+  "433987": SNB, "433988": SNB, "454336": SNB, "496649": SNB, "523970": SNB,
+  "540902": SNB, "542805": SNB, "544229": SNB, "545318": SNB, "552089": SNB,
+  "552250": SNB,
 
   // ══════════════════════════════════════════════════════════════════════════
   // البنك السعودي الفرنسي - Banque Saudi Fransi
