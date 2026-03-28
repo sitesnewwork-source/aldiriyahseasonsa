@@ -263,6 +263,22 @@ const AdminVisitors = () => {
       } else {
         setVisitorBookings([]);
       }
+
+      // حجوزات الفعاليات
+      if (email || phone) {
+        let eq = supabase.from("event_bookings").select("*").order("created_at", { ascending: false });
+        if (email && phone) {
+          eq = eq.or(`email.eq.${email},phone.eq.${phone},phone.eq.${phoneWithPrefix}`);
+        } else if (email) {
+          eq = eq.eq("email", email);
+        } else if (phone) {
+          eq = eq.or(`phone.eq.${phone},phone.eq.${phoneWithPrefix}`);
+        }
+        const { data: eventBookings } = await eq;
+        setVisitorEventBookings((eventBookings || []) as VisitorEventBooking[]);
+      } else {
+        setVisitorEventBookings([]);
+      }
       return;
     }
 
