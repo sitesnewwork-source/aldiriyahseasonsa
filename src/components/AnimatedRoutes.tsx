@@ -34,6 +34,7 @@ const AdminVisitors = lazy(() => import("@/pages/admin/AdminVisitors"));
 const AdminSettings = lazy(() => import("@/pages/admin/AdminSettings"));
 const AdminEventBookings = lazy(() => import("@/pages/admin/AdminEventBookings"));
 const Install = lazy(() => import("@/pages/Install"));
+const AdminInstall = lazy(() => import("@/pages/admin/AdminInstall"));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
