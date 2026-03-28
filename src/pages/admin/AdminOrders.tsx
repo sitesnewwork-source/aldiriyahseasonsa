@@ -4,9 +4,10 @@ import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import {
   Search, CreditCard, Mail, Phone, Hash, Receipt, Ticket,
-  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark, Copy, Check,
+  CheckCircle, XCircle, Filter, ShieldCheck, Clock, Ban, Landmark, Copy, Check, FileText,
 } from "lucide-react";
 import { toast } from "sonner";
+import jsPDF from "jspdf";
 import ExportButtons from "@/components/admin/ExportButtons";
 
 interface Order {
