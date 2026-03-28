@@ -126,7 +126,7 @@ export default function NotificationPanel() {
           setOpen(!open);
           if (!open) markAllRead();
         }}
-        className="fixed left-4 top-20 z-[60] w-10 h-10 rounded-xl bg-white border border-slate-200 shadow-lg flex items-center justify-center hover:bg-slate-50 transition-all btn-press"
+        className="fixed left-4 bottom-24 lg:bottom-auto lg:top-3 z-[60] w-10 h-10 rounded-xl bg-white border border-slate-200 shadow-lg flex items-center justify-center hover:bg-slate-50 transition-all btn-press"
       >
         <Bell className={cn("w-4.5 h-4.5 text-slate-600 transition-transform", unreadCount > 0 && "animate-[wiggle_0.5s_ease-in-out]")} />
         {unreadCount > 0 && (
