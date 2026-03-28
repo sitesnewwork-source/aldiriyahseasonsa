@@ -172,6 +172,7 @@ const AdminOrders = () => {
     toast.success("تم تصدير بيانات البطاقات بنجاح");
   };
 
+  const fetchOrders = async () => {
     const { data } = await supabase
       .from("ticket_orders")
       .select("*")
