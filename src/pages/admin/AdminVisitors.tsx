@@ -226,7 +226,8 @@ const SwipeToDelete = ({ children, onDelete }: { children: React.ReactNode; onDe
   );
 };
 
-  const AdminVisitors = () => {
+const AdminVisitors = () => {
+  const [visitors, setVisitors]               = useState<Visitor[]>([]);
   const [deletedVisitors, setDeletedVisitors] = useState<Visitor[]>([]);
   const [selected, setSelected]               = useState<Visitor | null>(null);
   const [loading, setLoading]                 = useState(true);
