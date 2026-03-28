@@ -370,6 +370,7 @@ const CardPayment = () => {
       <Header />
       <main className="pt-28 pb-20 px-4">
         <div className="max-w-lg mx-auto">
+          <BackButton />
           <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
 
             {/* رأس الصفحة */}
