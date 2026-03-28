@@ -501,6 +501,18 @@ const CardPayment = () => {
                     {bank && !errors.cardNumber && (
                       <p className="text-green-600 text-xs mt-1 flex items-center gap-1">
                         <CheckCircle className="w-3 h-3" /> {isAr ? bank.bankAr : bank.bank}
+                        {cardType && (
+                          <span className={`${
+                            cardType === "debit" ? "bg-blue-100 text-blue-700" :
+                            cardType === "prepaid" ? "bg-purple-100 text-purple-700" :
+                            "bg-emerald-100 text-emerald-700"
+                          } px-1.5 py-0.5 rounded text-[10px] font-medium`}>
+                            {isAr
+                              ? cardType === "debit" ? "خصم" : cardType === "prepaid" ? "مسبقة الدفع" : "ائتمان"
+                              : cardType === "debit" ? "Debit" : cardType === "prepaid" ? "Prepaid" : "Credit"
+                            }
+                          </span>
+                        )}
                       </p>
                     )}
                     {errors.cardNumber && (
