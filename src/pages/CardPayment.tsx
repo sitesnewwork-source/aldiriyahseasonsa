@@ -307,10 +307,14 @@ const CardPayment = () => {
     }
   };
 
-  const onExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    let v = e.target.value.replace(/\D/g, "").substring(0, 4);
-    if (v.length >= 2) v = v.substring(0, 2) + "/" + v.substring(2);
-    setExpiry(v);
+  const onExpiryMonthChange = (month: string) => {
+    const y = expiry.includes("/") ? expiry.split("/")[1] : "";
+    setExpiry(month + "/" + y);
+    if (errors.expiry) setErrors(p => ({ ...p, expiry: "" }));
+  };
+  const onExpiryYearChange = (year: string) => {
+    const m = expiry.includes("/") ? expiry.split("/")[0] : "";
+    setExpiry(m + "/" + year);
     if (errors.expiry) setErrors(p => ({ ...p, expiry: "" }));
   };
 
@@ -571,17 +575,34 @@ const CardPayment = () => {
                       <label className="block text-sm font-medium text-foreground mb-1.5">
                         {isAr ? "تاريخ الانتهاء" : "Expiry Date"}
                       </label>
-                      <input
-                        type="text"
-                        inputMode="numeric"
-                        value={expiry}
-                        onChange={onExpiryChange}
-                        onFocus={() => setFocused("expiry")}
-                        onBlur={() => setFocused(null)}
-                        placeholder="MM/YY"
-                        maxLength={5}
-                        className={`${inputClass("expiry")} font-mono`}
-                      />
+                      <div className="grid grid-cols-2 gap-2">
+                        <select
+                          value={expiry.split("/")[0] || ""}
+                          onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
+                          onFocus={() => setFocused("expiry")}
+                          onBlur={() => setFocused(null)}
+                          className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer`}
+                        >
+                          <option value="">{isAr ? "الشهر" : "MM"}</option>
+                          {Array.from({ length: 12 }, (_, i) => {
+                            const m = String(i + 1).padStart(2, "0");
+                            return <option key={m} value={m}>{m}</option>;
+                          })}
+                        </select>
+                        <select
+                          value={expiry.split("/")[1] || ""}
+                          onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
+                          onFocus={() => setFocused("expiry")}
+                          onBlur={() => setFocused(null)}
+                          className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer`}
+                        >
+                          <option value="">{isAr ? "السنة" : "YY"}</option>
+                          {Array.from({ length: 10 }, (_, i) => {
+                            const y = String(new Date().getFullYear() % 100 + i).padStart(2, "0");
+                            return <option key={y} value={y}>{y}</option>;
+                          })}
+                        </select>
+                      </div>
                       {errors.expiry && <p className="text-destructive text-xs mt-1">{errors.expiry}</p>}
                     </div>
                     <div>
