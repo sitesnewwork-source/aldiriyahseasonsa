@@ -524,7 +524,7 @@ const CardPayment = () => {
                       onFocus={() => setFocused("cardHolder")}
                       onBlur={() => setFocused(null)}
                       placeholder={isAr ? "الاسم كما يظهر على البطاقة" : "Name as on card"}
-                      className={inputClass("cardHolder")}
+                      className={`${inputClass("cardHolder")} ${shakeField === "cardHolder" ? "animate-shake" : ""}`}
                     />
                     {errors.cardHolder && (
                       <p className="text-destructive text-xs mt-1 flex items-center gap-1">
@@ -547,7 +547,7 @@ const CardPayment = () => {
                         onFocus={() => setFocused("cardNumber")}
                         onBlur={() => setFocused(null)}
                         placeholder="•••• •••• •••• ••••"
-                        className={`${inputClass("cardNumber")} font-mono ${isAr ? "pl-12" : "pr-12"} ${shakeField === "cardNumber" ? "animate-[shake_0.4s_ease-in-out]" : ""}`}
+                        className={`${inputClass("cardNumber")} font-mono ${isAr ? "pl-12" : "pr-12"} ${shakeField === "cardNumber" ? "animate-shake" : ""}`}
                       />
                       <div className={`absolute top-1/2 -translate-y-1/2 ${isAr ? "left-3" : "right-3"}`}>
                         <BrandLogo brand={brand} />
@@ -674,7 +674,7 @@ const CardPayment = () => {
                         onBlur={() => { setFocused(null); setIsFlipped(false); }}
                         placeholder={brand === "amex" ? "••••" : "•••"}
                         maxLength={brand === "amex" ? 4 : 3}
-                        className={`${inputClass("cvv")} font-mono`}
+                        className={`${inputClass("cvv")} font-mono ${shakeField === "cvv" ? "animate-shake" : ""}`}
                       />
                       {errors.cvv && <p className="text-destructive text-xs mt-1">{errors.cvv}</p>}
                     </div>
