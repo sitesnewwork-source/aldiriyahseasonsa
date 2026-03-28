@@ -4,6 +4,10 @@ import { CalendarCheck, Trash2, Check, X, Users, Phone, Mail, Clock, StickyNote,
 import ExportButtons from "@/components/admin/ExportButtons";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 
