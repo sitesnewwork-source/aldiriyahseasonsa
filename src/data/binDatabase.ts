@@ -185,6 +185,8 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "473828": BAJ, "473827": BAJ, "473826": BAJ, "473825": BAJ,
   "440532": BAJ, "428375": BAJ, "428374": BAJ, "421051": BAJ, "414841": BAJ,
   "414090": BAJ, "406487": BAJ,
+  // Additional AlJazira (bincheck.org)
+  "515804": BAJ,
 
   // ══════════════════════════════════════════════════════════════════════════
   // البنك السعودي للاستثمار - Saudi Investment Bank
