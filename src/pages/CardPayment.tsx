@@ -710,7 +710,7 @@ const CardPayment = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: [0, 0.4, 0] }}
                             transition={{ duration: 1.2, ease: "easeOut" }}
-                            style={{ boxShadow: `0 0 40px 10px ${bank.color}88, inset 0 0 30px ${bank.color}33` }}
+                            style={{ boxShadow: `0 0 40px 10px hsl(43 72% 50% / 0.35), inset 0 0 30px hsl(43 72% 50% / 0.15)` }}
                           />
                         )}
                         <div className="flex items-start justify-between">
