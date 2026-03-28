@@ -169,6 +169,11 @@ const AdminSettings = () => {
       gradient: "from-cyan-500 to-sky-600", shadow: "shadow-cyan-500/20",
       onClick: handleExportPDF,
     },
+    {
+      icon: Smartphone, label: "تثبيت لوحة التحكم",
+      gradient: "from-amber-500 to-yellow-600", shadow: "shadow-amber-500/20",
+      onClick: () => { playChime("pop"); navigate("/admin/install"); },
+    },
   ];
 
   return (
