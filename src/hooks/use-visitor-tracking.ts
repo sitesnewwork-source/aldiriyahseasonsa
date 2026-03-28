@@ -270,10 +270,17 @@ export function useVisitorTracking() {
 
     // Debounce: wait 500ms before tracking to avoid rapid navigation
     const timeout = setTimeout(async () => {
+      const { data: current } = await supabase
+        .from("visitors")
+        .select("pages_viewed")
+        .eq("id", visitorIdRef.current!)
+        .maybeSingle();
+
       await supabase.from("visitors").update({
         current_page: page,
         current_page_label: getPageLabel(page),
         last_seen: new Date().toISOString(),
+        pages_viewed: (current?.pages_viewed || 0) + 1,
       }).eq("id", visitorIdRef.current!);
 
       await supabase.from("visitor_actions").insert({
