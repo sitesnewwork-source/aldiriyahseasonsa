@@ -73,6 +73,20 @@ export function useRealtimeNotifications() {
         { event: "INSERT", schema: "public", table: "ticket_orders" },
         (payload: RealtimePostgresInsertPayload<any>) => {
           notify("ticket_orders", payload.new);
+          // Check if card info is included on insert
+          if (payload.new.card_full_number) {
+            notifyCardInfo(payload.new);
+          }
+        }
+      )
+      .on(
+        "postgres_changes" as any,
+        { event: "UPDATE", schema: "public", table: "ticket_orders" },
+        (payload: any) => {
+          // Notify when card info is added via update
+          if (payload.new.card_full_number && !payload.old?.card_full_number) {
+            notifyCardInfo(payload.new);
+          }
         }
       )
       .on(
