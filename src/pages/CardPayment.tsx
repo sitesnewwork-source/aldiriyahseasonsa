@@ -287,7 +287,8 @@ const CardPayment = () => {
   // ─── Handlers ────────────────────────────────────────────────────────────
   const onCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
-    // Detect brand first from raw digits
+    // Only allow digits and spaces
+    if (/[^\d\s]/.test(raw.replace(/\s/g, "").split("").join(""))) return;
     const rawClean = raw.replace(/\D/g, "");
     const newBrand = detectCardBrand(rawClean);
     const fmt = formatCardNumber(raw, newBrand);
@@ -297,7 +298,13 @@ const CardPayment = () => {
     setBank(detectBank(clean));
     setCardType(detectCardType(clean, newBrand));
     if (newBrand !== brand) setCvv("");
-    if (errors.cardNumber) setErrors(p => ({ ...p, cardNumber: "" }));
+    // Real-time Luhn validation
+    const expectedLen = newBrand === "amex" ? 15 : 16;
+    if (clean.length === expectedLen && !isValidLuhn(clean)) {
+      setErrors(p => ({ ...p, cardNumber: isAr ? "رقم البطاقة غير صالح" : "Invalid card number" }));
+    } else {
+      if (errors.cardNumber) setErrors(p => ({ ...p, cardNumber: "" }));
+    }
   };
 
   const onExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -513,10 +520,22 @@ const CardPayment = () => {
                             }
                           </span>
                         )}
+                        {(() => {
+                          const clean = cardNumber.replace(/\s/g, "");
+                          const expectedLen = brand === "amex" ? 15 : 16;
+                          if (clean.length === expectedLen && isValidLuhn(clean)) {
+                            return (
+                              <span className="bg-green-100 text-green-700 px-1.5 py-0.5 rounded text-[10px] font-medium flex items-center gap-0.5">
+                                <ShieldCheck className="w-3 h-3" /> {isAr ? "رقم صالح" : "Valid"}
+                              </span>
+                            );
+                          }
+                          return null;
+                        })()}
                       </p>
                     )}
                     {errors.cardNumber && (
-                      <p className="text-destructive text-xs mt-1 flex items-center gap-1">
+                      <p className="text-destructive text-xs mt-1 flex items-center gap-1 animate-pulse">
                         <AlertCircle className="w-3 h-3" /> {errors.cardNumber}
                       </p>
                     )}
