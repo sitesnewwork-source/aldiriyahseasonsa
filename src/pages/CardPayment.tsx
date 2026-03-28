@@ -700,9 +700,7 @@ const CardPayment = () => {
                         className="absolute inset-0 rounded-2xl p-5 flex flex-col justify-between overflow-hidden shadow-lg"
                         style={{
                           backfaceVisibility: "hidden",
-                          background: bank
-                            ? `linear-gradient(135deg, ${bank.color} 0%, ${bank.color}dd 100%)`
-                            : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+                          background: "linear-gradient(135deg, hsl(220 15% 6%) 0%, hsl(220 12% 10%) 40%, hsl(43 40% 15%) 100%)",
                         }}
                       >
                         {/* Glow pulse when bank detected */}
@@ -712,7 +710,7 @@ const CardPayment = () => {
                             initial={{ opacity: 0 }}
                             animate={{ opacity: [0, 0.4, 0] }}
                             transition={{ duration: 1.2, ease: "easeOut" }}
-                            style={{ boxShadow: `0 0 40px 10px ${bank.color}88, inset 0 0 30px ${bank.color}33` }}
+                            style={{ boxShadow: `0 0 40px 10px hsl(43 72% 50% / 0.35), inset 0 0 30px hsl(43 72% 50% / 0.15)` }}
                           />
                         )}
                         <div className="flex items-start justify-between">
@@ -825,9 +823,7 @@ const CardPayment = () => {
                         style={{
                           backfaceVisibility: "hidden",
                           transform: "rotateY(180deg)",
-                          background: bank
-                            ? `linear-gradient(135deg, ${bank.color}ee 0%, ${bank.color} 100%)`
-                            : "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                          background: "linear-gradient(135deg, hsl(220 12% 10%) 0%, hsl(220 15% 6%) 40%, hsl(43 40% 15%) 100%)",
                         }}
                       >
                         {/* الشريط المغناطيسي */}
