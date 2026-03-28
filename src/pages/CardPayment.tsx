@@ -583,7 +583,7 @@ const CardPayment = () => {
                             onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
                             onFocus={() => setFocused("expiry")}
                             onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20`}
+                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
                           >
                             <option value="">{isAr ? "الشهر" : "MM"}</option>
                             {Array.from({ length: 12 }, (_, i) => {
@@ -599,7 +599,7 @@ const CardPayment = () => {
                             onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
                             onFocus={() => setFocused("expiry")}
                             onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20`}
+                            className={`${inputClass("expiry")} font-mono appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
                           >
                             <option value="">{isAr ? "السنة" : "YY"}</option>
                             {Array.from({ length: 10 }, (_, i) => {
