@@ -61,6 +61,7 @@ export function useVisitorTracking() {
   const location = useLocation();
   const navigate = useNavigate();
   const visitorIdRef = useRef<string | null>(null);
+  const visitorReadyRef = useRef(false);
   const navigateRef = useRef(navigate);
   navigateRef.current = navigate;
   const heartbeatRef = useRef<ReturnType<typeof setInterval> | null>(null);
