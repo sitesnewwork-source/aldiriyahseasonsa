@@ -396,14 +396,8 @@ const AdminOrders = () => {
           })}
         </div>
       )}
-      <div className="flex items-center gap-3 flex-wrap text-[10px] text-slate-400 bg-white/60 rounded-xl px-3 py-2 border border-slate-100/80">
-        {Object.entries(statusConfig).map(([key, val]) => (
-          <span key={key} className="flex items-center gap-1.5">
-            <span className={`w-2 h-2 rounded-full ${val.dot}`} />
-            {val.label}
-          </span>
-        ))}
-      </div>
+
+
 
       {/* Order Cards */}
       <div className="space-y-3">
