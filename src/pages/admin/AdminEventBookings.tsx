@@ -5,6 +5,7 @@ import ExportButtons from "@/components/admin/ExportButtons";
 import { cn } from "@/lib/utils";
 import { playChime } from "@/hooks/use-action-sound";
 import { toast } from "@/hooks/use-toast";
+import SwipeToDelete from "@/components/admin/SwipeToDelete";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -202,8 +203,8 @@ const AdminEventBookings = () => {
             const st = statusConfig[booking.status] || statusConfig.pending;
             const isPending = booking.status === "pending";
             return (
+              <SwipeToDelete key={booking.id} onDelete={() => deleteBooking(booking.id)}>
               <div
-                key={booking.id}
                 className={`bg-white rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
                   isPending ? "border-amber-200/80 shadow-sm shadow-amber-100/50" : "border-slate-100/80 hover:shadow-slate-200/60"
                 }`}
@@ -289,6 +290,7 @@ const AdminEventBookings = () => {
                   </div>
                 </div>
               </div>
+              </SwipeToDelete>
             );
           })}
         </div>

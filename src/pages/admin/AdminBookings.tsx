@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
@@ -10,6 +10,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
+import SwipeToDelete from "@/components/admin/SwipeToDelete";
 
 interface Booking {
   id: string;
@@ -51,6 +52,18 @@ const AdminBookings = () => {
       toast.error("حدث خطأ أثناء المسح");
     }
   };
+
+  const deleteSingleBooking = useCallback(async (id: string) => {
+    playChime("delete");
+    if (navigator.vibrate) navigator.vibrate(100);
+    try {
+      await supabase.from("restaurant_bookings").delete().eq("id", id);
+      setBookings(prev => prev.filter(b => b.id !== id));
+      toast.success("تم حذف الحجز");
+    } catch {
+      toast.error("حدث خطأ أثناء الحذف");
+    }
+  }, []);
 
   const fetchBookings = async () => {
     const { data } = await supabase
@@ -211,8 +224,8 @@ const AdminBookings = () => {
             const st = statusConfig[b.status] || statusConfig.pending;
             const isPending = b.status === "pending";
             return (
+              <SwipeToDelete key={b.id} onDelete={() => deleteSingleBooking(b.id)}>
               <div
-                key={b.id}
                 className={`bg-white rounded-2xl border overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5 ${
                   isPending ? "border-amber-200/80 shadow-sm shadow-amber-100/50" : b.status === "cancelled" ? "border-red-100/80" : "border-slate-100/80 hover:shadow-slate-200/60"
                 }`}
@@ -306,6 +319,7 @@ const AdminBookings = () => {
                   </div>
                 )}
               </div>
+              </SwipeToDelete>
             );
           })
         )}
