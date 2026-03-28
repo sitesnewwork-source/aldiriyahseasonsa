@@ -12,6 +12,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import ExportButtons from "@/components/admin/ExportButtons";
 import { playChime } from "@/hooks/use-action-sound";
+import { bankLogos, bankColors, bankUIColors } from "@/data/bankLogos";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
