@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ParallaxHeroProps {
   image: string;
@@ -8,7 +9,7 @@ interface ParallaxHeroProps {
   minHeight?: string;
   overlayClassName?: string;
   children?: React.ReactNode;
-  speed?: number; // 0.1–0.5, default 0.3
+  speed?: number;
 }
 
 const ParallaxHero = ({
@@ -20,14 +21,16 @@ const ParallaxHero = ({
   children,
   speed = 0.3,
 }: ParallaxHeroProps) => {
+  const isMobile = useIsMobile();
+  const mobileSpeed = isMobile ? speed * 0.4 : speed;
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
 
-  const y = useTransform(scrollYProgress, [0, 1], ["0%", `${speed * 100}%`]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", `${mobileSpeed * 100}%`]);
+  const scale = useTransform(scrollYProgress, [0, 1], [1, isMobile ? 1.04 : 1.1]);
   const opacity = useTransform(scrollYProgress, [0, 0.8, 1], [1, 0.6, 0.3]);
 
   return (

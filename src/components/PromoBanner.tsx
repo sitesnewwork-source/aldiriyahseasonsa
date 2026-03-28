@@ -4,13 +4,15 @@ import { scrollToSection } from "@/lib/scroll";
 import { useLanguage } from "@/i18n/LanguageContext";
 import hotelImg from "@/assets/hotel-bab-samhan.jpg";
 import { useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const PromoBanner = () => {
   const { t, isRtl } = useLanguage();
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+  const y = useTransform(scrollYProgress, [0, 1], isMobile ? ["-5%", "5%"] : ["-12%", "12%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0.6, 1, 1, 0.6]);
 
   return (

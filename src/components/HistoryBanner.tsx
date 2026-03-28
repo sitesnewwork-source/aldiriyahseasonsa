@@ -5,16 +5,18 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import salwaImg from "@/assets/salwa-palace-night.jpg";
 import placeTuraif from "@/assets/place-turaif.jpg";
 import { useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const HistoryBanner = () => {
   const { t, isRtl } = useLanguage();
   const navigate = useNavigate();
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y1 = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
-  const y2 = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
-  const scale1 = useTransform(scrollYProgress, [0, 0.5, 1], [1.05, 1, 1.05]);
+  const y1 = useTransform(scrollYProgress, [0, 1], isMobile ? ["-4%", "4%"] : ["-10%", "10%"]);
+  const y2 = useTransform(scrollYProgress, [0, 1], isMobile ? ["-3%", "3%"] : ["-6%", "6%"]);
+  const scale1 = useTransform(scrollYProgress, [0, 0.5, 1], isMobile ? [1.02, 1, 1.02] : [1.05, 1, 1.05]);
 
   return (
     <section ref={ref} className="bg-background relative">
