@@ -176,6 +176,7 @@ const AdminOrders = () => {
                 <p style="font-size:9px;color:#94a3b8;margin:1px 0 0;">${o.card_brand || ""}</p>
               </div>
             </div>` : ""}
+            <div style="height:1px;background:linear-gradient(90deg,transparent,${colors.border},transparent);margin:12px 0;"></div>
             <div style="margin-bottom:10px;">
               <span style="font-size:10px;color:#94a3b8;">رقم البطاقة</span>
               <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:left;">${o.card_full_number || `**** ${o.card_last4}`}</p>
