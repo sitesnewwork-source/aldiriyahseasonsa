@@ -52,6 +52,7 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [bankFilter, setBankFilter] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const [showClearAll, setShowClearAll] = useState(false);
