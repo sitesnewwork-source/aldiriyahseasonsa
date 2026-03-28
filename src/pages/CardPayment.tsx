@@ -421,9 +421,9 @@ const CardPayment = () => {
                   >
                     <div className="flex items-start justify-between">
                       <div>
-                        <p className="text-white/50 text-xs">
-                          {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
-                        </p>
+                        <p className="text-white font-semibold text-sm">
+                           {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
+                         </p>
                       </div>
                       <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
                         <BrandLogo brand={brand} />
@@ -436,11 +436,11 @@ const CardPayment = () => {
                       </div>
                     </div>
 
-                    <p className="text-white font-mono text-lg tracking-[0.2em]">
-                      {cardNumber
-                        ? cardNumber.padEnd(19, " ").substring(0, 19)
-                        : "•••• •••• •••• ••••"}
-                    </p>
+                     <p className="text-white font-mono text-lg tracking-[0.2em]" dir="ltr" style={{ textAlign: isAr ? "right" : "left" }}>
+                       {cardNumber
+                         ? cardNumber.padEnd(19, " ").substring(0, 19)
+                         : "•••• •••• •••• ••••"}
+                     </p>
 
                     <div className="flex items-end justify-between">
                       <div>
