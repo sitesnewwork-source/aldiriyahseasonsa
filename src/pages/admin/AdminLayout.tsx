@@ -22,7 +22,49 @@ const navItems = [
   { label: "الإعدادات", icon: Settings, path: "/admin/settings", gradient: "from-slate-500 to-slate-700" },
 ];
 
-const bottomNavItems = navItems.slice(0, 4);
+const swipePages = ["/admin", ...bottomNavItems.map(i => i.path)];
+
+// Swipeable wrapper for mobile gesture navigation
+const SwipeableContent = ({ children, navigate, currentPath }: { children: React.ReactNode; navigate: (path: string) => void; currentPath: string }) => {
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const swiping = useRef(false);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStart.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+    swiping.current = false;
+  }, []);
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!touchStart.current) return;
+    const dx = e.changedTouches[0].clientX - touchStart.current.x;
+    const dy = e.changedTouches[0].clientY - touchStart.current.y;
+    touchStart.current = null;
+
+    // Only horizontal swipe (dx > dy, min 80px)
+    if (Math.abs(dx) < 80 || Math.abs(dy) > Math.abs(dx) * 0.7) return;
+
+    const currentIndex = swipePages.indexOf(currentPath);
+    if (currentIndex === -1) return;
+
+    // RTL: swipe left = next, swipe right = prev (reversed)
+    if (dx < 0 && currentIndex < swipePages.length - 1) {
+      navigate(swipePages[currentIndex + 1]);
+    } else if (dx > 0 && currentIndex > 0) {
+      navigate(swipePages[currentIndex - 1]);
+    }
+  }, [currentPath, navigate]);
+
+  return (
+    <PullToRefresh onRefresh={async () => {
+      window.dispatchEvent(new CustomEvent("admin-pull-refresh"));
+      await new Promise(r => setTimeout(r, 600));
+    }}>
+      <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+        {children}
+      </div>
+    </PullToRefresh>
+  );
+};
 
 const AdminLayout = () => {
   const [session, setSession] = useState<any>(null);
