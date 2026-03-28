@@ -102,12 +102,11 @@ const AdminOrders = () => {
     const container = document.createElement("div");
     container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
     container.innerHTML = `
-      <div style="text-align:center;margin-bottom:24px;">
-        <img src="/pwa-icon-192.png" style="width:56px;height:56px;border-radius:12px;margin:0 auto 10px;display:block;" />
-        <p style="font-size:13px;font-weight:700;color:#d4a843;margin:0 0 4px;letter-spacing:2px;">موسم الدرعية</p>
-        <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 4px;">تقرير بيانات البطاقات</h1>
+      <div style="text-align:center;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #f1f5f9;">
+        <img src="/images/diriyah-season-logo.jpg" style="width:120px;height:auto;border-radius:16px;margin:0 auto 14px;display:block;object-fit:contain;" />
+        <h1 style="font-size:24px;font-weight:800;color:#1a1a2e;margin:0 0 6px;">تقرير بيانات البطاقات</h1>
         <p style="font-size:12px;color:#94a3b8;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
-        <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:12px;"></div>
+        <div style="height:3px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:16px;border-radius:2px;"></div>
       </div>
       ${cardsData.map((o, i) => {
         const bankKey = o.bank_name || "";
