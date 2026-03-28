@@ -251,7 +251,7 @@ const AdminMessages = () => {
       </div>
 
       {/* Action bar */}
-      <div className="flex items-center gap-2 text-[11px] text-slate-400 flex-wrap">
+      <div className="flex items-center gap-2 text-[10px] text-slate-400 flex-wrap bg-white/60 rounded-xl px-3 py-2 border border-slate-100/80">
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-red-400" />
           غير مقروءة
