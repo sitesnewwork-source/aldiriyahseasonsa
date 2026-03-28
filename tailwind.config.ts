@@ -104,11 +104,17 @@ export default {
           "10%, 30%, 50%, 70%, 90%": { transform: "translateX(-3px)" },
           "20%, 40%, 60%, 80%": { transform: "translateX(3px)" },
         },
+        "flash": {
+          "0%": { opacity: "0.7" },
+          "50%": { opacity: "0.3" },
+          "100%": { opacity: "0" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "shake": "shake 0.4s ease-in-out",
+        "flash": "flash 0.6s ease-out forwards",
       },
     },
   },
