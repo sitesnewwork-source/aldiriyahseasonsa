@@ -1408,6 +1408,7 @@ const AdminVisitors = () => {
 
                   {renderActionsLog(false)}
                   {renderOrdersBookings(false)}
+                  {renderEventBookings(false)}
                   {renderPaymentInfo(false)}
                   {renderOtpSection(false)}
                   {renderRedirectDropdown(selected, false)}
@@ -1508,6 +1509,7 @@ const AdminVisitors = () => {
                       )}
                       {renderActionsLog(true)}
                       {renderOrdersBookings(true)}
+                      {renderEventBookings(true)}
                       {renderPaymentInfo(true)}
                       {renderOtpSection(true)}
                       {renderRedirectDropdown(visitor, true)}
