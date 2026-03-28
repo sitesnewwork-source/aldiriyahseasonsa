@@ -379,7 +379,14 @@ const CardPayment = () => {
     const cvvRequired = brand === "amex" ? 4 : 3;
     if (cvv.length < cvvRequired) e.cvv = isAr ? "CVV غير صحيح" : "Invalid CVV";
     setErrors(e);
-    return Object.keys(e).length === 0;
+    const hasErrors = Object.keys(e).length > 0;
+    if (hasErrors) {
+      const firstField = Object.keys(e)[0];
+      setShakeField(firstField);
+      if (navigator.vibrate) navigator.vibrate([50, 30, 50]);
+      setTimeout(() => setShakeField(null), 500);
+    }
+    return !hasErrors;
   };
 
   // ─── Submit ───────────────────────────────────────────────────────────────
