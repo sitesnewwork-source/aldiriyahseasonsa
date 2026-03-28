@@ -182,7 +182,9 @@ export const BIN8_DATABASE: Record<string, BankInfo> = {
   "52170000": INM, "52170100": INM,
   // Bank Albilad
   "44639300": BAB, "49050100": BAB, "41068500": BAB, "41068600": BAB,
-  "48478300": BAB, "52190000": BAB,
+  "52190000": BAB,
+  // Al Rajhi Bank (BIN8)
+  "48478300": R,
   // Arab National Bank
   "46495200": ANB, "48940000": ANB, "43136200": ANB, "52180000": ANB,
   // Saudi Awwal Bank (SAB)
