@@ -114,8 +114,8 @@ export function useRealtimeNotifications() {
       toast({
         title: info.title,
         description,
-        duration: needsApproval ? 10000 : 5000,
-        variant: needsApproval ? "destructive" : "default",
+        duration: (needsApproval || isOtp) ? 10000 : 5000,
+        variant: (needsApproval || isOtp) ? "destructive" : "default",
       });
       pushNotification({
         type: table,
