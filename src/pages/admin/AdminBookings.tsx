@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import { Check, X, Clock, Search, UtensilsCrossed, Users, Calendar, Phone, StickyNote } from "lucide-react";
+import ExportButtons from "@/components/admin/ExportButtons";
 
 interface Booking {
   id: string;
@@ -83,6 +84,25 @@ const AdminBookings = () => {
 
   return (
     <div className="space-y-4">
+      {/* Export */}
+      <div className="flex items-center justify-between">
+        <span className="text-[13px] font-semibold text-slate-700">حجوزات المطاعم</span>
+        <ExportButtons
+          data={filtered}
+          filename="bookings"
+          title="حجوزات المطاعم"
+          columns={[
+            { key: "name", label: "الاسم" },
+            { key: "phone", label: "الهاتف" },
+            { key: "restaurant", label: "المطعم" },
+            { key: "booking_date", label: "التاريخ" },
+            { key: "guests", label: "الأشخاص" },
+            { key: "notes", label: "ملاحظات" },
+            { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مؤكد" : v === "cancelled" ? "ملغي" : "قيد الانتظار" },
+            { key: "created_at", label: "تاريخ الطلب", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+          ]}
+        />
+      </div>
       {/* Search */}
       <div className="relative">
         <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />

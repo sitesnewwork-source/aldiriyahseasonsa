@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Mail, MailOpen, Search, Archive, ArchiveRestore, Phone, AtSign, Trash2, CheckSquare, Square, Reply, Send, ExternalLink } from "lucide-react";
+import ExportButtons from "@/components/admin/ExportButtons";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -167,7 +168,24 @@ const AdminMessages = () => {
 
   return (
     <div className="space-y-4">
-      {/* View mode toggle: Inbox / Archived */}
+      {/* Export */}
+      <div className="flex items-center justify-between">
+        <span className="text-[13px] font-semibold text-slate-700">رسائل التواصل</span>
+        <ExportButtons
+          data={filtered}
+          filename="messages"
+          title="رسائل التواصل"
+          columns={[
+            { key: "name", label: "الاسم" },
+            { key: "email", label: "البريد" },
+            { key: "phone", label: "الهاتف" },
+            { key: "subject", label: "الموضوع" },
+            { key: "message", label: "الرسالة" },
+            { key: "is_read", label: "الحالة", format: (v) => v ? "مقروءة" : "غير مقروءة" },
+            { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+          ]}
+        />
+      </div>
       <div className="flex gap-1 bg-white rounded-xl border border-slate-200 p-1">
         <button
           onClick={() => { setViewMode("inbox"); setSelectMode(false); setSelectedIds(new Set()); setFilter("all"); }}

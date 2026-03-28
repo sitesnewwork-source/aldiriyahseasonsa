@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { ar } from "date-fns/locale";
 import { Search, CreditCard, Mail, Phone, Hash, Receipt, Ticket, CheckCircle, XCircle, Filter } from "lucide-react";
+import ExportButtons from "@/components/admin/ExportButtons";
 
 interface Order {
   id: string;
@@ -84,6 +85,25 @@ const AdminOrders = () => {
 
   return (
     <div className="space-y-4">
+      {/* Export */}
+      <div className="flex items-center justify-between">
+        <span className="text-[13px] font-semibold text-slate-700">طلبات التذاكر</span>
+        <ExportButtons
+          data={filtered}
+          filename="orders"
+          title="طلبات التذاكر"
+          columns={[
+            { key: "email", label: "البريد" },
+            { key: "phone", label: "الهاتف" },
+            { key: "total", label: "الإجمالي", format: (v) => `${v} ر.س` },
+            { key: "payment_method", label: "طريقة الدفع", format: (v) => v === "card" ? "بطاقة" : v },
+            { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مقبول" : v === "rejected" ? "مرفوض" : "قيد المراجعة" },
+            { key: "confirmation_number", label: "رقم التأكيد" },
+            { key: "cardholder_name", label: "حامل البطاقة" },
+            { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+          ]}
+        />
+      </div>
       {/* Search */}
       <div className="relative">
         <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
