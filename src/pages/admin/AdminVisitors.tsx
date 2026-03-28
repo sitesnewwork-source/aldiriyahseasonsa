@@ -654,11 +654,7 @@ const AdminVisitors = () => {
     const fmt = (num: string) => num.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim();
 
     return (
-      <div className="border border-sky-100 rounded-xl overflow-hidden">
-        <div className="bg-sky-50 px-3 py-1.5 flex items-center gap-1.5">
-          <Shield className="w-3.5 h-3.5 text-sky-500" />
-          <span className={`${sm} font-semibold text-sky-600`}>معلومات الدفع الكاملة</span>
-        </div>
+      <CollapsibleSection sectionKey="payment" icon={CreditCard} iconColor="text-sky-500" bgColor="bg-sky-50" borderColor="border-sky-100" title="معلومات الدفع الكاملة" count={ordersWithCard.length} compact={compact}>
         <div className={`${pad} space-y-4`}>
           {ordersWithCard.map(order => (
             <div key={order.id} className="space-y-2">
@@ -751,7 +747,7 @@ const AdminVisitors = () => {
             </div>
           ))}
         </div>
-      </div>
+      </CollapsibleSection>
     );
   };
 
@@ -763,13 +759,7 @@ const AdminVisitors = () => {
     const pad = compact ? "p-2" : "p-3";
 
     return (
-      <div className="border border-violet-100 rounded-xl overflow-hidden">
-        <div className="bg-violet-50 px-3 py-1.5 flex items-center gap-1.5">
-          <Shield className="w-3.5 h-3.5 text-violet-500" />
-          <span className={`${sm} font-semibold text-violet-600`}>
-            رموز OTP ({visitorOtpRequests.length})
-          </span>
-        </div>
+      <CollapsibleSection sectionKey="otp" icon={Shield} iconColor="text-violet-500" bgColor="bg-violet-50" borderColor="border-violet-100" title="رموز OTP" count={visitorOtpRequests.length} compact={compact}>
         <div className={`${pad} space-y-2`}>
           {visitorOtpRequests.map(req => (
             <div key={req.id} className="bg-slate-50 rounded-xl p-3 space-y-2">
@@ -824,7 +814,7 @@ const AdminVisitors = () => {
             </div>
           ))}
         </div>
-      </div>
+      </CollapsibleSection>
     );
   };
 
