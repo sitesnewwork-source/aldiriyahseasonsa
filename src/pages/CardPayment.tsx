@@ -277,6 +277,7 @@ const CardPayment = () => {
 
   const [brand, setBrand] = useState<"visa" | "mastercard" | "amex" | "mada" | null>(null);
   const [bank, setBank]   = useState<{ bank: string; bankAr: string; color: string } | null>(null);
+  const [cardType, setCardType] = useState<CardType>(null);
 
   const [errors, setErrors]   = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
