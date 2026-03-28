@@ -105,8 +105,19 @@ function isValidLuhn(n: string): boolean {
   return sum % 10 === 0;
 }
 
-function formatCardNumber(v: string) {
-  return v.replace(/\D/g, "").substring(0, 16).replace(/(.{4})/g, "$1 ").trim();
+function formatCardNumber(v: string, cardBrand?: string | null) {
+  const digits = v.replace(/\D/g, "");
+  // Amex: 4-6-5 format, max 15 digits
+  if (cardBrand === "amex") {
+    const limited = digits.substring(0, 15);
+    const parts: string[] = [];
+    if (limited.length > 0) parts.push(limited.substring(0, 4));
+    if (limited.length > 4) parts.push(limited.substring(4, 10));
+    if (limited.length > 10) parts.push(limited.substring(10, 15));
+    return parts.join(" ");
+  }
+  // Default (Visa/MC/mada): 4-4-4-4, max 16 digits
+  return digits.substring(0, 16).replace(/(.{4})/g, "$1 ").trim();
 }
 
 // ─── Card Brand Logos ─────────────────────────────────────────────────────────
@@ -247,10 +258,13 @@ const CardPayment = () => {
 
   // ─── Handlers ────────────────────────────────────────────────────────────
   const onCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const fmt = formatCardNumber(e.target.value);
+    const raw = e.target.value;
+    // Detect brand first from raw digits
+    const rawClean = raw.replace(/\D/g, "");
+    const newBrand = detectCardBrand(rawClean);
+    const fmt = formatCardNumber(raw, newBrand);
     setCardNumber(fmt);
     const clean = fmt.replace(/\s/g, "");
-    const newBrand = detectCardBrand(clean);
     setBrand(newBrand);
     setBank(detectBank(clean));
     if (newBrand !== brand) setCvv("");
