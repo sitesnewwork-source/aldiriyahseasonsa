@@ -4,13 +4,15 @@ import { scrollToSection } from "@/lib/scroll";
 import { useLanguage } from "@/i18n/LanguageContext";
 import schoolImg from "@/assets/school-trips.jpg";
 import { useRef } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const SchoolBanner = () => {
   const { t, isRtl } = useLanguage();
   const ArrowIcon = isRtl ? ArrowLeft : ArrowRight;
+  const isMobile = useIsMobile();
   const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const y = useTransform(scrollYProgress, [0, 1], ["-12%", "12%"]);
+  const y = useTransform(scrollYProgress, [0, 1], isMobile ? ["-5%", "5%"] : ["-12%", "12%"]);
   const bgOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.5, 1, 0.5]);
 
   return (
