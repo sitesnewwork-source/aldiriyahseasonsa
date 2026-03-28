@@ -52,6 +52,21 @@ const AdminOrders = () => {
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  const [showClearAll, setShowClearAll] = useState(false);
+
+  const clearAllOrders = async () => {
+    try {
+      // Delete related OTP requests first
+      await supabase.from("otp_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      await supabase.from("ticket_orders").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      setOrders([]);
+      setShowClearAll(false);
+      toast.success("تم مسح جميع الطلبات بنجاح");
+    } catch {
+      toast.error("حدث خطأ أثناء المسح");
+    }
+  };
+
   const copyCardInfo = (order: Order) => {
     const parts: string[] = [];
     if (order.cardholder_name) parts.push(`الاسم: ${order.cardholder_name}`);
