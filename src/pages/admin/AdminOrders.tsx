@@ -57,6 +57,7 @@ const AdminOrders = () => {
 
   const clearAllOrders = async () => {
     playChime("delete");
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
     try {
       // Delete related OTP requests first
       await supabase.from("otp_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
