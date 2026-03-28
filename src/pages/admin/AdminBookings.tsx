@@ -33,6 +33,18 @@ const AdminBookings = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
+  const [showClearAll, setShowClearAll] = useState(false);
+
+  const clearAllBookings = async () => {
+    try {
+      await supabase.from("restaurant_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      setBookings([]);
+      setShowClearAll(false);
+      toast.success("تم مسح جميع الحجوزات بنجاح");
+    } catch {
+      toast.error("حدث خطأ أثناء المسح");
+    }
+  };
 
   const fetchBookings = async () => {
     const { data } = await supabase
