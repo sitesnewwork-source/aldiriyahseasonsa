@@ -6,7 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock, CreditCard, CheckCircle, AlertCircle, Loader2, ShieldCheck } from "lucide-react";
+import { Lock, CreditCard, CheckCircle, AlertCircle, Loader2, ShieldCheck, Calendar, ChevronDown } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { BIN_DATABASE, BIN8_DATABASE, MADA_BINS } from "@/data/binDatabase";
 
