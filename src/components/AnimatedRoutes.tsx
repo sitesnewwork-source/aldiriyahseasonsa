@@ -34,6 +34,7 @@ const AdminVisitors = lazy(() => import("@/pages/admin/AdminVisitors"));
 const AdminSettings = lazy(() => import("@/pages/admin/AdminSettings"));
 const AdminEventBookings = lazy(() => import("@/pages/admin/AdminEventBookings"));
 const Install = lazy(() => import("@/pages/Install"));
+const AdminInstall = lazy(() => import("@/pages/admin/AdminInstall"));
 
 const PageLoader = () => (
   <div className="min-h-screen flex items-center justify-center bg-background">
@@ -77,6 +78,7 @@ const AnimatedRoutes = forwardRef<HTMLDivElement>((_, ref) => {
             <Route path="orders" element={<AdminOrders />} />
             <Route path="event-bookings" element={<AdminEventBookings />} />
             <Route path="settings" element={<AdminSettings />} />
+            <Route path="install" element={<AdminInstall />} />
           </Route>
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
