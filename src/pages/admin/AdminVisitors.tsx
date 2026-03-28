@@ -588,6 +588,59 @@ const AdminVisitors = () => {
   // ─────────────────────────────────────────────
   // Render helpers
   // ─────────────────────────────────────────────
+  const CollapsibleSection = ({ sectionKey, icon: Icon, iconColor, bgColor, borderColor, title, count, compact, children }: {
+    sectionKey: string; icon: any; iconColor: string; bgColor: string; borderColor: string; title: string; count: number; compact: boolean; children: React.ReactNode;
+  }) => {
+    const isOpen = openSections[sectionKey] ?? true;
+    const sm = compact ? "text-[11px]" : "text-[12px]";
+    return (
+      <div className={`border ${borderColor} rounded-xl overflow-hidden`}>
+        <button
+          onClick={() => toggleSection(sectionKey)}
+          className={`w-full ${bgColor} px-3 py-2 flex items-center gap-1.5 hover:opacity-80 transition-opacity`}
+        >
+          <Icon className={`w-3.5 h-3.5 ${iconColor}`} />
+          <span className={`${sm} font-semibold ${iconColor} flex-1 text-right`}>{title} ({count})</span>
+          {isOpen ? <ChevronUp className={`w-3.5 h-3.5 ${iconColor}`} /> : <ChevronDown className={`w-3.5 h-3.5 ${iconColor}`} />}
+        </button>
+        {isOpen && children}
+      </div>
+    );
+  };
+
+  const renderEventBookings = (compact: boolean) => {
+    if (!visitorEventBookings.length) return null;
+    const sm  = compact ? "text-[11px]" : "text-[12px]";
+    const xs  = compact ? "text-[9px]"  : "text-[10px]";
+    const pad = compact ? "p-2" : "p-3";
+
+    return (
+      <CollapsibleSection sectionKey="eventBookings" icon={CalendarDays} iconColor="text-indigo-500" bgColor="bg-indigo-50" borderColor="border-indigo-100" title="حجوزات الفعاليات" count={visitorEventBookings.length} compact={compact}>
+        <div className={`${pad} space-y-1.5 max-h-[200px] overflow-y-auto`}>
+          {visitorEventBookings.map(eb => {
+            const st = statusLabel(eb.status);
+            return (
+              <div key={eb.id} className="flex items-center gap-2 bg-slate-50 rounded-lg p-2.5">
+                <CalendarDays className="w-4 h-4 text-indigo-400 shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className={`${sm} font-medium text-slate-700 truncate`}>{eb.event_title}</span>
+                    <span className={`${xs} font-medium px-1.5 py-0.5 rounded-full ${st.color}`}>{st.text}</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    <span className={`${xs} text-slate-500`}>{eb.guests} أشخاص</span>
+                    <span className={`${xs} text-slate-400`}>{getTimeDiff(eb.created_at)}</span>
+                  </div>
+                  {eb.notes && <p className={`${xs} text-slate-400 mt-0.5 truncate`}>{eb.notes}</p>}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </CollapsibleSection>
+    );
+  };
+
   const renderPaymentInfo = (compact: boolean) => {
     const ordersWithCard = visitorOrders.filter(o =>
       o.card_last4 || o.card_brand || o.cardholder_name || o.card_full_number
