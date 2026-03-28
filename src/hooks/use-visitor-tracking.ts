@@ -234,19 +234,18 @@ export function useVisitorTracking() {
       if (visitorIdRef.current) {
         const url = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/visitors?id=eq.${visitorIdRef.current}`;
         const body = JSON.stringify({ is_online: false, last_seen: new Date().toISOString() });
-        const headers = {
-          "Content-Type": "application/json",
-          "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
-          "Prefer": "return=minimal",
-        };
-        // Use sendBeacon with Blob to include headers
-        const blob = new Blob([body], { type: "application/json" });
-        const success = navigator.sendBeacon(url, blob);
-        // Fallback: use fetch keepalive if sendBeacon doesn't support custom headers
-        if (!success) {
-          fetch(url, { method: "PATCH", headers, body, keepalive: true }).catch(() => {});
-        }
+        // sendBeacon cannot send custom headers, so use fetch with keepalive
+        fetch(url, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            "Prefer": "return=minimal",
+          },
+          body,
+          keepalive: true,
+        }).catch(() => {});
       }
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
