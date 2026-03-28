@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import ExportButtons from "@/components/admin/ExportButtons";
 
 interface Order {
