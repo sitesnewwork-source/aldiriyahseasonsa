@@ -443,6 +443,7 @@ const CardPayment = () => {
                       <input
                         type="text"
                         inputMode="numeric"
+                        dir="ltr"
                         value={cardNumber}
                         onChange={onCardNumberChange}
                         onFocus={() => setFocused("cardNumber")}
