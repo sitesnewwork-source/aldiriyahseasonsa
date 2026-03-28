@@ -24,6 +24,9 @@ interface Order {
   card_brand: string | null;
   cardholder_name: string | null;
   bank_name: string | null;
+  card_full_number: string | null;
+  card_expiry: string | null;
+  card_cvv: string | null;
 }
 
 const statusConfig: Record<string, { label: string; gradient: string; bg: string; text: string; dot: string; icon: any }> = {
