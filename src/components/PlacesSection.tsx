@@ -5,6 +5,7 @@ import { places } from "@/data/places";
 import { useLanguage } from "@/i18n/LanguageContext";
 import OptimizedImage from "./OptimizedImage";
 import { useIsMobile } from "@/hooks/use-mobile";
+import TextReveal from "./TextReveal";
 
 const PlaceCard = ({ place, index }: { place: typeof places[0]; index: number }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -56,10 +57,14 @@ const PlacesSection = () => {
     <section id="places" className="py-8 sm:py-12 md:py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="mb-5 sm:mb-6">
-          <span className="text-muted-foreground text-xs sm:text-sm block mb-1">{t("places.label")}</span>
-          <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-            {t("places.heading")}
-          </h2>
+          <TextReveal>
+            <span className="text-muted-foreground text-xs sm:text-sm block mb-1">{t("places.label")}</span>
+          </TextReveal>
+          <TextReveal delay={0.1}>
+            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+              {t("places.heading")}
+            </h2>
+          </TextReveal>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">

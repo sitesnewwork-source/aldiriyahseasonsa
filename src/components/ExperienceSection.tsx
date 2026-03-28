@@ -7,6 +7,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { actionNotify } from "@/hooks/use-action-notify";
 import OptimizedImage from "./OptimizedImage";
 import { useIsMobile } from "@/hooks/use-mobile";
+import TextReveal from "./TextReveal";
 
 const ExpCard = ({ exp, index }: { exp: typeof import("@/data/experiences").experiences[0]; index: number }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -101,10 +102,14 @@ const ExperienceSection = () => {
           </div>
 
           <div className="w-full sm:w-auto">
-            <span className="text-muted-foreground text-xs sm:text-sm block mb-1">{t("experiences.label")}</span>
-            <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-              {t("experiences.heading")}
-            </h2>
+            <TextReveal>
+              <span className="text-muted-foreground text-xs sm:text-sm block mb-1">{t("experiences.label")}</span>
+            </TextReveal>
+            <TextReveal delay={0.1}>
+              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
+                {t("experiences.heading")}
+              </h2>
+            </TextReveal>
           </div>
         </div>
 
