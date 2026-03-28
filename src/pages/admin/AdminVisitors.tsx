@@ -333,6 +333,7 @@ const AdminVisitors = () => {
     } else {
       setVisitorOrders([]);
       setVisitorBookings([]);
+      setVisitorEventBookings([]);
       setVisitorOtpRequests([]);
     }
   };
@@ -441,6 +442,7 @@ const AdminVisitors = () => {
     } else {
       setVisitorOrders([]);
       setVisitorBookings([]);
+      setVisitorEventBookings([]);
       setVisitorOtpRequests([]);
       setSelectedActions([]);
     }
