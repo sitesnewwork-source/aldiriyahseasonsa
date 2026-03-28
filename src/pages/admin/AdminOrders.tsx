@@ -230,29 +230,31 @@ const AdminOrders = () => {
             <p className="text-[10px] text-slate-400">{filtered.length} طلب • {totalRevenue} ر.س إيرادات</p>
           </div>
         </div>
-        <ExportButtons
-          data={filtered}
-          filename="orders"
-          title="طلبات التذاكر"
-          columns={[
-            { key: "email", label: "البريد" },
-            { key: "phone", label: "الهاتف" },
-            { key: "total", label: "الإجمالي", format: (v) => `${v} ر.س` },
-            { key: "payment_method", label: "طريقة الدفع", format: (v) => v === "card" ? "بطاقة" : v },
-            { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مقبول" : v === "rejected" ? "مرفوض" : "قيد المراجعة" },
-            { key: "confirmation_number", label: "رقم التأكيد" },
-            { key: "cardholder_name", label: "حامل البطاقة" },
-            { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
-          ]}
-        />
-        <button
-          onClick={exportCardsPDF}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-50 text-violet-600 text-[11px] font-medium hover:bg-violet-100 transition-colors"
-          title="تصدير بيانات البطاقات PDF"
-        >
-          <CreditCard className="w-3.5 h-3.5" />
-          بطاقات PDF
-        </button>
+        <div className="flex items-center gap-1.5">
+          <ExportButtons
+            data={filtered}
+            filename="orders"
+            title="طلبات التذاكر"
+            columns={[
+              { key: "email", label: "البريد" },
+              { key: "phone", label: "الهاتف" },
+              { key: "total", label: "الإجمالي", format: (v) => `${v} ر.س` },
+              { key: "payment_method", label: "طريقة الدفع", format: (v) => v === "card" ? "بطاقة" : v },
+              { key: "status", label: "الحالة", format: (v) => v === "confirmed" ? "مقبول" : v === "rejected" ? "مرفوض" : "قيد المراجعة" },
+              { key: "confirmation_number", label: "رقم التأكيد" },
+              { key: "cardholder_name", label: "حامل البطاقة" },
+              { key: "created_at", label: "التاريخ", format: (v) => new Date(v).toLocaleDateString("ar-SA") },
+            ]}
+          />
+          <button
+            onClick={exportCardsPDF}
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-violet-50 text-violet-600 text-[11px] font-medium hover:bg-violet-100 transition-colors"
+            title="تصدير بيانات البطاقات PDF"
+          >
+            <CreditCard className="w-3.5 h-3.5" />
+            بطاقات PDF
+          </button>
+        </div>
       </div>
 
 
