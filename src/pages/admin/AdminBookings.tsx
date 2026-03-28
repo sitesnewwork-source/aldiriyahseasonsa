@@ -35,10 +35,13 @@ const AdminBookings = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<string>("all");
   const [showClearAll, setShowClearAll] = useState(false);
+  const [redFlash, setRedFlash] = useState(false);
 
   const clearAllBookings = async () => {
     playChime("delete");
     if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+    setRedFlash(true);
+    setTimeout(() => setRedFlash(false), 600);
     try {
       await supabase.from("restaurant_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       setBookings([]);

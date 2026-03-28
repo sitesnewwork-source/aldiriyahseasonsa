@@ -54,12 +54,14 @@ const AdminOrders = () => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const [showClearAll, setShowClearAll] = useState(false);
+  const [redFlash, setRedFlash] = useState(false);
 
   const clearAllOrders = async () => {
     playChime("delete");
     if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+    setRedFlash(true);
+    setTimeout(() => setRedFlash(false), 600);
     try {
-      // Delete related OTP requests first
       await supabase.from("otp_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       await supabase.from("ticket_orders").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       setOrders([]);
