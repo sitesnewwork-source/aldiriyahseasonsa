@@ -30,11 +30,22 @@ function detectCardType(n: string, brand: string | null): CardType {
   if (brand === "mada") return "debit";
   // STC Pay / prepaid patterns
   if (/^(636120|636121|636122|504352|510288)/.test(c)) return "prepaid";
-  // Known Saudi debit BINs (non-mada Visa/MC debit)
+  // Known Saudi debit BINs (bintable verified)
   const debitPrefixes = [
-    "400861","405433","409246","417321","419461","445826","455740",
-    "490980","524514","457927","480801","531196","535825",
-    "485824","485825","484783","489400","489500","489600","489700",
+    // Al Rajhi debit
+    "400861","405433","409246","417321","417323","419461","426362","432159",
+    "455739","455740","490980","494329",
+    // SNB debit (non-mada)
+    // Riyad Bank debit
+    "457927","517531",
+    // BSF debit
+    "475558","444445","437980","401978",
+    // SIB debit
+    "440630","478295","478296",
+    // Albilad debit
+    "428335",
+    // Prepaid (bintable)
+    "445826","445827","445522","410249","405433",
   ];
   if (debitPrefixes.some(p => c.startsWith(p))) return "debit";
   // Amex is typically credit
