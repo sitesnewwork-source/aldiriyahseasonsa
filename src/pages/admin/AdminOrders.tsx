@@ -136,16 +136,41 @@ const AdminOrders = () => {
         const logoUrl = bankLogos[bankKey] || "";
         const hasBankName = !!o.bank_name;
 
+        const bankColors: Record<string, { header: string; accent: string; bg: string; border: string }> = {
+          "مصرف الراجحي": { header: "linear-gradient(135deg,#004d3d,#00795e)", accent: "#00c49a", bg: "#f0fdf9", border: "#bbf7d0" },
+          "Al Rajhi Bank": { header: "linear-gradient(135deg,#004d3d,#00795e)", accent: "#00c49a", bg: "#f0fdf9", border: "#bbf7d0" },
+          "البنك الأهلي السعودي": { header: "linear-gradient(135deg,#1a3a5c,#2563a0)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
+          "Saudi National Bank": { header: "linear-gradient(135deg,#1a3a5c,#2563a0)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
+          "البنك السعودي الفرنسي": { header: "linear-gradient(135deg,#1e3a5f,#2d5a8e)", accent: "#4a90d9", bg: "#eff6ff", border: "#bfdbfe" },
+          "Banque Saudi Fransi": { header: "linear-gradient(135deg,#1e3a5f,#2d5a8e)", accent: "#4a90d9", bg: "#eff6ff", border: "#bfdbfe" },
+          "بنك الرياض": { header: "linear-gradient(135deg,#4a1a6b,#7c3aed)", accent: "#8b5cf6", bg: "#faf5ff", border: "#ddd6fe" },
+          "Riyad Bank": { header: "linear-gradient(135deg,#4a1a6b,#7c3aed)", accent: "#8b5cf6", bg: "#faf5ff", border: "#ddd6fe" },
+          "مصرف الإنماء": { header: "linear-gradient(135deg,#064e3b,#047857)", accent: "#10b981", bg: "#ecfdf5", border: "#a7f3d0" },
+          "Alinma Bank": { header: "linear-gradient(135deg,#064e3b,#047857)", accent: "#10b981", bg: "#ecfdf5", border: "#a7f3d0" },
+          "بنك البلاد": { header: "linear-gradient(135deg,#7c2d12,#c2410c)", accent: "#f97316", bg: "#fff7ed", border: "#fed7aa" },
+          "Bank Albilad": { header: "linear-gradient(135deg,#7c2d12,#c2410c)", accent: "#f97316", bg: "#fff7ed", border: "#fed7aa" },
+          "البنك العربي الوطني": { header: "linear-gradient(135deg,#1e3a5f,#1d4ed8)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
+          "Arab National Bank": { header: "linear-gradient(135deg,#1e3a5f,#1d4ed8)", accent: "#3b82f6", bg: "#eff6ff", border: "#bfdbfe" },
+          "البنك السعودي الأول": { header: "linear-gradient(135deg,#1e3a5f,#0369a1)", accent: "#0ea5e9", bg: "#f0f9ff", border: "#bae6fd" },
+          "Saudi Awwal Bank": { header: "linear-gradient(135deg,#1e3a5f,#0369a1)", accent: "#0ea5e9", bg: "#f0f9ff", border: "#bae6fd" },
+          "بنك الجزيرة": { header: "linear-gradient(135deg,#7f1d1d,#b91c1c)", accent: "#ef4444", bg: "#fef2f2", border: "#fecaca" },
+          "Bank AlJazira": { header: "linear-gradient(135deg,#7f1d1d,#b91c1c)", accent: "#ef4444", bg: "#fef2f2", border: "#fecaca" },
+          "البنك السعودي للاستثمار": { header: "linear-gradient(135deg,#134e4a,#0d9488)", accent: "#14b8a6", bg: "#f0fdfa", border: "#99f6e4" },
+          "Saudi Investment Bank": { header: "linear-gradient(135deg,#134e4a,#0d9488)", accent: "#14b8a6", bg: "#f0fdfa", border: "#99f6e4" },
+          "STC Pay": { header: "linear-gradient(135deg,#581c87,#7e22ce)", accent: "#a855f7", bg: "#faf5ff", border: "#e9d5ff" },
+        };
+        const colors = bankColors[bankKey] || { header: "linear-gradient(135deg,#1a1a2e,#2d2d44)", accent: "#d4a843", bg: "#fafbfc", border: "#e2e8f0" };
+
         return `
-        <div style="border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;margin-bottom:16px;break-inside:avoid;">
-          <div style="background:linear-gradient(135deg,#1a1a2e,#2d2d44);padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="color:#d4a843;font-size:11px;font-weight:700;">${o.confirmation_number || o.id.slice(0, 8)}</span>
+        <div style="border:1px solid ${colors.border};border-radius:12px;overflow:hidden;margin-bottom:16px;break-inside:avoid;">
+          <div style="background:${colors.header};padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:${colors.accent};font-size:11px;font-weight:700;">${o.confirmation_number || o.id.slice(0, 8)}</span>
             <span style="color:#fff;font-size:12px;font-weight:700;">#${i + 1} ${(o.card_brand || "CARD").toUpperCase()}</span>
           </div>
-          <div style="padding:14px 16px;background:#fafbfc;">
+          <div style="padding:14px 16px;background:${colors.bg};">
             ${hasBankName ? `
-            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;padding:8px 12px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;">
-              ${logoUrl ? `<img src="${logoUrl}" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid #e2e8f0;padding:3px;" />` : ""}
+            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;padding:8px 12px;background:#fff;border-radius:8px;border:1px solid ${colors.border};">
+              ${logoUrl ? `<img src="${logoUrl}" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid ${colors.border};padding:3px;" />` : ""}
               <div style="text-align:center;">
                 <p style="font-size:12px;font-weight:700;color:#334155;margin:0;">${o.bank_name}</p>
                 <p style="font-size:9px;color:#94a3b8;margin:1px 0 0;">${o.card_brand || ""}</p>
