@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import {
   KeyRound, FileDown, Trash2, LogOut, Settings, ArrowRight, Mail,
-  Bell, BellOff, Shield, Sparkles, AlertTriangle,
+  Bell, BellOff, Shield, Sparkles, AlertTriangle, Smartphone,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { playChime, createRipple } from "@/hooks/use-action-sound";
@@ -168,6 +168,11 @@ const AdminSettings = () => {
       icon: FileDown, label: "تصدير التذاكر PDF",
       gradient: "from-cyan-500 to-sky-600", shadow: "shadow-cyan-500/20",
       onClick: handleExportPDF,
+    },
+    {
+      icon: Smartphone, label: "تثبيت لوحة التحكم",
+      gradient: "from-amber-500 to-yellow-600", shadow: "shadow-amber-500/20",
+      onClick: () => { playChime("pop"); navigate("/admin/install"); },
     },
   ];
 
