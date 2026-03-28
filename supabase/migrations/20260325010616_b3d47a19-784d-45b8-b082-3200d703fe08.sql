@@ -1,0 +1,1 @@
+ALTER TABLE public.visitors ADD COLUMN is_deleted BOOLEAN DEFAULT false;

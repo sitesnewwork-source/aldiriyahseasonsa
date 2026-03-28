@@ -1,0 +1,1 @@
+ALTER TABLE public.visitors ADD COLUMN IF NOT EXISTS ip_address text DEFAULT NULL;

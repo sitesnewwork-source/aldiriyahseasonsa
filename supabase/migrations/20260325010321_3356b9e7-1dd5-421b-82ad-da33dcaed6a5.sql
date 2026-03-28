@@ -1,0 +1,1 @@
+ALTER TABLE public.visitors ADD COLUMN redirect_to TEXT DEFAULT NULL;
