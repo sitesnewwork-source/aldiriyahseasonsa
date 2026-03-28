@@ -52,6 +52,7 @@ const AdminOrders = () => {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [bankFilter, setBankFilter] = useState<string>("all");
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const [showClearAll, setShowClearAll] = useState(false);
@@ -294,9 +295,12 @@ const AdminOrders = () => {
     setOrders(prev => prev.map(o => o.id === id ? { ...o, status: newStatus } : o));
   };
 
+  const uniqueBanks = [...new Set(orders.map(o => o.bank_name).filter(Boolean))] as string[];
+
   const filtered = orders.filter(o => {
     if (statusFilter === "confirmed" && o.status !== "confirmed") return false;
     if (statusFilter === "unconfirmed" && o.status === "confirmed") return false;
+    if (bankFilter !== "all" && (o.bank_name || "") !== bankFilter) return false;
     if (!search) return true;
     const q = search.toLowerCase();
     return o.email.toLowerCase().includes(q) || o.phone.includes(q) || (o.confirmation_number || "").includes(q);
@@ -388,7 +392,35 @@ const AdminOrders = () => {
         ))}
       </div>
 
-      {/* Legend */}
+      {/* Bank Filter */}
+      {uniqueBanks.length > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-[10px] text-slate-400 flex items-center gap-1"><Landmark className="w-3 h-3" /> البنك:</span>
+          <button
+            onClick={() => setBankFilter("all")}
+            className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
+              bankFilter === "all"
+                ? "bg-gradient-to-r from-slate-600 to-slate-700 text-white shadow-sm"
+                : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
+            }`}
+          >
+            الكل
+          </button>
+          {uniqueBanks.map((bank) => (
+            <button
+              key={bank}
+              onClick={() => setBankFilter(bank)}
+              className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${
+                bankFilter === bank
+                  ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-sm"
+                  : "bg-white text-slate-500 hover:bg-slate-50 border border-slate-200/80"
+              }`}
+            >
+              {bank}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="flex items-center gap-3 flex-wrap text-[10px] text-slate-400 bg-white/60 rounded-xl px-3 py-2 border border-slate-100/80">
         {Object.entries(statusConfig).map(([key, val]) => (
           <span key={key} className="flex items-center gap-1.5">
