@@ -208,7 +208,7 @@ const Install = () => {
                 </div>
                 <div className="inline-block p-4 bg-white rounded-2xl shadow-lg border border-primary/10">
                   <QRCodeSVG
-                    value="https://aldiriyahseasonsa.lovable.app/admin"
+                    value="https://aldiriyahseasonsa.lovable.app/install"
                     size={180}
                     bgColor="#ffffff"
                     fgColor="#1a1a2e"
