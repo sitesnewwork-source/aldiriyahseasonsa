@@ -467,3 +467,14 @@
   filter: drop-shadow(0 0 4px hsl(43 80% 52% / 0.5));
   height: 2px;
 }
+
+/* Fix mobile width - prevent horizontal scroll */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+#root {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
