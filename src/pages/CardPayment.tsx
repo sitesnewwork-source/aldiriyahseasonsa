@@ -12,12 +12,41 @@ import { BIN_DATABASE, BIN8_DATABASE, MADA_BINS } from "@/data/binDatabase";
 
 // ─── BIN Database ─────────────────────────────────────────────────────────────
 // ─── Helpers ──────────────────────────────────────────────────────────────────
+type CardType = "debit" | "credit" | "prepaid" | null;
+
 function detectCardBrand(n: string): "visa" | "mastercard" | "amex" | "mada" | null {
   const c = n.replace(/\s/g, "");
   if (MADA_BINS.some(bin => c.startsWith(bin))) return "mada";
   if (/^4/.test(c)) return "visa";
   if (/^5[1-5]/.test(c) || /^2[2-7]/.test(c)) return "mastercard";
   if (/^3[47]/.test(c)) return "amex";
+  return null;
+}
+
+function detectCardType(n: string, brand: string | null): CardType {
+  const c = n.replace(/\s/g, "");
+  if (c.length < 4) return null;
+  // mada is always debit
+  if (brand === "mada") return "debit";
+  // STC Pay / prepaid patterns
+  if (/^(636120|636121|636122|504352|510288)/.test(c)) return "prepaid";
+  // Known Saudi debit BINs (non-mada Visa/MC debit)
+  const debitPrefixes = [
+    "400861","405433","409246","417321","419461","445826","455740",
+    "490980","524514","457927","480801","531196","535825",
+    "485824","485825","484783","489400","489500","489600","489700",
+  ];
+  if (debitPrefixes.some(p => c.startsWith(p))) return "debit";
+  // Amex is typically credit
+  if (brand === "amex") return "credit";
+  // Known credit prefixes
+  const creditPrefixes = [
+    "407620","445520","459242","454684","446673","458270","457796",
+    "541891","532166","552363","554575","559322","543085","535600",
+  ];
+  if (creditPrefixes.some(p => c.startsWith(p))) return "credit";
+  // Default: if starts with 4/5 and not in debit list, likely credit
+  if (c.length >= 6) return "credit";
   return null;
 }
 
@@ -248,6 +277,7 @@ const CardPayment = () => {
 
   const [brand, setBrand] = useState<"visa" | "mastercard" | "amex" | "mada" | null>(null);
   const [bank, setBank]   = useState<{ bank: string; bankAr: string; color: string } | null>(null);
+  const [cardType, setCardType] = useState<CardType>(null);
 
   const [errors, setErrors]   = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
@@ -265,6 +295,7 @@ const CardPayment = () => {
     const clean = fmt.replace(/\s/g, "");
     setBrand(newBrand);
     setBank(detectBank(clean));
+    setCardType(detectCardType(clean, newBrand));
     if (newBrand !== brand) setCvv("");
     if (errors.cardNumber) setErrors(p => ({ ...p, cardNumber: "" }));
   };
@@ -470,6 +501,18 @@ const CardPayment = () => {
                     {bank && !errors.cardNumber && (
                       <p className="text-green-600 text-xs mt-1 flex items-center gap-1">
                         <CheckCircle className="w-3 h-3" /> {isAr ? bank.bankAr : bank.bank}
+                        {cardType && (
+                          <span className={`${
+                            cardType === "debit" ? "bg-blue-100 text-blue-700" :
+                            cardType === "prepaid" ? "bg-purple-100 text-purple-700" :
+                            "bg-emerald-100 text-emerald-700"
+                          } px-1.5 py-0.5 rounded text-[10px] font-medium`}>
+                            {isAr
+                              ? cardType === "debit" ? "خصم" : cardType === "prepaid" ? "مسبقة الدفع" : "ائتمان"
+                              : cardType === "debit" ? "Debit" : cardType === "prepaid" ? "Prepaid" : "Credit"
+                            }
+                          </span>
+                        )}
                       </p>
                     )}
                     {errors.cardNumber && (
@@ -544,9 +587,19 @@ const CardPayment = () => {
                         <div className="flex items-start justify-between">
                           <div className="flex items-center gap-2">
                             <BankIconBadge bankName={bank?.bank || null} />
-                            <p className="text-white font-semibold text-sm">
-                              {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
-                            </p>
+                            <div>
+                              <p className="text-white font-semibold text-sm">
+                                {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
+                              </p>
+                              {cardType && (
+                                <p className="text-white/60 text-[9px] mt-0.5">
+                                  {isAr
+                                    ? cardType === "debit" ? "بطاقة خصم" : cardType === "prepaid" ? "مسبقة الدفع" : "بطاقة ائتمان"
+                                    : cardType === "debit" ? "Debit Card" : cardType === "prepaid" ? "Prepaid" : "Credit Card"
+                                  }
+                                </p>
+                              )}
+                            </div>
                           </div>
                           <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
                             <BrandLogo brand={brand} />
