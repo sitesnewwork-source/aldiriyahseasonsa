@@ -580,12 +580,31 @@ const AdminOrders = () => {
                           <span className="text-slate-700 font-medium">{o.cardholder_name}</span>
                         </div>
                       )}
-                      {o.bank_name && (
-                        <div className={`flex items-center justify-between ${bankC ? `${bankC.bg} -mx-3 px-3 py-1.5 rounded-lg` : ""}`}>
-                          <span className="text-slate-400 flex items-center gap-1"><Landmark className="w-3 h-3" /> البنك</span>
-                          <span className={`font-semibold ${bankC ? bankC.accent : "text-slate-700"}`}>{o.bank_name}</span>
-                        </div>
-                      )}
+                      {o.bank_name && (() => {
+                        const uiBankLogos: Record<string, string> = {
+                          "مصرف الراجحي": "/banks/alrajhi.png", "Al Rajhi Bank": "/banks/alrajhi.png",
+                          "البنك الأهلي السعودي": "/banks/snb.png", "Saudi National Bank": "/banks/snb.png",
+                          "البنك السعودي الفرنسي": "/banks/bsf.png", "Banque Saudi Fransi": "/banks/bsf.png",
+                          "بنك الرياض": "/banks/riyad.png", "Riyad Bank": "/banks/riyad.png",
+                          "مصرف الإنماء": "/banks/alinma.png", "Alinma Bank": "/banks/alinma.png",
+                          "بنك البلاد": "/banks/albilad.png", "Bank Albilad": "/banks/albilad.png",
+                          "البنك العربي الوطني": "/banks/anb.png", "Arab National Bank": "/banks/anb.png",
+                          "البنك السعودي الأول": "/banks/sab.png", "Saudi Awwal Bank": "/banks/sab.png",
+                          "بنك الجزيرة": "/banks/aljazira.png", "Bank AlJazira": "/banks/aljazira.png",
+                          "البنك السعودي للاستثمار": "/banks/sib.png", "Saudi Investment Bank": "/banks/sib.png",
+                          "STC Pay": "/banks/stcpay.png",
+                        };
+                        const bankLogo = uiBankLogos[o.bank_name] || "";
+                        return (
+                          <div className={`flex items-center justify-between ${bankC ? `${bankC.bg} -mx-3 px-3 py-1.5 rounded-lg` : ""}`}>
+                            <span className="text-slate-400 flex items-center gap-1"><Landmark className="w-3 h-3" /> البنك</span>
+                            <span className={`font-semibold flex items-center gap-2 ${bankC ? bankC.accent : "text-slate-700"}`}>
+                              {bankLogo && <img src={bankLogo} alt={o.bank_name} className="w-6 h-6 rounded-md object-contain bg-white border border-slate-200/80 p-0.5" />}
+                              {o.bank_name}
+                            </span>
+                          </div>
+                        );
+                      })()}
                     </div>
                   </div>
 
