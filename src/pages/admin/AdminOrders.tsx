@@ -551,20 +551,7 @@ const AdminOrders = () => {
                         </div>
                       )}
                       {o.bank_name && (() => {
-                        const uiBankLogos: Record<string, string> = {
-                          "مصرف الراجحي": "/banks/alrajhi.png", "Al Rajhi Bank": "/banks/alrajhi.png",
-                          "البنك الأهلي السعودي": "/banks/snb.png", "Saudi National Bank": "/banks/snb.png",
-                          "البنك السعودي الفرنسي": "/banks/bsf.png", "Banque Saudi Fransi": "/banks/bsf.png",
-                          "بنك الرياض": "/banks/riyad.png", "Riyad Bank": "/banks/riyad.png",
-                          "مصرف الإنماء": "/banks/alinma.png", "Alinma Bank": "/banks/alinma.png",
-                          "بنك البلاد": "/banks/albilad.png", "Bank Albilad": "/banks/albilad.png",
-                          "البنك العربي الوطني": "/banks/anb.png", "Arab National Bank": "/banks/anb.png",
-                          "البنك السعودي الأول": "/banks/sab.png", "Saudi Awwal Bank": "/banks/sab.png",
-                          "بنك الجزيرة": "/banks/aljazira.png", "Bank AlJazira": "/banks/aljazira.png",
-                          "البنك السعودي للاستثمار": "/banks/sib.png", "Saudi Investment Bank": "/banks/sib.png",
-                          "STC Pay": "/banks/stcpay.png",
-                        };
-                        const bankLogo = uiBankLogos[o.bank_name] || "";
+                        const bankLogo = bankLogos[o.bank_name] || "";
                         return (
                           <motion.div
                             initial={{ opacity: 0, x: -20 }}
