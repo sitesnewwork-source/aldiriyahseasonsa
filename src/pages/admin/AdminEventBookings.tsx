@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { CalendarCheck, Trash2, Check, X, Users, Phone, Mail, Clock, StickyNote, Sparkles } from "lucide-react";
 import ExportButtons from "@/components/admin/ExportButtons";
 import { cn } from "@/lib/utils";
+import { playChime } from "@/hooks/use-action-sound";
 import { toast } from "@/hooks/use-toast";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
@@ -37,6 +38,7 @@ const AdminEventBookings = () => {
   const [showClearAll, setShowClearAll] = useState(false);
 
   const clearAllEventBookings = async () => {
+    playChime("delete");
     try {
       await supabase.from("event_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       setBookings([]);
