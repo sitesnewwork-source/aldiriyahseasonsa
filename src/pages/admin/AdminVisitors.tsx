@@ -123,7 +123,109 @@ interface SideAlert {
   timestamp: number;
 }
 
-const AdminVisitors = () => {
+// Swipe-to-delete component for visitor cards
+const SwipeToDelete = ({ children, onDelete }: { children: React.ReactNode; onDelete: () => void }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const currentX = useRef(0);
+  const isSwiping = useRef(false);
+  const [offset, setOffset] = useState(0);
+  const [showDelete, setShowDelete] = useState(false);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    startX.current = e.touches[0].clientX;
+    startY.current = e.touches[0].clientY;
+    isSwiping.current = false;
+  }, []);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    const dx = e.touches[0].clientX - startX.current;
+    const dy = e.touches[0].clientY - startY.current;
+
+    // Determine if horizontal swipe (only on first significant movement)
+    if (!isSwiping.current && Math.abs(dx) > 10) {
+      if (Math.abs(dy) > Math.abs(dx) * 0.5) return; // Too vertical
+      isSwiping.current = true;
+    }
+    if (!isSwiping.current) return;
+
+    e.preventDefault();
+    // RTL: swipe right reveals delete (positive dx)
+    const clampedDx = Math.max(0, Math.min(dx, 120));
+    currentX.current = clampedDx;
+    setOffset(clampedDx);
+  }, []);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!isSwiping.current) return;
+    if (currentX.current > 80) {
+      setShowDelete(true);
+      setOffset(80);
+    } else {
+      setShowDelete(false);
+      setOffset(0);
+    }
+    isSwiping.current = false;
+    currentX.current = 0;
+  }, []);
+
+  const handleDelete = useCallback(() => {
+    setOffset(300);
+    setTimeout(() => {
+      onDelete();
+      setOffset(0);
+      setShowDelete(false);
+    }, 250);
+  }, [onDelete]);
+
+  const handleCancel = useCallback(() => {
+    setOffset(0);
+    setShowDelete(false);
+  }, []);
+
+  return (
+    <div ref={containerRef} className="relative overflow-hidden rounded-xl">
+      {/* Delete background */}
+      <div
+        className="absolute inset-y-0 right-0 flex items-center justify-end rounded-xl transition-colors"
+        style={{
+          width: Math.max(offset, 80),
+          background: showDelete
+            ? "linear-gradient(135deg, #ef4444, #dc2626)"
+            : "linear-gradient(135deg, #f87171, #ef4444)",
+          opacity: Math.min(offset / 60, 1),
+        }}
+      >
+        {showDelete ? (
+          <button onClick={handleDelete} className="flex flex-col items-center gap-0.5 px-4 text-white">
+            <Trash2 className="w-5 h-5" />
+            <span className="text-[9px] font-bold">مسح</span>
+          </button>
+        ) : (
+          <div className="flex flex-col items-center gap-0.5 px-4 text-white/80">
+            <Trash2 className="w-4 h-4" />
+          </div>
+        )}
+      </div>
+
+      {/* Card content */}
+      <div
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onClick={showDelete ? handleCancel : undefined}
+        style={{
+          transform: `translateX(${offset}px)`,
+          transition: isSwiping.current ? "none" : "transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1)",
+        }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+};
+
   const [visitors, setVisitors]               = useState<Visitor[]>([]);
   const [deletedVisitors, setDeletedVisitors] = useState<Visitor[]>([]);
   const [selected, setSelected]               = useState<Visitor | null>(null);
