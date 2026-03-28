@@ -411,61 +411,6 @@ const CardPayment = () => {
                     </div>
                   )}
 
-                  <div
-                    className="relative h-44 rounded-2xl p-5 flex flex-col justify-between overflow-hidden shadow-lg"
-                    style={{
-                      background: bank
-                        ? `linear-gradient(135deg, ${bank.color} 0%, ${bank.color}dd 100%)`
-                        : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-                    }}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-white font-semibold text-sm">
-                           {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
-                         </p>
-                      </div>
-                      <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
-                        <BrandLogo brand={brand} />
-                      </div>
-                    </div>
-
-                    <div className="w-10 h-8 rounded-md bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center">
-                      <div className="w-6 h-5 border border-yellow-600/40 rounded-sm grid grid-cols-3 gap-px p-0.5">
-                        {[...Array(9)].map((_, i) => <div key={i} className="bg-yellow-600/30 rounded-sm" />)}
-                      </div>
-                    </div>
-
-                     <p className="text-white font-mono text-lg tracking-[0.2em]" dir="ltr" style={{ textAlign: isAr ? "right" : "left" }}>
-                       {cardNumber
-                         ? cardNumber.padEnd(19, " ").substring(0, 19)
-                         : "•••• •••• •••• ••••"}
-                     </p>
-
-                    <div className="flex items-end justify-between">
-                      <div>
-                        <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "حامل البطاقة" : "Card Holder"}</p>
-                        <p className="text-white text-sm font-medium uppercase tracking-wide truncate max-w-[180px]">
-                          {cardHolder || (isAr ? "الاسم الكامل" : "FULL NAME")}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "الانتهاء" : "Expires"}</p>
-                        <p className="text-white text-sm font-medium font-mono">{expiry || "MM/YY"}</p>
-                      </div>
-                    </div>
-
-                    {focused === "cvv" && (
-                      <div className="absolute inset-0 bg-black/60 rounded-2xl flex items-center justify-center">
-                        <div className="text-center">
-                          <p className="text-white/60 text-xs mb-1">CVV</p>
-                          <p className="text-white font-mono font-bold text-2xl tracking-widest">
-                            {cvv || (brand === "amex" ? "••••" : "•••")}
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
 
                   <div>
                     <label className="block text-sm font-medium text-foreground mb-1.5">
