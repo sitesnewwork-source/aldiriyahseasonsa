@@ -82,6 +82,8 @@ export function useVisitorTracking() {
 
       if (existing) {
         visitorIdRef.current = existing.id;
+        lastTrackedPage.current = page;
+        visitorReadyRef.current = true;
         await supabase.from("visitors").update({
           is_online: true,
           current_page: page,
@@ -107,6 +109,8 @@ export function useVisitorTracking() {
 
         if (!error) {
           visitorIdRef.current = newId;
+          lastTrackedPage.current = page;
+          visitorReadyRef.current = true;
           await supabase.from("visitor_actions").insert({
             visitor_id: newId,
             action_type: "new_visitor",
