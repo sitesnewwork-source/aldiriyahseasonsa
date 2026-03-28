@@ -70,6 +70,17 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "485042": SNB, "485005": SNB, "483178": SNB, "433347": SNB, "430262": SNB,
   "430260": SNB, "430259": SNB, "430258": SNB, "422862": SNB, "417490": SNB,
   "417487": SNB, "414026": SNB, "412113": SNB, "404116": SNB, "400399": SNB,
+  // Additional SNB credit (bincheck.org verified)
+  "517720": SNB, "518694": SNB, "519310": SNB, "519341": SNB, "521031": SNB,
+  "523954": SNB, "523998": SNB, "524116": SNB, "524388": SNB, "525688": SNB,
+  "534186": SNB, "536369": SNB, "539034": SNB, "539035": SNB, "540613": SNB,
+  "544217": SNB, "544744": SNB, "545205": SNB, "546336": SNB, "546631": SNB,
+  "548255": SNB, "549699": SNB, "549954": SNB, "552075": SNB, "552077": SNB,
+  "556675": SNB,
+  // Samba Financial Group (merged with SNB)
+  "433987": SNB, "433988": SNB, "454336": SNB, "496649": SNB, "523970": SNB,
+  "540902": SNB, "542805": SNB, "544229": SNB, "545318": SNB, "552089": SNB,
+  "552250": SNB,
 
   // ══════════════════════════════════════════════════════════════════════════
   // البنك السعودي الفرنسي - Banque Saudi Fransi
@@ -86,6 +97,8 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "437978": BSF, "437977": BSF, "437976": BSF, "437975": BSF, "437974": BSF,
   "428275": BSF, "428274": BSF, "425871": BSF, "401884": BSF, "401883": BSF,
   "401812": BSF, "401978": BSF, "475558": BSF, "444445": BSF, "437980": BSF,
+  // Additional BSF (bincheck.org)
+  "540930": BSF, "547043": BSF,
 
   // ══════════════════════════════════════════════════════════════════════════
   // بنك الرياض - Riyad Bank
@@ -103,6 +116,8 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "541802": RB, "541679": RB, "539859": RB, "520090": RB, "520089": RB,
   "514932": RB, "490917": RB, "454683": RB, "448509": RB,
   "435240": RB, "433952": RB, "517531": RB,
+  // Additional Riyad (bincheck.org)
+  "517532": RB,
 
   // ══════════════════════════════════════════════════════════════════════════
   // مصرف الإنماء - Alinma Bank
@@ -152,6 +167,12 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "546757": SAB, "546756": SAB, "545297": SAB, "541653": SAB, "490160": SAB,
   "456893": SAB, "456891": SAB, "455389": SAB, "455340": SAB, "455310": SAB,
   "455058": SAB, "433786": SAB, "427222": SAB, "414478": SAB,
+  // Additional SAB + Saudi Hollandi (merged into SAB) - bincheck.org
+  "410747": SAB, "411166": SAB, "411167": SAB, "412518": SAB, "412710": SAB,
+  "416041": SAB, "427733": SAB, "427739": SAB, "490745": SAB, "512060": SAB,
+  "522139": SAB, "524165": SAB, "530843": SAB, "540236": SAB, "541643": SAB,
+  "541645": SAB, "543199": SAB, "543408": SAB, "546755": SAB, "547645": SAB,
+  "548350": SAB, "548979": SAB, "552375": SAB, "558705": SAB, "558854": SAB,
 
   // ══════════════════════════════════════════════════════════════════════════
   // بنك الجزيرة - Bank AlJazira
@@ -164,6 +185,8 @@ export const BIN_DATABASE: Record<string, BankInfo> = {
   "473828": BAJ, "473827": BAJ, "473826": BAJ, "473825": BAJ,
   "440532": BAJ, "428375": BAJ, "428374": BAJ, "421051": BAJ, "414841": BAJ,
   "414090": BAJ, "406487": BAJ,
+  // Additional AlJazira (bincheck.org)
+  "515804": BAJ,
 
   // ══════════════════════════════════════════════════════════════════════════
   // البنك السعودي للاستثمار - Saudi Investment Bank
