@@ -39,6 +39,7 @@ const SwipeToDelete = ({ children, onDelete, label = "مسح" }: SwipeToDeletePr
     if (currentX.current > 60) {
       setShowDelete(true);
       setOffset(80);
+      if (navigator.vibrate) navigator.vibrate(30);
     } else {
       setShowDelete(false);
       setOffset(0);
