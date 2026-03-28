@@ -56,7 +56,7 @@ const AdminLogin = ({ onLogin }: Props) => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pr-10 bg-background"
-                placeholder="admin@diriyah.sa"
+                placeholder="admin@diriyah.com"
                 dir="ltr"
                 required
               />
