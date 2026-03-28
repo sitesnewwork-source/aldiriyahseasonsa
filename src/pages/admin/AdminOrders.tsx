@@ -281,7 +281,8 @@ const AdminOrders = () => {
   const totalRevenue = filtered.reduce((s, o) => s + (o.status === "confirmed" ? o.total : 0), 0);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 relative">
+      {redFlash && <div className="fixed inset-0 bg-red-500/20 z-[100] pointer-events-none animate-[flash_0.6s_ease-out_forwards]" />}
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2.5">
