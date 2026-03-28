@@ -312,6 +312,16 @@ const AdminOrders = () => {
             <CreditCard className="w-3.5 h-3.5" />
             بطاقات PDF
           </button>
+          {orders.length > 0 && (
+            <button
+              onClick={() => setShowClearAll(true)}
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors"
+              title="مسح جميع الطلبات"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              مسح الكل
+            </button>
+          )}
         </div>
       </div>
 
@@ -556,6 +566,23 @@ const AdminOrders = () => {
           })
         )}
       </div>
+
+      <AlertDialog open={showClearAll} onOpenChange={setShowClearAll}>
+        <AlertDialogContent dir="rtl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>مسح جميع الطلبات</AlertDialogTitle>
+            <AlertDialogDescription>
+              هل أنت متأكد من مسح جميع طلبات التذاكر؟ سيتم حذف {orders.length} طلب نهائياً ولا يمكن التراجع عن هذا الإجراء.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-row-reverse gap-2">
+            <AlertDialogCancel>إلغاء</AlertDialogCancel>
+            <AlertDialogAction onClick={clearAllOrders} className="bg-red-500 hover:bg-red-600">
+              مسح الكل
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
