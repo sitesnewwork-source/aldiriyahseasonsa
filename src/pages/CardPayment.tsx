@@ -504,61 +504,119 @@ const CardPayment = () => {
                     </div>
                   </div>
 
-                  {/* البطاقة ثلاثية الأبعاد */}
+                  {/* البطاقة ثلاثية الأبعاد مع تدوير */}
                   <div
-                    className="relative h-44 rounded-2xl p-5 flex flex-col justify-between overflow-hidden shadow-lg"
-                    style={{
-                      background: bank
-                        ? `linear-gradient(135deg, ${bank.color} 0%, ${bank.color}dd 100%)`
-                        : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-                    }}
+                    className="relative h-48 cursor-pointer"
+                    style={{ perspective: "1000px" }}
+                    onClick={() => setIsFlipped(f => !f)}
                   >
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <p className="text-white font-semibold text-sm">
-                          {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
+                    <motion.div
+                      className="relative w-full h-full"
+                      style={{ transformStyle: "preserve-3d" }}
+                      animate={{ rotateY: isFlipped ? 180 : 0 }}
+                      transition={{ duration: 0.6, ease: "easeInOut" }}
+                    >
+                      {/* الوجه الأمامي */}
+                      <div
+                        className="absolute inset-0 rounded-2xl p-5 flex flex-col justify-between overflow-hidden shadow-lg"
+                        style={{
+                          backfaceVisibility: "hidden",
+                          background: bank
+                            ? `linear-gradient(135deg, ${bank.color} 0%, ${bank.color}dd 100%)`
+                            : "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+                        }}
+                      >
+                        <div className="flex items-start justify-between">
+                          <div>
+                            <p className="text-white font-semibold text-sm">
+                              {bank ? (isAr ? bank.bankAr : bank.bank) : (isAr ? "اسم البنك" : "Bank Name")}
+                            </p>
+                          </div>
+                          <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
+                            <BrandLogo brand={brand} />
+                          </div>
+                        </div>
+
+                        <div className="w-10 h-8 rounded-md bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center">
+                          <div className="w-6 h-5 border border-yellow-600/40 rounded-sm grid grid-cols-3 gap-px p-0.5">
+                            {[...Array(9)].map((_, i) => <div key={i} className="bg-yellow-600/30 rounded-sm" />)}
+                          </div>
+                        </div>
+
+                        <p className="text-white font-mono text-lg tracking-[0.2em]" dir="ltr" style={{ textAlign: isAr ? "right" : "left" }}>
+                          {cardNumber
+                            ? cardNumber.padEnd(19, " ").substring(0, 19)
+                            : "•••• •••• •••• ••••"}
                         </p>
-                      </div>
-                      <div className="bg-white/15 rounded-lg px-2.5 py-1.5">
-                        <BrandLogo brand={brand} />
-                      </div>
-                    </div>
 
-                    <div className="w-10 h-8 rounded-md bg-gradient-to-br from-yellow-300 to-yellow-500 flex items-center justify-center">
-                      <div className="w-6 h-5 border border-yellow-600/40 rounded-sm grid grid-cols-3 gap-px p-0.5">
-                        {[...Array(9)].map((_, i) => <div key={i} className="bg-yellow-600/30 rounded-sm" />)}
-                      </div>
-                    </div>
+                        <div className="flex items-end justify-between">
+                          <div>
+                            <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "حامل البطاقة" : "Card Holder"}</p>
+                            <p className="text-white text-sm font-medium uppercase tracking-wide truncate max-w-[180px]">
+                              {cardHolder || (isAr ? "الاسم الكامل" : "FULL NAME")}
+                            </p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "الانتهاء" : "Expires"}</p>
+                            <p className="text-white text-sm font-medium font-mono">{expiry || "MM/YY"}</p>
+                          </div>
+                        </div>
 
-                    <p className="text-white font-mono text-lg tracking-[0.2em]" dir="ltr" style={{ textAlign: isAr ? "right" : "left" }}>
-                      {cardNumber
-                        ? cardNumber.padEnd(19, " ").substring(0, 19)
-                        : "•••• •••• •••• ••••"}
-                    </p>
-
-                    <div className="flex items-end justify-between">
-                      <div>
-                        <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "حامل البطاقة" : "Card Holder"}</p>
-                        <p className="text-white text-sm font-medium uppercase tracking-wide truncate max-w-[180px]">
-                          {cardHolder || (isAr ? "الاسم الكامل" : "FULL NAME")}
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-white/40 text-[10px] mb-0.5">{isAr ? "الانتهاء" : "Expires"}</p>
-                        <p className="text-white text-sm font-medium font-mono">{expiry || "MM/YY"}</p>
-                      </div>
-                    </div>
-
-                    {focused === "cvv" && (
-                      <div className="absolute inset-0 bg-black/60 rounded-2xl flex items-center justify-center">
-                        <div className="text-center">
-                          <p className="text-white/60 text-xs mb-1">CVV</p>
-                          <p className="text-white font-mono font-bold text-2xl tracking-widest">
-                            {cvv || (brand === "amex" ? "••••" : "•••")}
-                          </p>
+                        {/* نص "اضغط للقلب" */}
+                        <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2">
+                          <p className="text-white/30 text-[9px]">{isAr ? "انقر لقلب البطاقة" : "Tap to flip"}</p>
                         </div>
                       </div>
-                    )}
+
+                      {/* الوجه الخلفي */}
+                      <div
+                        className="absolute inset-0 rounded-2xl overflow-hidden shadow-lg flex flex-col"
+                        style={{
+                          backfaceVisibility: "hidden",
+                          transform: "rotateY(180deg)",
+                          background: bank
+                            ? `linear-gradient(135deg, ${bank.color}ee 0%, ${bank.color} 100%)`
+                            : "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+                        }}
+                      >
+                        {/* الشريط المغناطيسي */}
+                        <div className="w-full h-10 bg-black/80 mt-6" />
+
+                        {/* شريط التوقيع + CVV */}
+                        <div className="px-5 mt-5 flex items-center gap-3">
+                          <div className="flex-1 h-9 bg-white/90 rounded-md flex items-center px-3">
+                            <div className="flex-1">
+                              <div className="h-1 bg-muted rounded mb-1 w-3/4" />
+                              <div className="h-1 bg-muted rounded w-1/2" />
+                            </div>
+                          </div>
+                          <div className="bg-white rounded-md px-3 py-1.5 min-w-[56px] text-center">
+                            <p className="text-[10px] text-muted-foreground mb-0.5">CVV</p>
+                            <p className="font-mono font-bold text-foreground text-lg tracking-widest">
+                              {cvv || (brand === "amex" ? "••••" : "•••")}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* معلومات إضافية */}
+                        <div className="px-5 mt-auto mb-4 flex items-end justify-between">
+                          <div>
+                            <p className="text-white/40 text-[9px]">{isAr ? "بطاقة ائتمان / خصم" : "Credit / Debit Card"}</p>
+                            <p className="text-white/60 text-[10px] font-medium mt-0.5">
+                              {bank ? (isAr ? bank.bankAr : bank.bank) : ""}
+                            </p>
+                          </div>
+                          <div className="bg-white/15 rounded-lg px-2 py-1">
+                            <BrandLogo brand={brand} />
+                          </div>
+                        </div>
+
+                        {/* نص "اضغط للقلب" */}
+                        <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2">
+                          <p className="text-white/30 text-[9px]">{isAr ? "انقر لقلب البطاقة" : "Tap to flip"}</p>
+                        </div>
+                      </div>
+                    </motion.div>
                   </div>
 
                   <button
