@@ -130,6 +130,7 @@ import SwipeToDelete from "@/components/admin/SwipeToDelete";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const AdminVisitors = () => {
+  const isMobile = useIsMobile();
   const [visitors, setVisitors]               = useState<Visitor[]>([]);
   const [deletedVisitors, setDeletedVisitors] = useState<Visitor[]>([]);
   const [selected, setSelected]               = useState<Visitor | null>(null);
