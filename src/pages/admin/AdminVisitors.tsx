@@ -1156,7 +1156,7 @@ const AdminVisitors = () => {
               onClick={e => { createRipple(e); deleteAll(); }}
               className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors relative overflow-hidden"
             >
-              <Trash2 className="w-3.5 h-3.5" /> مسح جميع المحادثات
+              <WifiOffBulk className="w-3.5 h-3.5" /> حذف غير المتصلين ({visitors.filter(v => !v.is_online).length})
             </button>
             <button
               onClick={e => { createRipple(e); playChime("click"); setSelectMode(!selectMode); if (selectMode) setSelectedIds(new Set()); }}
