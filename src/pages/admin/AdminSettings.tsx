@@ -166,6 +166,21 @@ const AdminSettings = () => {
       badgeGradient: !notifSupported ? "from-slate-400 to-slate-500" : isNotifGranted ? "from-emerald-400 to-green-500" : isNotifDenied ? "from-red-400 to-rose-500" : "from-amber-400 to-orange-400",
     },
     {
+      icon: soundMuted ? VolumeX : Volume2,
+      label: "أصوات الإشعارات",
+      gradient: soundMuted ? "from-slate-400 to-slate-500" : "from-emerald-500 to-teal-500",
+      shadow: soundMuted ? "shadow-slate-400/20" : "shadow-emerald-500/20",
+      onClick: () => {
+        const newVal = !soundMuted;
+        setSoundMuted(newVal);
+        setSoundMutedState(newVal);
+        if (!newVal) playChime("success");
+        toast({ title: newVal ? "🔇 تم كتم الأصوات" : "🔊 تم تفعيل الأصوات", description: newVal ? "لن تسمع أصوات الإشعارات" : "ستسمع أصوات الإشعارات الآن" });
+      },
+      badge: soundMuted ? "مكتوم" : "مفعّل",
+      badgeGradient: soundMuted ? "from-slate-400 to-slate-500" : "from-emerald-400 to-green-500",
+    },
+    {
       icon: FileDown, label: "تصدير التذاكر PDF",
       gradient: "from-cyan-500 to-sky-600", shadow: "shadow-cyan-500/20",
       onClick: handleExportPDF,
