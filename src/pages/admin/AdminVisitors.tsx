@@ -1257,7 +1257,6 @@ const AdminVisitors = () => {
                       </button>
                     )}
                   </div>
-                <>
                   <div className="flex gap-1 bg-slate-50 rounded-xl p-1">
                     {[
                       { key: "all"     as const, label: "الكل",     count: visitors.length },
