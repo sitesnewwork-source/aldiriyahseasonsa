@@ -1239,6 +1239,25 @@ const AdminVisitors = () => {
               </button>
               {!showTrash && (
                 <>
+                  <div className="relative">
+                    <Search className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="بحث بالاسم أو البريد أو الهاتف..."
+                      className="w-full py-2 pr-8 pl-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300 transition-all"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center hover:bg-slate-300 transition-colors"
+                      >
+                        <X className="w-2.5 h-2.5 text-slate-500" />
+                      </button>
+                    )}
+                  </div>
+                <>
                   <div className="flex gap-1 bg-slate-50 rounded-xl p-1">
                     {[
                       { key: "all"     as const, label: "الكل",     count: visitors.length },
