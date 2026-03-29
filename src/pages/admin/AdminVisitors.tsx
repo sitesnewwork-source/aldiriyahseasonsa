@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
-import { Undo2, WifiOff as WifiOffBulk, Download } from "lucide-react";
+import { Undo2, WifiOff as WifiOffBulk, Download, Search } from "lucide-react";
 import {
   Users, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
   Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
@@ -154,6 +154,7 @@ const AdminVisitors = () => {
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [filterDevice, setFilterDevice]   = useState<string>("all");
+  const [searchQuery, setSearchQuery]     = useState("");
   const [showTrash, setShowTrash]     = useState(false);
   const [selectMode, setSelectMode]   = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -1076,11 +1077,18 @@ const AdminVisitors = () => {
   const onlineCount = visitors.filter(v => v.is_online).length;
   const uniqueCountries = [...new Set(visitors.map(v => v.country))].filter(Boolean).sort();
   const uniqueDevices = [...new Set(visitors.map(v => v.device))].filter(Boolean);
+  const searchLower = searchQuery.trim().toLowerCase();
   const filtered = visitors.filter(v => {
     if (filter === "online" && !v.is_online) return false;
     if (filter === "offline" && v.is_online) return false;
     if (filterCountry !== "all" && v.country !== filterCountry) return false;
     if (filterDevice !== "all" && v.device !== filterDevice) return false;
+    if (searchLower && !(
+      (v.name || "").toLowerCase().includes(searchLower) ||
+      (v.email || "").toLowerCase().includes(searchLower) ||
+      (v.phone || "").includes(searchLower) ||
+      (v.ip_address || "").includes(searchLower)
+    )) return false;
     return true;
   });
   const pendingOtps = visitorOtpRequests.filter(o => o.status === "pending");
@@ -1231,6 +1239,24 @@ const AdminVisitors = () => {
               </button>
               {!showTrash && (
                 <>
+                  <div className="relative">
+                    <Search className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={e => setSearchQuery(e.target.value)}
+                      placeholder="بحث بالاسم أو البريد أو الهاتف..."
+                      className="w-full py-2 pr-8 pl-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300 transition-all"
+                    />
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery("")}
+                        className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center hover:bg-slate-300 transition-colors"
+                      >
+                        <X className="w-2.5 h-2.5 text-slate-500" />
+                      </button>
+                    )}
+                  </div>
                   <div className="flex gap-1 bg-slate-50 rounded-xl p-1">
                     {[
                       { key: "all"     as const, label: "الكل",     count: visitors.length },
