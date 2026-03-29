@@ -152,6 +152,8 @@ const AdminVisitors = () => {
   };
 
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
+  const [filterCountry, setFilterCountry] = useState<string>("all");
+  const [filterDevice, setFilterDevice]   = useState<string>("all");
   const [showTrash, setShowTrash]     = useState(false);
   const [selectMode, setSelectMode]   = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
