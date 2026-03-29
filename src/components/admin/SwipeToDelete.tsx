@@ -117,6 +117,7 @@ const SwipeToDelete = ({
             </div>
             <button
               onClick={() => {
+                playChime("pop");
                 restoreCard();
                 toast.dismiss();
               }}
