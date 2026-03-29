@@ -6,7 +6,7 @@ import {
   Bell, BellOff, Shield, Sparkles, AlertTriangle, Smartphone,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { playChime, createRipple } from "@/hooks/use-action-sound";
+import { playChime, createRipple, isSoundMuted, setSoundMuted } from "@/hooks/use-action-sound";
 import { requestNotificationPermission, getNotificationPermission, isNotificationSupported } from "@/hooks/use-browser-notifications";
 
 const AdminSettings = () => {

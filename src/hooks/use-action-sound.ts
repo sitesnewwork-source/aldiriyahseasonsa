@@ -10,8 +10,19 @@ const getAudioContext = () => {
 
 type SoundType = "soft" | "success" | "info" | "click" | "error" | "whoosh" | "pop" | "notification" | "delete" | "urgent" | "message" | "visitor";
 
+const SOUND_MUTE_KEY = "admin_sound_muted";
+
+export const isSoundMuted = (): boolean => {
+  try { return localStorage.getItem(SOUND_MUTE_KEY) === "true"; } catch { return false; }
+};
+
+export const setSoundMuted = (muted: boolean) => {
+  try { localStorage.setItem(SOUND_MUTE_KEY, String(muted)); } catch {}
+};
+
 export const playChime = (type: SoundType = "soft") => {
   try {
+    if (isSoundMuted()) return;
     const ctx = getAudioContext();
     const now = ctx.currentTime;
 
