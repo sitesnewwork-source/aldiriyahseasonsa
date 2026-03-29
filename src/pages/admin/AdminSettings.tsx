@@ -3,10 +3,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import {
   KeyRound, FileDown, Trash2, LogOut, Settings, ArrowRight, Mail,
-  Bell, BellOff, Shield, Sparkles, AlertTriangle, Smartphone,
+  Bell, BellOff, Shield, Sparkles, AlertTriangle, Smartphone, Volume2, VolumeX,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { playChime, createRipple } from "@/hooks/use-action-sound";
+import { playChime, createRipple, isSoundMuted, setSoundMuted } from "@/hooks/use-action-sound";
 import { requestNotificationPermission, getNotificationPermission, isNotificationSupported } from "@/hooks/use-browser-notifications";
 
 const AdminSettings = () => {
@@ -19,6 +19,7 @@ const AdminSettings = () => {
   const [newEmail, setNewEmail] = useState("");
   const [clearing, setClearing] = useState(false);
   const [notifPermission, setNotifPermission] = useState<string>(getNotificationPermission());
+  const [soundMuted, setSoundMutedState] = useState(isSoundMuted());
 
   useEffect(() => {
     const interval = setInterval(() => setNotifPermission(getNotificationPermission()), 1000);
@@ -163,6 +164,21 @@ const AdminSettings = () => {
       onClick: handleToggleNotifications,
       badge: !notifSupported ? "غير مدعوم" : isNotifGranted ? "مفعّل" : isNotifDenied ? "مرفوض" : "معطّل",
       badgeGradient: !notifSupported ? "from-slate-400 to-slate-500" : isNotifGranted ? "from-emerald-400 to-green-500" : isNotifDenied ? "from-red-400 to-rose-500" : "from-amber-400 to-orange-400",
+    },
+    {
+      icon: soundMuted ? VolumeX : Volume2,
+      label: "أصوات الإشعارات",
+      gradient: soundMuted ? "from-slate-400 to-slate-500" : "from-emerald-500 to-teal-500",
+      shadow: soundMuted ? "shadow-slate-400/20" : "shadow-emerald-500/20",
+      onClick: () => {
+        const newVal = !soundMuted;
+        setSoundMuted(newVal);
+        setSoundMutedState(newVal);
+        if (!newVal) playChime("success");
+        toast({ title: newVal ? "🔇 تم كتم الأصوات" : "🔊 تم تفعيل الأصوات", description: newVal ? "لن تسمع أصوات الإشعارات" : "ستسمع أصوات الإشعارات الآن" });
+      },
+      badge: soundMuted ? "مكتوم" : "مفعّل",
+      badgeGradient: soundMuted ? "from-slate-400 to-slate-500" : "from-emerald-400 to-green-500",
     },
     {
       icon: FileDown, label: "تصدير التذاكر PDF",
