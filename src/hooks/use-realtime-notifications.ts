@@ -126,6 +126,7 @@ export function useRealtimeNotifications() {
       
       const soundType = isOtp ? "urgent"
         : table === "contact_messages" ? "message"
+        : table === "visitors" ? "visitor"
         : table === "event_bookings" ? "notification"
         : needsApproval ? "urgent" : "notification";
       playChime(soundType);
