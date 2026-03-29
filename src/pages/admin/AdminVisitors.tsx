@@ -1074,9 +1074,15 @@ const AdminVisitors = () => {
   // Derived
   // ─────────────────────────────────────────────
   const onlineCount = visitors.filter(v => v.is_online).length;
-  const filtered = visitors.filter(v =>
-    filter === "online" ? v.is_online : filter === "offline" ? !v.is_online : true
-  );
+  const uniqueCountries = [...new Set(visitors.map(v => v.country))].filter(Boolean).sort();
+  const uniqueDevices = [...new Set(visitors.map(v => v.device))].filter(Boolean);
+  const filtered = visitors.filter(v => {
+    if (filter === "online" && !v.is_online) return false;
+    if (filter === "offline" && v.is_online) return false;
+    if (filterCountry !== "all" && v.country !== filterCountry) return false;
+    if (filterDevice !== "all" && v.device !== filterDevice) return false;
+    return true;
+  });
   const pendingOtps = visitorOtpRequests.filter(o => o.status === "pending");
 
   if (loading) {
