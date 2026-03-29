@@ -1085,6 +1085,34 @@ const AdminVisitors = () => {
   });
   const pendingOtps = visitorOtpRequests.filter(o => o.status === "pending");
 
+  const exportFilteredCSV = useCallback(() => {
+    playChime("success");
+    const headers = ["الاسم","البريد","الهاتف","الدولة","الجهاز","المتصفح","الصفحة الحالية","متصل","آخر ظهور","الزيارات","الصفحات","IP"];
+    const rows = filtered.map(v => [
+      v.name || "زائر جديد",
+      v.email || "",
+      v.phone || "",
+      v.country || "",
+      v.device || "",
+      v.browser || "",
+      v.current_page_label || v.current_page || "",
+      v.is_online ? "نعم" : "لا",
+      new Date(v.last_seen).toLocaleString("ar-SA"),
+      v.total_visits,
+      v.pages_viewed,
+      v.ip_address || "",
+    ]);
+    const bom = "\uFEFF";
+    const csv = bom + [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `visitors_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [filtered]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-120px)]">
