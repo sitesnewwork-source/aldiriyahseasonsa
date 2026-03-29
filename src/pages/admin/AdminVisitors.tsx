@@ -477,12 +477,64 @@ const AdminVisitors = () => {
   };
 
   const deleteAll = async () => {
-    playChime("delete");
-    const ids = visitors.filter(v => !v.is_online).map(v => v.id);
+    const offlineVisitors = visitors.filter(v => !v.is_online);
+    const ids = offlineVisitors.map(v => v.id);
     if (!ids.length) return;
-    await supabase.from("visitors").update({ is_deleted: true } as any).in("id", ids);
+
+    playChime("delete");
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+
+    // Optimistically hide from UI
+    setVisitors(prev => prev.filter(v => v.is_online));
     if (selected && ids.includes(selected.id)) setSelected(null);
-    setSelectedIds(new Set()); setSelectMode(false); fetchVisitors();
+    setSelectedIds(new Set()); setSelectMode(false);
+
+    const undoDuration = 5000;
+    let undone = false;
+
+    const restoreBulk = () => {
+      undone = true;
+      playChime("pop");
+      setVisitors(prev => {
+        const merged = [...prev, ...offlineVisitors];
+        merged.sort((a, b) => new Date(b.last_seen).getTime() - new Date(a.last_seen).getTime());
+        return merged;
+      });
+    };
+
+    toast(
+      () => (
+        <div className="w-full flex flex-col gap-2" dir="rtl">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Trash2 className="w-4 h-4 text-red-500 shrink-0" />
+              <span className="text-sm font-medium">تم حذف {ids.length} زائر غير متصل</span>
+            </div>
+            <button
+              onClick={() => { restoreBulk(); toast.dismiss(); }}
+              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-primary/10 text-primary text-xs font-bold hover:bg-primary/20 transition-colors"
+            >
+              <Undo2 className="w-3.5 h-3.5" />
+              تراجع
+            </button>
+          </div>
+          <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
+            <div
+              className="h-full rounded-full bg-red-500"
+              style={{ animation: `undoProgress ${undoDuration}ms linear forwards` }}
+            />
+          </div>
+        </div>
+      ),
+      { duration: undoDuration, unstyled: false },
+    );
+
+    setTimeout(async () => {
+      if (!undone) {
+        await supabase.from("visitors").update({ is_deleted: true } as any).in("id", ids);
+        fetchVisitors();
+      }
+    }, undoDuration);
   };
 
   const permanentDeleteSingle = async (id: string) => {
