@@ -1624,100 +1624,143 @@ const AdminVisitors = () => {
             )}
           </div>
 
-          {/* Mobile expanded */}
-          <div className="lg:hidden space-y-1.5">
-            {!showTrash && filtered.map(visitor => {
-              const isExpanded = selected?.id === visitor.id;
-              return (
-                <div key={visitor.id}>
-                  <div
-                    className={`w-full text-right bg-white rounded-xl border transition-all duration-300 p-3 cursor-pointer ${
-                      isExpanded ? "border-blue-400 bg-blue-50/40" : "border-slate-100"
-                    } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
-                    onClick={() => { if (!selectMode) { playChime(isExpanded ? "whoosh" : "pop"); setSelected(isExpanded ? null : visitor); } }}
-                  >
-                    <div className="flex items-center gap-2.5">
-                      {selectMode && (
-                        <button onClick={e => { e.stopPropagation(); toggleSelect(visitor.id); }} className="shrink-0">
-                          {selectedIds.has(visitor.id)
-                            ? <CheckSquare className="w-4 h-4 text-blue-500" />
-                            : <Square className="w-4 h-4 text-slate-300" />}
-                        </button>
-                      )}
+          {/* Mobile Detail Sheet */}
+          <Sheet open={!!selected && typeof window !== 'undefined' && window.innerWidth < 1024} onOpenChange={(open) => { if (!open) setSelected(null); }}>
+            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl p-0 overflow-hidden" dir="rtl">
+              {selected && (
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="p-4 border-b border-slate-100 shrink-0">
+                    <div className="flex items-center gap-3">
+                      <button
+                        onClick={() => setSelected(null)}
+                        className="p-1.5 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors shrink-0"
+                      >
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
                       <div className="relative shrink-0">
-                        <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold ${
-                          visitor.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
+                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[15px] font-bold ${
+                          selected.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
                         }`}>
-                          {(visitor.name || "ز")[0]}
+                          {(selected.name || "ز")[0]}
                         </div>
-                        <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
-                          visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
+                        <span className={`absolute -bottom-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-white ${
+                          selected.is_online ? "bg-emerald-400" : "bg-slate-300"
                         }`} />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[13px] font-semibold text-slate-700 truncate">{visitor.name || "زائر جديد"}</span>
-                          <div className="flex items-center gap-1.5 shrink-0">
-                            {visitor.is_online ? <Wifi className="w-3.5 h-3.5 text-emerald-400" /> : <WifiOff className="w-3.5 h-3.5 text-slate-300" />}
-                            <ChevronDown className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`} />
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-[14px] font-bold text-slate-800 truncate">{selected.name || "زائر جديد"}</h3>
+                          <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 ${
+                            selected.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"
+                          }`}>
+                            {selected.is_online ? "متصل" : "غير متصل"}
+                          </span>
                         </div>
                         <div className="flex items-center gap-1 mt-0.5">
-                          <MapPin className="w-2.5 h-2.5 text-slate-300" />
-                          <span className="text-[10px] text-slate-400 truncate">{visitor.current_page_label}</span>
+                          <Eye className="w-2.5 h-2.5 text-blue-400" />
+                          <span className="text-[10px] text-blue-500">{selected.current_page_label}</span>
                         </div>
                       </div>
+                      <button
+                        onClick={() => deleteSingle(selected.id)}
+                        className="p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 transition-colors shrink-0"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
                     </div>
                   </div>
 
-                  {isExpanded && (
-                    <div className="bg-white rounded-xl border border-blue-200 p-3 mt-1 space-y-3">
-                      <div className="flex items-center gap-2">
-                        <Eye className="w-3.5 h-3.5 text-blue-400" />
-                        <span className="text-[12px] text-blue-500 font-medium">يتصفح: {visitor.current_page_label}</span>
-                      </div>
-                      {(visitor.email || visitor.phone) && (
-                        <div className="border border-purple-100 rounded-lg overflow-hidden">
-                          <div className="bg-purple-50 px-3 py-1.5">
-                            <span className="text-[11px] font-semibold text-purple-600">بيانات الزائر</span>
-                          </div>
-                          <div className="p-2.5 space-y-1.5">
-                            {visitor.email && (
-                              <div className="flex items-center gap-2 text-[11px]">
-                                <Globe className="w-3.5 h-3.5 text-slate-400" />
-                                <span className="text-slate-700" dir="ltr">{visitor.email}</span>
-                              </div>
-                            )}
-                            {visitor.phone && (
-                              <div className="flex items-center gap-2 text-[11px]">
-                                <Smartphone className="w-3.5 h-3.5 text-slate-400" />
-                                <span className="text-slate-700" dir="ltr">{visitor.phone}</span>
-                              </div>
-                            )}
-                          </div>
+                  {/* Scrollable Content */}
+                  <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                    {/* Contact info */}
+                    {(selected.email || selected.phone) && (
+                      <div className="border border-purple-100 rounded-xl overflow-hidden">
+                        <div className="bg-purple-50 px-3 py-1.5">
+                          <span className="text-[11px] font-semibold text-purple-600">بيانات الزائر</span>
                         </div>
-                      )}
-                      <button onClick={(e) => { e.stopPropagation(); toggleAllSections(); }} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-slate-50 text-slate-500 text-[10px] font-medium hover:bg-slate-100 transition-colors">
-                        {allOpen ? <><ChevronUp className="w-3 h-3" /> طي الكل</> : <><ChevronDown className="w-3 h-3" /> فتح الكل</>}
-                      </button>
-                      {renderActionsLog(true)}
-                      {renderOrdersBookings(true)}
-                      {renderEventBookings(true)}
-                      {renderPaymentInfo(true)}
-                      {renderOtpSection(true)}
-                      {renderRedirectDropdown(visitor, true)}
-                      <button
-                        onClick={e => { e.stopPropagation(); deleteSingle(visitor.id); }}
-                        className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" /> مسح الزائر
-                      </button>
+                        <div className="p-2.5 space-y-1.5">
+                          {selected.email && (
+                            <div className="flex items-center gap-2 text-[11px]">
+                              <Globe className="w-3.5 h-3.5 text-slate-400" />
+                              <span className="text-slate-700" dir="ltr">{selected.email}</span>
+                            </div>
+                          )}
+                          {selected.phone && (
+                            <div className="flex items-center gap-2 text-[11px]">
+                              <Smartphone className="w-3.5 h-3.5 text-slate-400" />
+                              <span className="text-slate-700" dir="ltr">{selected.phone}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Visitor info grid */}
+                    <div className="border border-blue-100 rounded-xl overflow-hidden">
+                      <div className="bg-blue-50 px-3 py-1.5">
+                        <span className="text-[11px] font-semibold text-blue-600">معلومات الزائر</span>
+                      </div>
+                      <div className="p-2.5 grid grid-cols-2 gap-1.5">
+                        {[
+                          { label: "الجهاز", value: selected.device === "mobile" ? "جوال" : "كمبيوتر", icon: selected.device === "mobile" ? Smartphone : Monitor },
+                          { label: "المتصفح", value: selected.browser, icon: Globe },
+                          { label: "الدولة", value: `${countryFlag(selected.country)} ${selected.country}`, icon: MapPin },
+                          { label: "آخر نشاط", value: getTimeDiff(selected.last_seen), icon: Clock },
+                        ].map(info => (
+                          <div key={info.label} className="flex items-center gap-1.5 bg-slate-50 rounded-lg p-2">
+                            <info.icon className="w-3 h-3 text-slate-400 shrink-0" />
+                            <div>
+                              <p className="text-[8px] text-slate-400">{info.label}</p>
+                              <p className="text-[11px] font-medium text-slate-700">{info.value}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  )}
+
+                    {/* Stats */}
+                    <div className="border border-emerald-100 rounded-xl overflow-hidden">
+                      <div className="bg-emerald-50 px-3 py-1.5">
+                        <span className="text-[11px] font-semibold text-emerald-600">إحصائيات التصفح</span>
+                      </div>
+                      <div className="p-2.5 grid grid-cols-3 gap-1.5">
+                        {[
+                          { label: "إجمالي الزيارات", value: String(selected.total_visits || 0) },
+                          { label: "الصفحات المشاهدة", value: String(selected.pages_viewed || 0) },
+                          { label: "مدة الجلسة", value: getDuration(selected.session_start) },
+                        ].map(stat => (
+                          <div key={stat.label} className="text-center bg-slate-50 rounded-lg p-2">
+                            <p className="text-[14px] font-bold text-slate-800">{stat.value}</p>
+                            <p className="text-[8px] text-slate-400 mt-0.5">{stat.label}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Toggle all sections */}
+                    <button onClick={toggleAllSections} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-slate-50 text-slate-500 text-[10px] font-medium hover:bg-slate-100 transition-colors">
+                      {allOpen ? <><ChevronUp className="w-3 h-3" /> طي الكل</> : <><ChevronDown className="w-3 h-3" /> فتح الكل</>}
+                    </button>
+
+                    {renderActionsLog(true)}
+                    {renderOrdersBookings(true)}
+                    {renderEventBookings(true)}
+                    {renderPaymentInfo(true)}
+                    {renderOtpSection(true)}
+                    {renderRedirectDropdown(selected, true)}
+
+                    <button
+                      onClick={() => deleteSingle(selected.id)}
+                      className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" /> مسح الزائر
+                    </button>
+                  </div>
                 </div>
-              );
-            })}
-          </div>
+              )}
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
 
