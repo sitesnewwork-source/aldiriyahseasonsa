@@ -1286,6 +1286,12 @@ const AdminVisitors = () => {
                       <X className="w-3 h-3" /> إزالة الفلاتر
                     </button>
                   )}
+                  <button
+                    onClick={e => { createRipple(e); exportFilteredCSV(); }}
+                    className="w-full py-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-medium hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1 relative overflow-hidden border border-emerald-100"
+                  >
+                    <Download className="w-3 h-3" /> تصدير CSV ({filtered.length} زائر)
+                  </button>
                 </>
               )}
             </div>
