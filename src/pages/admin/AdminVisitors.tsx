@@ -1292,6 +1292,14 @@ const AdminVisitors = () => {
                   >
                     <Download className="w-3 h-3" /> تصدير CSV ({filtered.length} زائر)
                   </button>
+                  {(filter !== "all" || filterCountry !== "all" || filterDevice !== "all") && filtered.length !== visitors.length && (
+                    <div className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-blue-50 border border-blue-100">
+                      <span className="text-[10px] font-bold text-blue-600">{filtered.length}</span>
+                      <span className="text-[10px] text-blue-400">من</span>
+                      <span className="text-[10px] font-bold text-blue-600">{visitors.length}</span>
+                      <span className="text-[10px] text-blue-400">زائر</span>
+                    </div>
+                  )}
                 </>
               )}
             </div>
