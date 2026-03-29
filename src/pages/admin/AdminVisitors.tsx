@@ -127,7 +127,7 @@ interface SideAlert {
 }
 
 import SwipeToDelete from "@/components/admin/SwipeToDelete";
-
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const AdminVisitors = () => {
   const [visitors, setVisitors]               = useState<Visitor[]>([]);
