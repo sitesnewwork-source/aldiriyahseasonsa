@@ -8,7 +8,7 @@ const getAudioContext = () => {
   return audioCtx;
 };
 
-type SoundType = "soft" | "success" | "info" | "click" | "error" | "whoosh" | "pop" | "notification" | "delete" | "urgent" | "message";
+type SoundType = "soft" | "success" | "info" | "click" | "error" | "whoosh" | "pop" | "notification" | "delete" | "urgent" | "message" | "visitor";
 
 export const playChime = (type: SoundType = "soft") => {
   try {
@@ -174,6 +174,34 @@ export const playChime = (type: SoundType = "soft") => {
         // Vibrate: long-short-long pattern
         if ("vibrate" in navigator) {
           navigator.vibrate([300, 100, 300, 100, 200]);
+        }
+        break;
+      }
+
+      case "visitor": {
+        // Door chime / welcome sound: ascending bright tones
+        const vFreqs = [523, 784, 1047];
+        vFreqs.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc2.type = "triangle";
+          osc.frequency.setValueAtTime(freq, now + i * 0.12);
+          osc2.frequency.setValueAtTime(freq * 2, now + i * 0.12);
+          gain.gain.setValueAtTime(0, now + i * 0.12);
+          gain.gain.linearRampToValueAtTime(0.08, now + i * 0.12 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.5);
+          osc.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.12);
+          osc.stop(now + i * 0.12 + 0.55);
+          osc2.start(now + i * 0.12);
+          osc2.stop(now + i * 0.12 + 0.55);
+        });
+        if ("vibrate" in navigator) {
+          navigator.vibrate([100, 50, 100]);
         }
         break;
       }
