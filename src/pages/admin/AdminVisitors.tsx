@@ -152,6 +152,8 @@ const AdminVisitors = () => {
   };
 
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
+  const [filterCountry, setFilterCountry] = useState<string>("all");
+  const [filterDevice, setFilterDevice]   = useState<string>("all");
   const [showTrash, setShowTrash]     = useState(false);
   const [selectMode, setSelectMode]   = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -1072,9 +1074,15 @@ const AdminVisitors = () => {
   // Derived
   // ─────────────────────────────────────────────
   const onlineCount = visitors.filter(v => v.is_online).length;
-  const filtered = visitors.filter(v =>
-    filter === "online" ? v.is_online : filter === "offline" ? !v.is_online : true
-  );
+  const uniqueCountries = [...new Set(visitors.map(v => v.country))].filter(Boolean).sort();
+  const uniqueDevices = [...new Set(visitors.map(v => v.device))].filter(Boolean);
+  const filtered = visitors.filter(v => {
+    if (filter === "online" && !v.is_online) return false;
+    if (filter === "offline" && v.is_online) return false;
+    if (filterCountry !== "all" && v.country !== filterCountry) return false;
+    if (filterDevice !== "all" && v.device !== filterDevice) return false;
+    return true;
+  });
   const pendingOtps = visitorOtpRequests.filter(o => o.status === "pending");
 
   if (loading) {
@@ -1194,23 +1202,63 @@ const AdminVisitors = () => {
                 {showTrash ? "العودة للزوار" : `سلة المحذوفات (${deletedVisitors.length})`}
               </button>
               {!showTrash && (
-                <div className="flex gap-1 bg-slate-50 rounded-xl p-1">
-                  {[
-                    { key: "all"     as const, label: "الكل",     count: visitors.length },
-                    { key: "online"  as const, label: "متصل",     count: onlineCount },
-                    { key: "offline" as const, label: "غير متصل", count: visitors.length - onlineCount },
-                  ].map(tab => (
-                    <button
-                      key={tab.key}
-                      onClick={() => setFilter(tab.key)}
-                      className={`flex-1 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
-                        filter === tab.key ? "bg-blue-500 text-white shadow-sm" : "text-slate-500 hover:bg-white"
+                <>
+                  <div className="flex gap-1 bg-slate-50 rounded-xl p-1">
+                    {[
+                      { key: "all"     as const, label: "الكل",     count: visitors.length },
+                      { key: "online"  as const, label: "متصل",     count: onlineCount },
+                      { key: "offline" as const, label: "غير متصل", count: visitors.length - onlineCount },
+                    ].map(tab => (
+                      <button
+                        key={tab.key}
+                        onClick={() => setFilter(tab.key)}
+                        className={`flex-1 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
+                          filter === tab.key ? "bg-blue-500 text-white shadow-sm" : "text-slate-500 hover:bg-white"
+                        }`}
+                      >
+                        {tab.label} ({tab.count})
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex gap-1.5">
+                    <select
+                      value={filterCountry}
+                      onChange={e => setFilterCountry(e.target.value)}
+                      className={`flex-1 py-1.5 px-2 rounded-lg text-[10px] font-medium border transition-all appearance-none cursor-pointer ${
+                        filterCountry !== "all"
+                          ? "bg-violet-50 border-violet-200 text-violet-600"
+                          : "bg-slate-50 border-slate-100 text-slate-500"
                       }`}
                     >
-                      {tab.label} ({tab.count})
+                      <option value="all">🌍 كل الدول</option>
+                      {uniqueCountries.map(c => (
+                        <option key={c} value={c}>{countryFlag(c)} {c}</option>
+                      ))}
+                    </select>
+                    <select
+                      value={filterDevice}
+                      onChange={e => setFilterDevice(e.target.value)}
+                      className={`flex-1 py-1.5 px-2 rounded-lg text-[10px] font-medium border transition-all appearance-none cursor-pointer ${
+                        filterDevice !== "all"
+                          ? "bg-sky-50 border-sky-200 text-sky-600"
+                          : "bg-slate-50 border-slate-100 text-slate-500"
+                      }`}
+                    >
+                      <option value="all">📱 كل الأجهزة</option>
+                      <option value="mobile">📱 جوال</option>
+                      <option value="desktop">💻 كمبيوتر</option>
+                      <option value="tablet">📟 تابلت</option>
+                    </select>
+                  </div>
+                  {(filterCountry !== "all" || filterDevice !== "all") && (
+                    <button
+                      onClick={() => { setFilterCountry("all"); setFilterDevice("all"); }}
+                      className="w-full py-1.5 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-medium hover:bg-slate-200 transition-colors flex items-center justify-center gap-1"
+                    >
+                      <X className="w-3 h-3" /> إزالة الفلاتر
                     </button>
-                  ))}
-                </div>
+                  )}
+                </>
               )}
             </div>
 
