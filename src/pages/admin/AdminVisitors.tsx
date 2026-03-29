@@ -1626,7 +1626,7 @@ const AdminVisitors = () => {
           </div>
 
           {/* Mobile Detail Sheet */}
-          <Sheet open={!!selected && typeof window !== 'undefined' && window.innerWidth < 1024} onOpenChange={(open) => { if (!open) setSelected(null); }}>
+          <Sheet open={!!selected && isMobile} onOpenChange={(open) => { if (!open) setSelected(null); }}>
             <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl p-0 overflow-hidden" dir="rtl">
               {selected && (
                 <div className="flex flex-col h-full">
