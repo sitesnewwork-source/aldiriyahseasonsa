@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
-import { Undo2, WifiOff as WifiOffBulk, Download, Search } from "lucide-react";
+import { Undo2, WifiOff as WifiOffBulk, Download, Search, ArrowRight } from "lucide-react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   Users, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
   Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
