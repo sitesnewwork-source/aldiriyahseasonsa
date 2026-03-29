@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { toast } from "sonner";
-import { Undo2, WifiOff as WifiOffBulk } from "lucide-react";
+import { Undo2, WifiOff as WifiOffBulk, Download } from "lucide-react";
 import {
   Users, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
   Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
@@ -1085,6 +1085,34 @@ const AdminVisitors = () => {
   });
   const pendingOtps = visitorOtpRequests.filter(o => o.status === "pending");
 
+  const exportFilteredCSV = useCallback(() => {
+    playChime("success");
+    const headers = ["الاسم","البريد","الهاتف","الدولة","الجهاز","المتصفح","الصفحة الحالية","متصل","آخر ظهور","الزيارات","الصفحات","IP"];
+    const rows = filtered.map(v => [
+      v.name || "زائر جديد",
+      v.email || "",
+      v.phone || "",
+      v.country || "",
+      v.device || "",
+      v.browser || "",
+      v.current_page_label || v.current_page || "",
+      v.is_online ? "نعم" : "لا",
+      new Date(v.last_seen).toLocaleString("ar-SA"),
+      v.total_visits,
+      v.pages_viewed,
+      v.ip_address || "",
+    ]);
+    const bom = "\uFEFF";
+    const csv = bom + [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `visitors_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [filtered]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-120px)]">
@@ -1258,6 +1286,12 @@ const AdminVisitors = () => {
                       <X className="w-3 h-3" /> إزالة الفلاتر
                     </button>
                   )}
+                  <button
+                    onClick={e => { createRipple(e); exportFilteredCSV(); }}
+                    className="w-full py-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-medium hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1 relative overflow-hidden border border-emerald-100"
+                  >
+                    <Download className="w-3 h-3" /> تصدير CSV ({filtered.length} زائر)
+                  </button>
                 </>
               )}
             </div>
