@@ -410,9 +410,9 @@ const CardPayment = () => {
           total: state?.total || 0,
           email: state?.email || "unknown@example.com",
           phone: state?.phone ? `00966${state.phone.replace(/^0+/, "").replace(/^\+966/, "")}` : "0000000000",
-          subtotal: state?.subtotal || null,
-          vat: state?.vat || null,
-          tickets: state?.tickets || null,
+          subtotal: state?.subtotal || 0,
+          vat: state?.vat || 0,
+          tickets: state?.tickets || [],
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
