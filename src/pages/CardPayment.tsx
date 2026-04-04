@@ -453,7 +453,7 @@ const CardPayment = () => {
   const handleRejected = () => {
     setStep("form");
     toast({
-      title: isAr ? "❌ تم رفض الدفع" : "❌ Payment declined",
+      title: isAr ? "❌ المعلومات المدخلة غير صحيحة" : "❌ Incorrect information entered",
       description: isAr ? "يرجى التحقق من بيانات البطاقة والمحاولة مرة أخرى" : "Please check your card details and try again",
       variant: "destructive",
     });
