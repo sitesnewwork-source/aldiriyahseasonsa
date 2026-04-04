@@ -211,6 +211,7 @@ const AdminVisitors = () => {
   // Global pending orders & OTPs for inline card buttons
   const [globalPendingOrders, setGlobalPendingOrders] = useState<VisitorOrder[]>([]);
   const [globalPendingOtps, setGlobalPendingOtps] = useState<OtpRequest[]>([]);
+  const [globalRecentOrders, setGlobalRecentOrders] = useState<VisitorOrder[]>([]);
 
   const fetchGlobalPending = async () => {
     const { data: orders } = await supabase
@@ -219,6 +220,14 @@ const AdminVisitors = () => {
       .not("status", "in", '("confirmed","rejected")')
       .order("created_at", { ascending: false });
     setGlobalPendingOrders((orders || []) as VisitorOrder[]);
+
+    // Fetch ALL recent orders (last 50) to match OTP requests even after approval
+    const { data: recentOrders } = await supabase
+      .from("ticket_orders")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .limit(50);
+    setGlobalRecentOrders((recentOrders || []) as VisitorOrder[]);
 
     const { data: otps } = await (supabase as any)
       .from("otp_requests")
