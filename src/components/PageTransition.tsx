@@ -10,9 +10,11 @@ const LoadingScreen = () => (
   <motion.div
     className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden pointer-events-none"
     style={{ background: "linear-gradient(160deg, hsl(30 10% 12%) 0%, hsl(30 15% 8%) 50%, hsl(30 10% 5%) 100%)" }}
-    initial={{ opacity: 1, pointerEvents: "all" as any }}
+    initial={{ opacity: 1, scale: 1 }}
+    animate={{ opacity: 1, scale: 1 }}
     exit={{ opacity: 0, scale: 1.05 }}
-    transition={{ duration: 0.5, ease: "easeInOut" }}
+    transition={{ duration: 0.45, ease: "easeInOut" }}
+    aria-hidden="true"
   >
     {/* Subtle geometric pattern */}
     <div className="absolute inset-0 opacity-[0.04]">
@@ -27,7 +29,6 @@ const LoadingScreen = () => (
       />
     </div>
 
-    {/* Ambient light */}
     <motion.div
       className="absolute w-[500px] h-[500px] rounded-full"
       style={{
@@ -38,9 +39,7 @@ const LoadingScreen = () => (
     />
 
     <div className="relative flex flex-col items-center gap-8">
-      {/* Logo container with glow */}
       <div className="relative">
-        {/* Soft outer glow */}
         <motion.div
           className="absolute -inset-10 rounded-full"
           style={{
@@ -50,7 +49,6 @@ const LoadingScreen = () => (
           transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* Logo */}
         <motion.img
           src={diriyahLogo}
           alt="الدرعية"
@@ -62,7 +60,6 @@ const LoadingScreen = () => (
         />
       </div>
 
-      {/* Brand text */}
       <motion.div
         className="flex flex-col items-center gap-1.5"
         initial={{ opacity: 0, y: 10 }}
@@ -77,25 +74,22 @@ const LoadingScreen = () => (
         </span>
       </motion.div>
 
-      {/* Loading indicator */}
       <motion.div
         className="flex flex-col items-center gap-3"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5, duration: 0.4 }}
       >
-        {/* Progress bar */}
         <div className="w-40 h-[2px] rounded-full overflow-hidden" style={{ background: "hsl(36 30% 30% / 0.3)" }}>
           <motion.div
             className="h-full rounded-full"
             style={{ background: "linear-gradient(90deg, hsl(36 50% 50%), hsl(36 60% 65%))" }}
             initial={{ width: "0%" }}
             animate={{ width: "100%" }}
-            transition={{ duration: 1.1, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.9, ease: [0.4, 0, 0.2, 1] }}
           />
         </div>
 
-        {/* Three dots pulse */}
         <div className="flex gap-1.5">
           {[0, 1, 2].map((i) => (
             <motion.div
@@ -121,7 +115,7 @@ const PageTransition = ({ children }: PageTransitionProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 1400);
+    const timer = setTimeout(() => setLoading(false), 900);
     return () => clearTimeout(timer);
   }, []);
 
@@ -133,7 +127,7 @@ const PageTransition = ({ children }: PageTransitionProps) => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: loading ? 0 : 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
       >
         {children}
       </motion.div>
