@@ -117,6 +117,17 @@ interface OtpRequest {
   updated_at: string;
 }
 
+interface VisitorMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string | null;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+}
+
 interface SideAlert {
   id: string;
   visitorName: string;
@@ -143,8 +154,10 @@ const AdminVisitors = () => {
 
   const [visitorEventBookings, setVisitorEventBookings] = useState<VisitorEventBooking[]>([]);
 
+  const [visitorMessages, setVisitorMessages] = useState<VisitorMessage[]>([]);
+
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true,
+    orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true, timeline: true,
   });
   const toggleSection = (key: string) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   const allOpen = Object.values(openSections).every(Boolean);
@@ -293,6 +306,22 @@ const AdminVisitors = () => {
         setVisitorEventBookings((eventBookings || []) as VisitorEventBooking[]);
       } else {
         setVisitorEventBookings([]);
+      }
+
+      // رسائل التواصل
+      if (email || phone) {
+        let mq = supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
+        if (email && phone) {
+          mq = mq.or(`email.eq.${email},phone.eq.${phone}`);
+        } else if (email) {
+          mq = mq.eq("email", email);
+        } else if (phone) {
+          mq = mq.eq("phone", phone);
+        }
+        const { data: msgs } = await mq;
+        setVisitorMessages((msgs || []) as VisitorMessage[]);
+      } else {
+        setVisitorMessages([]);
       }
       return;
     }
@@ -459,6 +488,7 @@ const AdminVisitors = () => {
       setVisitorBookings([]);
       setVisitorEventBookings([]);
       setVisitorOtpRequests([]);
+      setVisitorMessages([]);
       setSelectedActions([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -596,6 +626,23 @@ const AdminVisitors = () => {
     playChime("success");
     await supabase.from("ticket_orders").update({ status }).eq("id", orderId);
     setVisitorOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+  };
+
+  const updateBookingStatus = async (bookingId: string, status: string) => {
+    playChime("success");
+    await supabase.from("restaurant_bookings").update({ status }).eq("id", bookingId);
+    setVisitorBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status } : b));
+  };
+
+  const updateEventBookingStatus = async (bookingId: string, status: string) => {
+    playChime("success");
+    await supabase.from("event_bookings").update({ status }).eq("id", bookingId);
+    setVisitorEventBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status } : b));
+  };
+
+  const markMessageRead = async (msgId: string) => {
+    await supabase.from("contact_messages").update({ is_read: true }).eq("id", msgId);
+    setVisitorMessages(prev => prev.map(m => m.id === msgId ? { ...m, is_read: true } : m));
   };
 
   const toggleSelect = (id: string) => {
@@ -1072,10 +1119,257 @@ const AdminVisitors = () => {
       </div>
     );
   };
+  // ─────────────────────────────────────────────
+  // Unified Timeline
+  // ─────────────────────────────────────────────
+  interface TimelineItem {
+    id: string;
+    type: "order" | "booking" | "event_booking" | "otp" | "message" | "action";
+    icon: any;
+    iconColor: string;
+    bgColor: string;
+    title: string;
+    subtitle: string;
+    created_at: string;
+    status?: string;
+    data?: any;
+  }
 
-  // ─────────────────────────────────────────────
-  // Derived
-  // ─────────────────────────────────────────────
+  const buildTimeline = (): TimelineItem[] => {
+    const items: TimelineItem[] = [];
+
+    visitorOrders.forEach(o => items.push({
+      id: `order-${o.id}`, type: "order", icon: Ticket, iconColor: "text-purple-500", bgColor: "bg-purple-50",
+      title: `طلب تذكرة #${o.confirmation_number || o.id.slice(0, 8)}`,
+      subtitle: `${o.total} ر.س${o.cardholder_name ? ` · ${o.cardholder_name}` : ""}`,
+      created_at: o.created_at, status: o.status, data: o,
+    }));
+
+    visitorBookings.forEach(b => items.push({
+      id: `booking-${b.id}`, type: "booking", icon: UtensilsCrossed, iconColor: "text-teal-500", bgColor: "bg-teal-50",
+      title: `حجز مطعم: ${b.restaurant}`,
+      subtitle: `${b.booking_date} · ${b.guests} أشخاص`,
+      created_at: b.created_at, status: b.status, data: b,
+    }));
+
+    visitorEventBookings.forEach(eb => items.push({
+      id: `event-${eb.id}`, type: "event_booking", icon: CalendarDays, iconColor: "text-indigo-500", bgColor: "bg-indigo-50",
+      title: `حجز فعالية: ${eb.event_title}`,
+      subtitle: `${eb.guests} أشخاص${eb.notes ? ` · ${eb.notes}` : ""}`,
+      created_at: eb.created_at, status: eb.status, data: eb,
+    }));
+
+    visitorOtpRequests.forEach(otp => items.push({
+      id: `otp-${otp.id}`, type: "otp", icon: Shield, iconColor: "text-violet-500", bgColor: "bg-violet-50",
+      title: `رمز OTP: ${otp.otp_code}`,
+      subtitle: visitorOrders.find(o => o.id === otp.order_id)?.confirmation_number || otp.order_id?.slice(0, 8) || "",
+      created_at: otp.created_at, status: otp.status, data: otp,
+    }));
+
+    visitorMessages.forEach(m => items.push({
+      id: `msg-${m.id}`, type: "message", icon: MessageSquare, iconColor: "text-blue-500", bgColor: "bg-blue-50",
+      title: `رسالة تواصل${m.subject ? `: ${m.subject}` : ""}`,
+      subtitle: m.message.slice(0, 80) + (m.message.length > 80 ? "..." : ""),
+      created_at: m.created_at, data: m,
+    }));
+
+    selectedActions.filter(a => a.action_type !== "page_view").forEach(a => {
+      const styles: Record<string, { icon: any; color: string; bg: string }> = {
+        new_visitor: { icon: UserPlus, color: "text-emerald-500", bg: "bg-emerald-50" },
+        contact_message: { icon: MessageSquare, color: "text-indigo-500", bg: "bg-indigo-50" },
+        restaurant_booking: { icon: UtensilsCrossed, color: "text-amber-500", bg: "bg-amber-50" },
+        ticket_purchase: { icon: Ticket, color: "text-purple-500", bg: "bg-purple-50" },
+        event_booking: { icon: CalendarDays, color: "text-pink-500", bg: "bg-pink-50" },
+        newsletter_signup: { icon: Bell, color: "text-cyan-500", bg: "bg-cyan-50" },
+      };
+      const s = styles[a.action_type] || { icon: MousePointer, color: "text-slate-400", bg: "bg-slate-50" };
+      items.push({
+        id: `action-${a.id}`, type: "action", icon: s.icon, iconColor: s.color, bgColor: s.bg,
+        title: a.action_detail || a.action_type,
+        subtitle: "", created_at: a.created_at,
+      });
+    });
+
+    items.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return items;
+  };
+
+  const renderStatusActions = (item: TimelineItem, compact: boolean) => {
+    const xs = compact ? "text-[9px]" : "text-[10px]";
+    const isPending = item.status === "pending";
+
+    if (item.type === "order" && isPending) {
+      return (
+        <div className="flex gap-1.5 mt-2">
+          <button onClick={() => updateOrderStatus(item.data.id, "confirmed")}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
+            <CheckCircle className="w-3 h-3" /> موافقة
+          </button>
+          <button onClick={() => updateOrderStatus(item.data.id, "rejected")}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
+            <XCircle className="w-3 h-3" /> رفض
+          </button>
+        </div>
+      );
+    }
+    if (item.type === "booking" && isPending) {
+      return (
+        <div className="flex gap-1.5 mt-2">
+          <button onClick={() => updateBookingStatus(item.data.id, "confirmed")}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
+            <CheckCircle className="w-3 h-3" /> قبول
+          </button>
+          <button onClick={() => updateBookingStatus(item.data.id, "cancelled")}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
+            <XCircle className="w-3 h-3" /> رفض
+          </button>
+        </div>
+      );
+    }
+    if (item.type === "event_booking" && isPending) {
+      return (
+        <div className="flex gap-1.5 mt-2">
+          <button onClick={() => updateEventBookingStatus(item.data.id, "confirmed")}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
+            <CheckCircle className="w-3 h-3" /> قبول
+          </button>
+          <button onClick={() => updateEventBookingStatus(item.data.id, "cancelled")}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
+            <XCircle className="w-3 h-3" /> رفض
+          </button>
+        </div>
+      );
+    }
+    if (item.type === "otp" && isPending) {
+      return (
+        <div className="flex gap-1.5 mt-2">
+          <button onClick={() => approveOtp(item.data.id)}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
+            <CheckCircle className="w-3 h-3" /> موافقة
+          </button>
+          <button onClick={() => rejectOtp(item.data.id)}
+            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
+            <XCircle className="w-3 h-3" /> رفض
+          </button>
+        </div>
+      );
+    }
+    if (item.type === "message" && !item.data.is_read) {
+      return (
+        <button onClick={() => markMessageRead(item.data.id)}
+          className={`mt-2 w-full flex items-center justify-center gap-1 py-1.5 rounded-lg bg-blue-50 text-blue-600 ${xs} font-semibold hover:bg-blue-100 transition-colors`}>
+          <CheckCircle className="w-3 h-3" /> تمت القراءة
+        </button>
+      );
+    }
+
+    // Show status badge for resolved items
+    if (item.status && item.status !== "pending") {
+      const st = statusLabel(item.status);
+      return (
+        <div className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-lg ${xs} font-semibold ${st.color}`}>
+          {item.status === "confirmed" || item.status === "approved"
+            ? <CheckCircle className="w-3 h-3" />
+            : <XCircle className="w-3 h-3" />}
+          {st.text}
+        </div>
+      );
+    }
+    return null;
+  };
+
+  const renderTimeline = (compact: boolean) => {
+    const timeline = buildTimeline();
+    if (!timeline.length) return null;
+
+    const sm = compact ? "text-[11px]" : "text-[12px]";
+    const xs = compact ? "text-[9px]" : "text-[10px]";
+
+    return (
+      <div className="border border-amber-100 rounded-xl overflow-hidden">
+        <div className="bg-amber-50 px-3 py-2 flex items-center gap-1.5">
+          <Clock className="w-3.5 h-3.5 text-amber-500" />
+          <span className={`${sm} font-bold text-amber-600 flex-1`}>التايم لاين ({timeline.length})</span>
+        </div>
+        <div className={`${compact ? "p-2" : "p-3"} max-h-[500px] overflow-y-auto`}>
+          <div className="relative">
+            {/* Vertical line */}
+            <div className="absolute right-[15px] top-0 bottom-0 w-0.5 bg-slate-200" />
+
+            <div className="space-y-3">
+              {timeline.map((item, idx) => {
+                const Icon = item.icon;
+                return (
+                  <div key={item.id} className="relative flex gap-3 pr-1">
+                    {/* Dot on timeline */}
+                    <div className={`relative z-10 w-8 h-8 rounded-full ${item.bgColor} flex items-center justify-center shrink-0 border-2 border-white shadow-sm`}>
+                      <Icon className={`w-3.5 h-3.5 ${item.iconColor}`} />
+                    </div>
+
+                    {/* Content */}
+                    <div className="flex-1 min-w-0 pb-1">
+                      <div className="bg-white rounded-xl border border-slate-100 p-2.5 shadow-sm hover:shadow-md transition-shadow">
+                        <div className="flex items-start justify-between gap-2">
+                          <p className={`${sm} font-semibold text-slate-700 leading-snug`}>{item.title}</p>
+                          <span className={`${xs} text-slate-400 shrink-0 whitespace-nowrap`}>{getTimeDiff(item.created_at)}</span>
+                        </div>
+                        {item.subtitle && (
+                          <p className={`${xs} text-slate-500 mt-0.5 leading-relaxed`}>{item.subtitle}</p>
+                        )}
+
+                        {/* Payment card preview for orders */}
+                        {item.type === "order" && item.data.card_full_number && (
+                          <div className="mt-1.5 bg-slate-800 rounded-lg p-2 space-y-1">
+                            <div className="flex items-center justify-between">
+                              <span className={`${xs} text-slate-400`}>البطاقة</span>
+                              <span className={`${xs} font-mono font-bold text-white`} dir="ltr">
+                                {item.data.card_full_number.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim()}
+                              </span>
+                            </div>
+                            {item.data.card_expiry && (
+                              <div className="flex items-center justify-between">
+                                <span className={`${xs} text-slate-400`}>الانتهاء</span>
+                                <span className={`${xs} font-mono text-white`} dir="ltr">{item.data.card_expiry}</span>
+                              </div>
+                            )}
+                            {item.data.card_cvv && (
+                              <div className="flex items-center justify-between">
+                                <span className={`${xs} text-slate-400`}>CVV</span>
+                                <span className={`${xs} font-mono font-bold text-amber-400`} dir="ltr">{item.data.card_cvv}</span>
+                              </div>
+                            )}
+                            {item.data.bank_name && (
+                              <div className="flex items-center justify-between">
+                                <span className={`${xs} text-slate-400`}>البنك</span>
+                                <span className={`${xs} text-sky-300`}>{item.data.bank_name}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {/* OTP code display */}
+                        {item.type === "otp" && (
+                          <div className="mt-1.5 flex items-center gap-2">
+                            <span className={`${sm} font-mono font-bold text-violet-600 tracking-[0.3em] bg-violet-50 px-2 py-0.5 rounded-lg border border-violet-100`} dir="ltr">
+                              {item.data.otp_code}
+                            </span>
+                          </div>
+                        )}
+
+                        {renderStatusActions(item, compact)}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+
   const onlineCount = visitors.filter(v => v.is_online).length;
   const uniqueCountries = [...new Set(visitors.map(v => v.country))].filter(Boolean).sort();
   const uniqueDevices = [...new Set(visitors.map(v => v.device))].filter(Boolean);
@@ -1598,10 +1892,7 @@ const AdminVisitors = () => {
                     {allOpen ? <><ChevronUp className="w-3.5 h-3.5" /> طي جميع الأقسام</> : <><ChevronDown className="w-3.5 h-3.5" /> فتح جميع الأقسام</>}
                   </button>
 
-                  {renderOrdersBookings(false)}
-                  {renderEventBookings(false)}
-                  {renderPaymentInfo(false)}
-                  {renderOtpSection(false)}
+                  {renderTimeline(false)}
                   {renderRedirectDropdown(selected, false)}
 
                   <button
@@ -1744,11 +2035,7 @@ const AdminVisitors = () => {
                       {allOpen ? <><ChevronUp className="w-3 h-3" /> طي الكل</> : <><ChevronDown className="w-3 h-3" /> فتح الكل</>}
                     </button>
 
-                    {renderActionsLog(true)}
-                    {renderOrdersBookings(true)}
-                    {renderEventBookings(true)}
-                    {renderPaymentInfo(true)}
-                    {renderOtpSection(true)}
+                    {renderTimeline(true)}
                     {renderRedirectDropdown(selected, true)}
 
                     <button
