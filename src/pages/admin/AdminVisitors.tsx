@@ -2123,6 +2123,22 @@ const AdminVisitors = () => {
                           <Eye className="w-2.5 h-2.5 text-blue-400" />
                           <span className="text-[10px] text-blue-500">{selected.current_page_label}</span>
                         </div>
+                        {(selected.email || selected.phone) && (
+                          <div className="flex items-center gap-3 mt-1 flex-wrap">
+                            {selected.email && (
+                              <div className="flex items-center gap-1">
+                                <Globe className="w-2.5 h-2.5 text-slate-400" />
+                                <span className="text-[9px] text-slate-500" dir="ltr">{selected.email}</span>
+                              </div>
+                            )}
+                            {selected.phone && (
+                              <div className="flex items-center gap-1">
+                                <Smartphone className="w-2.5 h-2.5 text-slate-400" />
+                                <span className="text-[9px] text-slate-500" dir="ltr">{selected.phone}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                       <button
                         onClick={() => deleteSingle(selected.id)}
