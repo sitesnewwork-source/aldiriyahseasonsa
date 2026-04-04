@@ -1830,6 +1830,7 @@ const AdminVisitors = () => {
               </div>
             ) : (
               <div className="space-y-2">
+                <AnimatePresence mode="popLayout">
                 <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
@@ -1840,7 +1841,10 @@ const AdminVisitors = () => {
                     <motion.div
                       key={visitor.id}
                       layout
-                      transition={{ type: "spring", stiffness: 500, damping: 35, mass: 0.8 }}
+                      initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9, y: -10 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8, delay: Math.min(filtered.indexOf(visitor) * 0.05, 0.5) }}
                     >
                     <SwipeToDelete
                       key={visitor.id}
@@ -1990,6 +1994,7 @@ const AdminVisitors = () => {
                   );
                 })}
                 </LayoutGroup>
+                </AnimatePresence>
                 {!filtered.length && (
                   <div className="text-center py-8 text-slate-400 text-[12px]">لا يوجد زوار</div>
                 )}
