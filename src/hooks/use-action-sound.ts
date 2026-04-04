@@ -293,6 +293,41 @@ export const playChime = (type: SoundType = "soft") => {
         break;
       }
 
+      case "otp_reminder": {
+        // Persistent warning: slow pulsing low-high alarm, more insistent than otp_incoming
+        const reminderTones = [440, 880, 440, 880, 440, 880, 440, 880];
+        reminderTones.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = i % 2 === 0 ? "triangle" : "sine";
+          osc.frequency.setValueAtTime(freq, now + i * 0.12);
+          gain.gain.setValueAtTime(0, now + i * 0.12);
+          gain.gain.linearRampToValueAtTime(0.1, now + i * 0.12 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.12 + 0.1);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.12);
+          osc.stop(now + i * 0.12 + 0.12);
+        });
+        // Final sustained warning tone
+        const warnOsc = ctx.createOscillator();
+        const warnGain = ctx.createGain();
+        warnOsc.type = "sawtooth";
+        warnOsc.frequency.setValueAtTime(600, now + 1.0);
+        warnOsc.frequency.linearRampToValueAtTime(900, now + 1.5);
+        warnGain.gain.setValueAtTime(0, now + 1.0);
+        warnGain.gain.linearRampToValueAtTime(0.08, now + 1.05);
+        warnGain.gain.exponentialRampToValueAtTime(0.001, now + 1.8);
+        warnOsc.connect(warnGain);
+        warnGain.connect(ctx.destination);
+        warnOsc.start(now + 1.0);
+        warnOsc.stop(now + 1.9);
+        if ("vibrate" in navigator) {
+          navigator.vibrate([100, 50, 100, 50, 100, 50, 100, 50, 300]);
+        }
+        break;
+      }
+
       case "success": {
         [523, 659, 784].forEach((freq, i) => {
           const osc = ctx.createOscillator();
