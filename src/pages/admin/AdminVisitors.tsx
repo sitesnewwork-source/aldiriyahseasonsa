@@ -2224,7 +2224,6 @@ const AdminVisitors = () => {
                     </button>
 
                     {renderTimeline(true)}
-                    {renderRedirectDropdown(selected, true)}
 
                     <button
                       onClick={() => deleteSingle(selected.id)}
