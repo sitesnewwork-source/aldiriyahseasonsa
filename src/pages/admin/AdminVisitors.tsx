@@ -1870,10 +1870,10 @@ const AdminVisitors = () => {
                         <div className="relative shrink-0">
                           <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-bold shadow-sm ${
                             hasPending ? "bg-gradient-to-br from-red-100 to-orange-100 text-red-600"
-                            : visitor.is_online ? "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600" 
-                            : "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400"
+                            : `bg-gradient-to-br ${getAvatarColor(displayName(visitor)).bg} ${getAvatarColor(displayName(visitor)).text}`
                           }`}>
                             {displayName(visitor)[0]}
+                          </div>
                           </div>
                           <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
