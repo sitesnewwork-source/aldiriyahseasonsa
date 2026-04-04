@@ -1,12 +1,8 @@
 import { toast } from "sonner";
-import { playChime } from "./use-action-sound";
-
-type SoundType = "soft" | "success" | "info";
 
 interface NotifyOptions {
   message: string;
   description?: string;
-  sound?: SoundType;
   icon?: string;
   duration?: number;
 }
@@ -14,11 +10,9 @@ interface NotifyOptions {
 export const actionNotify = ({
   message,
   description,
-  sound = "soft",
   icon = "✨",
   duration = 2500,
 }: NotifyOptions) => {
-  playChime(sound);
   toast(message, {
     description,
     icon,

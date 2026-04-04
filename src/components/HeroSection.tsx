@@ -146,7 +146,7 @@ const HeroSection = () => {
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => { playChime("soft"); setCurrent(i); }}
+            onClick={() => setCurrent(i)}
             className={`transition-all duration-500 rounded-full ${
               i === current
                 ? "w-3 h-3 border-2 border-gold bg-transparent glow-gold"

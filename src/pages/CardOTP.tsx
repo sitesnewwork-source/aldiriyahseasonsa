@@ -102,7 +102,7 @@ const CardOTP = () => {
     }
 
     setStatus("waiting");
-    playChime("notification");
+    
 
     const { data, error } = await (supabase as any)
       .from("otp_requests")
