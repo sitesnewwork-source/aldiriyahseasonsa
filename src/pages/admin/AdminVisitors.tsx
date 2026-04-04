@@ -7,7 +7,7 @@ import {
   Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
   Navigation, MessageSquare, UtensilsCrossed, Ticket, MousePointer,
   ChevronDown, ChevronUp, Send, RotateCcw, Archive, ShoppingBag, CalendarCheck,
-  CreditCard, Shield, CheckCircle, XCircle, X, CalendarDays,
+  CreditCard, Shield, CheckCircle, XCircle, X, CalendarDays, Clock, Eye,
 } from "lucide-react";
 import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
