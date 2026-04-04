@@ -1733,8 +1733,10 @@ const AdminVisitors = () => {
                       </div>
                     </div>
                     </SwipeToDelete>
+                    </motion.div>
                   );
                 })}
+                </LayoutGroup>
                 {!filtered.length && (
                   <div className="text-center py-8 text-slate-400 text-[12px]">لا يوجد زوار</div>
                 )}
