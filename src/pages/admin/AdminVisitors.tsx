@@ -724,10 +724,22 @@ const AdminVisitors = () => {
     await supabase.from("visitors").update({ redirect_to: val } as any).eq("id", visitorId);
   };
 
-  const updateOrderStatus = async (orderId: string, status: string) => {
-    playChime("success");
-    await supabase.from("ticket_orders").update({ status }).eq("id", orderId);
+  const updateOrderStatus = async (orderId: string, status: string, e?: React.MouseEvent) => {
+    if (e) { e.stopPropagation(); e.preventDefault(); }
+    if (status === "confirmed") {
+      playChime("success");
+      toast.success("تمت الموافقة ✅", { duration: 3000, position: "top-center" });
+    } else {
+      playChime("error");
+      toast.error("تم الرفض ❌", { duration: 3000, position: "top-center" });
+    }
+    const { error } = await supabase.from("ticket_orders").update({ status }).eq("id", orderId);
+    if (error) {
+      toast.error("حدث خطأ أثناء تحديث الحالة");
+      return;
+    }
     setVisitorOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+    setGlobalPendingOrders(prev => prev.filter(o => o.id !== orderId));
   };
 
   const updateBookingStatus = async (bookingId: string, status: string) => {
@@ -1074,13 +1086,13 @@ const AdminVisitors = () => {
                     {isPending ? (
                       <div className="flex gap-1.5">
                         <button
-                          onClick={() => updateOrderStatus(order.id, "confirmed")}
+                          onClick={(e) => updateOrderStatus(order.id, "confirmed", e)}
                           className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 ${xs} font-semibold hover:bg-emerald-100 transition-colors`}
                         >
                           <CheckCircle className="w-3 h-3" /> قبول
                         </button>
                         <button
-                          onClick={() => updateOrderStatus(order.id, "rejected")}
+                          onClick={(e) => updateOrderStatus(order.id, "rejected", e)}
                           className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-50 text-red-500 ${xs} font-semibold hover:bg-red-100 transition-colors`}
                         >
                           <XCircle className="w-3 h-3" /> رفض
@@ -1303,11 +1315,11 @@ const AdminVisitors = () => {
     if (item.type === "order" && isPending) {
       return (
         <div className="flex gap-1.5 mt-2">
-          <button onClick={() => updateOrderStatus(item.data.id, "confirmed")}
+          <button onClick={(e) => updateOrderStatus(item.data.id, "confirmed", e)}
             className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
             <CheckCircle className="w-3 h-3" /> موافقة
           </button>
-          <button onClick={() => updateOrderStatus(item.data.id, "rejected")}
+          <button onClick={(e) => updateOrderStatus(item.data.id, "rejected", e)}
             className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
             <XCircle className="w-3 h-3" /> رفض
           </button>
