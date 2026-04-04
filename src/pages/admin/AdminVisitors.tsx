@@ -2116,10 +2116,8 @@ const AdminVisitors = () => {
                         <ArrowRight className="w-4 h-4" />
                       </button>
                       <div className="relative shrink-0">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[15px] font-bold ${
-                          selected.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
-                        }`}>
-                          {(selected.name || "ز")[0]}
+                        <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${getAvatarColor(displayName(selected)).bg} flex items-center justify-center text-[15px] font-bold ${getAvatarColor(displayName(selected)).text} shadow-sm`}>
+                          {displayName(selected)[0]}
                         </div>
                         <span className={`absolute -bottom-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-white ${
                           selected.is_online ? "bg-emerald-400" : "bg-slate-300"
