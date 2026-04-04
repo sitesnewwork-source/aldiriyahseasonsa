@@ -58,6 +58,24 @@ const SessionTimer = ({ startTime }: { startTime: string }) => {
   return <span className="text-[9px] text-amber-500 font-medium">{hrs}س {remMins}د</span>;
 };
 
+// Live OTP wait timer - updates every second, shows mm:ss
+const OtpWaitTimer = ({ createdAt }: { createdAt: string }) => {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  const totalSec = Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000);
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
+  const isUrgent = totalSec >= 30;
+  return (
+    <span className={`text-[9px] font-mono font-bold tabular-nums ${isUrgent ? "text-red-500" : "text-violet-500"}`}>
+      ⏱ {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+    </span>
+  );
+};
+
 const sitePages = [
   { path: "/", label: "الصفحة الرئيسية" },
   { path: "/about", label: "عن الدرعية" },
