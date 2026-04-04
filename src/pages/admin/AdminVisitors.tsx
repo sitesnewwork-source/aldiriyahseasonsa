@@ -1857,45 +1857,55 @@ const AdminVisitors = () => {
                         const vPendingOtps = getVisitorPendingOtps(visitor);
                         if (!vPendingOrders.length && !vPendingOtps.length) return null;
                         return (
-                          <div className="mt-2.5 space-y-1.5 border-t border-slate-100/80 pt-2">
+                          <div className="mt-2 mr-[46px] space-y-1.5">
                             {vPendingOrders.map(order => (
-                              <div key={order.id} className="flex items-center gap-1.5 bg-slate-50/50 rounded-xl p-1.5">
-                                <CreditCard className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                                <span className="text-[9px] text-slate-600 flex-1 truncate font-medium">
-                                  {order.confirmation_number || order.id.slice(0, 8)} · {order.total} ر.س
-                                </span>
-                                <button
-                                  onClick={(e) => approveOrderInline(order.id, e)}
-                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all shadow-sm"
-                                >
-                                  <CheckCircle className="w-3 h-3" /> موافقة
-                                </button>
-                                <button
-                                  onClick={(e) => rejectOrderInline(order.id, e)}
-                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all shadow-sm"
-                                >
-                                  <XCircle className="w-3 h-3" /> رفض
-                                </button>
+                              <div key={order.id} className="rounded-xl bg-gradient-to-l from-amber-50/80 to-orange-50/50 border border-amber-200/60 p-2">
+                                <div className="flex items-center gap-1.5 mb-1.5">
+                                  <CreditCard className="w-3 h-3 text-amber-500 shrink-0" />
+                                  <span className="text-[9px] text-slate-600 flex-1 truncate font-semibold">
+                                    💳 {order.confirmation_number || order.id.slice(0, 8)}
+                                  </span>
+                                  <span className="text-[9px] font-bold text-amber-600">{order.total} ر.س</span>
+                                </div>
+                                <div className="flex gap-1.5">
+                                  <button
+                                    onClick={(e) => approveOrderInline(order.id, e)}
+                                    className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[9px] font-bold hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.97] transition-all shadow-sm shadow-emerald-500/20"
+                                  >
+                                    <CheckCircle className="w-3 h-3" /> موافقة
+                                  </button>
+                                  <button
+                                    onClick={(e) => rejectOrderInline(order.id, e)}
+                                    className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-[9px] font-bold hover:from-red-600 hover:to-red-700 active:scale-[0.97] transition-all shadow-sm shadow-red-500/20"
+                                  >
+                                    <XCircle className="w-3 h-3" /> رفض
+                                  </button>
+                                </div>
                               </div>
                             ))}
                             {vPendingOtps.map(otp => (
-                              <div key={otp.id} className="flex items-center gap-1.5 bg-slate-50/50 rounded-xl p-1.5">
-                                <Shield className="w-3.5 h-3.5 text-violet-500 shrink-0" />
-                                <span className="text-[9px] text-slate-600 flex-1 font-mono font-medium" dir="ltr">
-                                  OTP: {otp.otp_code}
-                                </span>
-                                <button
-                                  onClick={(e) => approveOtpInline(otp.id, e)}
-                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all shadow-sm"
-                                >
-                                  <CheckCircle className="w-3 h-3" /> موافقة
-                                </button>
-                                <button
-                                  onClick={(e) => rejectOtpInline(otp.id, e)}
-                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all shadow-sm"
-                                >
-                                  <XCircle className="w-3 h-3" /> رفض
-                                </button>
+                              <div key={otp.id} className="rounded-xl bg-gradient-to-l from-violet-50/80 to-purple-50/50 border border-violet-200/60 p-2">
+                                <div className="flex items-center gap-1.5 mb-1.5">
+                                  <Shield className="w-3 h-3 text-violet-500 shrink-0" />
+                                  <span className="text-[9px] text-violet-600 font-semibold">رمز التحقق</span>
+                                  <span className="text-[10px] text-slate-700 flex-1 font-mono font-bold tracking-wider" dir="ltr">
+                                    {otp.otp_code}
+                                  </span>
+                                </div>
+                                <div className="flex gap-1.5">
+                                  <button
+                                    onClick={(e) => approveOtpInline(otp.id, e)}
+                                    className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[9px] font-bold hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.97] transition-all shadow-sm shadow-emerald-500/20"
+                                  >
+                                    <CheckCircle className="w-3 h-3" /> موافقة
+                                  </button>
+                                  <button
+                                    onClick={(e) => rejectOtpInline(otp.id, e)}
+                                    className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-[9px] font-bold hover:from-red-600 hover:to-red-700 active:scale-[0.97] transition-all shadow-sm shadow-red-500/20"
+                                  >
+                                    <XCircle className="w-3 h-3" /> رفض
+                                  </button>
+                                </div>
                               </div>
                             ))}
                           </div>
