@@ -256,7 +256,30 @@ const AdminVisitors = () => {
     setGlobalPendingOtps((otps || []) as OtpRequest[]);
   };
 
-  const getVisitorPendingOrders = (visitor: Visitor) => {
+  // OTP reminder: play alert sound every 30s while there are pending OTPs older than 30s
+  const otpReminderRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  useEffect(() => {
+    if (otpReminderRef.current) {
+      clearInterval(otpReminderRef.current);
+      otpReminderRef.current = null;
+    }
+    if (globalPendingOtps.length > 0) {
+      otpReminderRef.current = setInterval(() => {
+        const now = Date.now();
+        const hasOld = globalPendingOtps.some(
+          otp => now - new Date(otp.created_at).getTime() > 30000
+        );
+        if (hasOld) {
+          playChime("otp_reminder");
+        }
+      }, 30000);
+    }
+    return () => {
+      if (otpReminderRef.current) clearInterval(otpReminderRef.current);
+    };
+  }, [globalPendingOtps]);
+
+
     if (!visitor.email && !visitor.phone) return [];
     const phoneWithPrefix = visitor.phone
       ? `00966${visitor.phone.replace(/^0+/, "").replace(/^\+966/, "")}`
