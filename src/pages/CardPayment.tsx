@@ -223,7 +223,7 @@ const WaitingApproval = ({
         table: "ticket_orders", filter: `id=eq.${orderId}`,
       }, (payload) => {
         const s = payload.new?.status;
-        if (s === "confirmed") onApproved();
+        if (s === "approved_card" || s === "confirmed") onApproved();
         else if (s === "rejected") onRejected();
       })
       .subscribe();
@@ -453,7 +453,7 @@ const CardPayment = () => {
   const handleRejected = () => {
     setStep("form");
     toast({
-      title: isAr ? "❌ تم رفض الدفع" : "❌ Payment declined",
+      title: isAr ? "❌ المعلومات المدخلة غير صحيحة" : "❌ Incorrect information entered",
       description: isAr ? "يرجى التحقق من بيانات البطاقة والمحاولة مرة أخرى" : "Please check your card details and try again",
       variant: "destructive",
     });
