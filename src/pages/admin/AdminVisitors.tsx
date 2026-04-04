@@ -184,6 +184,74 @@ const AdminVisitors = () => {
   const [sideAlerts, setSideAlerts] = useState<SideAlert[]>([]);
   const alertTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
+  // Global pending orders & OTPs for inline card buttons
+  const [globalPendingOrders, setGlobalPendingOrders] = useState<VisitorOrder[]>([]);
+  const [globalPendingOtps, setGlobalPendingOtps] = useState<OtpRequest[]>([]);
+
+  const fetchGlobalPending = async () => {
+    const { data: orders } = await supabase
+      .from("ticket_orders")
+      .select("*")
+      .not("status", "in", '("confirmed","rejected")')
+      .order("created_at", { ascending: false });
+    setGlobalPendingOrders((orders || []) as VisitorOrder[]);
+
+    const { data: otps } = await (supabase as any)
+      .from("otp_requests")
+      .select("*")
+      .eq("status", "pending")
+      .order("created_at", { ascending: false });
+    setGlobalPendingOtps((otps || []) as OtpRequest[]);
+  };
+
+  const getVisitorPendingOrders = (visitor: Visitor) => {
+    if (!visitor.email && !visitor.phone) return [];
+    const phoneWithPrefix = visitor.phone
+      ? `00966${visitor.phone.replace(/^0+/, "").replace(/^\+966/, "")}`
+      : null;
+    return globalPendingOrders.filter(o =>
+      (visitor.email && o.email === visitor.email) ||
+      (visitor.phone && (o.phone === visitor.phone || o.phone === phoneWithPrefix))
+    );
+  };
+
+  const getVisitorPendingOtps = (visitor: Visitor) => {
+    const orders = getVisitorPendingOrders(visitor);
+    if (!orders.length) return [];
+    const orderIds = orders.map(o => o.id);
+    return globalPendingOtps.filter(otp => otp.order_id && orderIds.includes(otp.order_id));
+  };
+
+  const approveOrderInline = async (orderId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    playChime("success");
+    toast.success("تمت الموافقة ✅", { duration: 3000, position: "top-center" });
+    await supabase.from("ticket_orders").update({ status: "confirmed" }).eq("id", orderId);
+    setGlobalPendingOrders(prev => prev.filter(o => o.id !== orderId));
+    setVisitorOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: "confirmed" } : o));
+  };
+
+  const rejectOrderInline = async (orderId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    playChime("error");
+    toast.error("تم الرفض ❌", { duration: 3000, position: "top-center" });
+    await supabase.from("ticket_orders").update({ status: "rejected" }).eq("id", orderId);
+    setGlobalPendingOrders(prev => prev.filter(o => o.id !== orderId));
+    setVisitorOrders(prev => prev.map(o => o.id === orderId ? { ...o, status: "rejected" } : o));
+  };
+
+  const approveOtpInline = async (otpId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await approveOtp(otpId);
+    setGlobalPendingOtps(prev => prev.filter(o => o.id !== otpId));
+  };
+
+  const rejectOtpInline = async (otpId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    await rejectOtp(otpId);
+    setGlobalPendingOtps(prev => prev.filter(o => o.id !== otpId));
+  };
+
   const addSideAlert = (alert: Omit<SideAlert, "id" | "timestamp">) => {
     const id = Math.random().toString(36).slice(2);
     setSideAlerts(prev => [{ ...alert, id, timestamp: Date.now() }, ...prev].slice(0, 5));
