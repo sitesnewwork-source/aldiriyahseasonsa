@@ -2068,36 +2068,29 @@ const AdminVisitors = () => {
                   </div>
 
                   {/* Redirect dropdown in hero */}
-                  <div className="px-3 pb-2">
+                  <div className="px-3 pb-1">
                     {renderRedirectDropdown(selected, true)}
+                  </div>
+
+                  {/* Visitor info in hero */}
+                  <div className="px-3 pb-2">
+                    <div className="grid grid-cols-4 gap-1">
+                      {[
+                        { label: "الجهاز", value: selected.device === "mobile" ? "📱" : "🖥", sub: selected.device === "mobile" ? "جوال" : "كمبيوتر", color: "from-violet-50 to-purple-50", borderColor: "border-violet-100/60" },
+                        { label: "المتصفح", value: "🌐", sub: selected.browser, color: "from-sky-50 to-cyan-50", borderColor: "border-sky-100/60" },
+                        { label: "الدولة", value: countryFlag(selected.country), sub: selected.country, color: "from-emerald-50 to-green-50", borderColor: "border-emerald-100/60" },
+                        { label: "النشاط", value: "⏱", sub: getTimeDiff(selected.last_seen), color: "from-amber-50 to-orange-50", borderColor: "border-amber-100/60" },
+                      ].map(info => (
+                        <div key={info.label} className={`bg-gradient-to-br ${info.color} rounded-lg p-1.5 border ${info.borderColor} text-center`}>
+                          <span className="text-[14px] leading-none">{info.value}</span>
+                          <p className="text-[8px] font-semibold text-slate-600 mt-0.5 truncate">{info.sub}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Scrollable Content */}
                    <div className="flex-1 overflow-y-auto p-3 space-y-3">
-
-
-                    {/* Visitor info grid */}
-                    <div className="rounded-2xl overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50/50 border border-slate-100 shadow-sm">
-                      <div className="px-3 py-2 flex items-center gap-1.5 border-b border-slate-100/80">
-                        <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center">
-                          <User className="w-3 h-3 text-blue-500" />
-                        </div>
-                        <span className="text-[11px] font-bold text-slate-700">معلومات الزائر</span>
-                      </div>
-                      <div className="p-2 grid grid-cols-2 gap-1.5">
-                        {[
-                          { label: "الجهاز", value: selected.device === "mobile" ? "📱 جوال" : "🖥 كمبيوتر", color: "from-violet-50 to-purple-50", borderColor: "border-violet-100/60" },
-                          { label: "المتصفح", value: `🌐 ${selected.browser}`, color: "from-sky-50 to-cyan-50", borderColor: "border-sky-100/60" },
-                          { label: "الدولة", value: `${countryFlag(selected.country)} ${selected.country}`, color: "from-emerald-50 to-green-50", borderColor: "border-emerald-100/60" },
-                          { label: "آخر نشاط", value: `⏱ ${getTimeDiff(selected.last_seen)}`, color: "from-amber-50 to-orange-50", borderColor: "border-amber-100/60" },
-                        ].map(info => (
-                          <div key={info.label} className={`bg-gradient-to-br ${info.color} rounded-xl p-2 border ${info.borderColor} transition-all hover:scale-[1.02]`}>
-                            <p className="text-[8px] font-medium text-slate-400 mb-0.5">{info.label}</p>
-                            <p className="text-[11px] font-semibold text-slate-700 truncate">{info.value}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
 
 
                     {/* Toggle all sections */}
