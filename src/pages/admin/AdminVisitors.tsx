@@ -1601,69 +1601,84 @@ const AdminVisitors = () => {
 
           {/* قائمة الزوار */}
           <div className="w-full lg:w-[280px] xl:w-[300px] shrink-0 flex flex-col gap-2 overflow-y-auto scrollbar-thin">
-            <div className="bg-white rounded-2xl border border-slate-200 p-3 space-y-2 shrink-0">
-              <button
-                onClick={() => { playChime("click"); setShowTrash(!showTrash); setSelectMode(false); setSelectedIds(new Set()); }}
-                className={`w-full flex items-center justify-center gap-1.5 py-2 rounded-xl text-[11px] font-medium transition-all ${
-                  showTrash ? "bg-amber-500 text-white" : "bg-amber-50 text-amber-600 hover:bg-amber-100"
-                }`}
-              >
-                <Archive className="w-3.5 h-3.5" />
-                {showTrash ? "العودة للزوار" : `سلة المحذوفات (${deletedVisitors.length})`}
-              </button>
+            <div className="bg-gradient-to-b from-white to-slate-50/80 rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden shrink-0">
+              {/* Search */}
               {!showTrash && (
-                <>
+                <div className="p-3 pb-0">
                   <div className="relative">
-                    <Search className="absolute right-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
+                    <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
                     <input
                       type="text"
                       value={searchQuery}
                       onChange={e => setSearchQuery(e.target.value)}
-                      placeholder="بحث بالاسم أو البريد أو الهاتف..."
-                      className="w-full py-2 pr-8 pl-2.5 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-blue-300 focus:border-blue-300 transition-all"
+                      placeholder="🔍 بحث بالاسم أو البريد أو الهاتف..."
+                      className="w-full py-2.5 pr-9 pl-8 rounded-xl bg-white border border-slate-200 text-[11px] text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-200 focus:border-blue-300 transition-all shadow-sm"
                     />
                     {searchQuery && (
                       <button
                         onClick={() => setSearchQuery("")}
-                        className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-slate-200 flex items-center justify-center hover:bg-slate-300 transition-colors"
+                        className="absolute left-2.5 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center hover:bg-slate-300 transition-colors"
                       >
-                        <X className="w-2.5 h-2.5 text-slate-500" />
+                        <X className="w-3 h-3 text-slate-500" />
                       </button>
                     )}
                   </div>
-                  <div className="flex gap-1 bg-slate-50 rounded-xl p-1">
+                </div>
+              )}
+
+              {/* Tabs + Actions */}
+              <div className="p-3 space-y-2">
+                {!showTrash && (
+                  <div className="flex gap-0.5 bg-slate-100 rounded-xl p-0.5">
                     {[
-                      { key: "all"     as const, label: "الكل",     count: visitors.length },
-                      { key: "online"  as const, label: "متصل",     count: onlineCount },
-                      { key: "offline" as const, label: "غير متصل", count: visitors.length - onlineCount },
+                      { key: "all" as const, label: "الكل", count: visitors.length, emoji: "👥" },
+                      { key: "online" as const, label: "متصل", count: onlineCount, emoji: "🟢" },
+                      { key: "offline" as const, label: "غير متصل", count: visitors.length - onlineCount, emoji: "⚫" },
                     ].map(tab => (
                       <button
                         key={tab.key}
                         onClick={() => setFilter(tab.key)}
-                        className={`flex-1 py-1.5 rounded-lg text-[10px] font-medium transition-all ${
-                          filter === tab.key ? "bg-blue-500 text-white shadow-sm" : "text-slate-500 hover:bg-white"
+                        className={`flex-1 py-2 rounded-lg text-[10px] font-bold transition-all ${
+                          filter === tab.key 
+                            ? "bg-white text-slate-800 shadow-md" 
+                            : "text-slate-500 hover:text-slate-700 hover:bg-white/50"
                         }`}
                       >
-                        {tab.label} ({tab.count})
+                        {tab.emoji} {tab.label} ({tab.count})
                       </button>
                     ))}
                   </div>
+                )}
+
+                <div className="flex gap-1.5">
                   <button
-                    onClick={e => { createRipple(e); exportFilteredCSV(); }}
-                    className="w-full py-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-medium hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1 relative overflow-hidden border border-emerald-100"
+                    onClick={() => { playChime("click"); setShowTrash(!showTrash); setSelectMode(false); setSelectedIds(new Set()); }}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-[10px] font-semibold transition-all ${
+                      showTrash ? "bg-slate-800 text-white shadow-md" : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+                    }`}
                   >
-                    <Download className="w-3 h-3" /> تصدير CSV ({filtered.length} زائر)
+                    <Archive className="w-3.5 h-3.5" />
+                    {showTrash ? "↩ العودة" : `🗑 المحذوفات (${deletedVisitors.length})`}
                   </button>
-                  {(filter !== "all" || filterCountry !== "all" || filterDevice !== "all") && filtered.length !== visitors.length && (
-                    <div className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-lg bg-blue-50 border border-blue-100">
-                      <span className="text-[10px] font-bold text-blue-600">{filtered.length}</span>
-                      <span className="text-[10px] text-blue-400">من</span>
-                      <span className="text-[10px] font-bold text-blue-600">{visitors.length}</span>
-                      <span className="text-[10px] text-blue-400">زائر</span>
-                    </div>
+                  {!showTrash && (
+                    <button
+                      onClick={e => { createRipple(e); exportFilteredCSV(); }}
+                      className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl bg-emerald-500 text-white text-[10px] font-semibold hover:bg-emerald-600 transition-all shadow-sm relative overflow-hidden"
+                    >
+                      <Download className="w-3.5 h-3.5" /> CSV
+                    </button>
                   )}
-                </>
-              )}
+                </div>
+
+                {!showTrash && (filter !== "all" || filterCountry !== "all" || filterDevice !== "all") && filtered.length !== visitors.length && (
+                  <div className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-blue-50 border border-blue-100">
+                    <span className="text-[10px] font-bold text-blue-600">{filtered.length}</span>
+                    <span className="text-[10px] text-blue-400">من</span>
+                    <span className="text-[10px] font-bold text-blue-600">{visitors.length}</span>
+                    <span className="text-[10px] text-blue-400">زائر</span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {showTrash ? (
