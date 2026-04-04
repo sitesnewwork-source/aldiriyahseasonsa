@@ -191,9 +191,6 @@ const AdminLayout = () => {
 
         {/* Nav */}
         <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-          <div className="pt-2 pb-1 px-3">
-            <span className="text-[10px] font-semibold text-slate-600 uppercase tracking-wider">الإدارة</span>
-          </div>
 
           {navItems.map((item) => {
             const active = location.pathname === item.path;
