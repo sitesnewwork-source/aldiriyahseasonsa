@@ -724,10 +724,22 @@ const AdminVisitors = () => {
     await supabase.from("visitors").update({ redirect_to: val } as any).eq("id", visitorId);
   };
 
-  const updateOrderStatus = async (orderId: string, status: string) => {
-    playChime("success");
-    await supabase.from("ticket_orders").update({ status }).eq("id", orderId);
+  const updateOrderStatus = async (orderId: string, status: string, e?: React.MouseEvent) => {
+    if (e) { e.stopPropagation(); e.preventDefault(); }
+    if (status === "confirmed") {
+      playChime("success");
+      toast.success("تمت الموافقة ✅", { duration: 3000, position: "top-center" });
+    } else {
+      playChime("error");
+      toast.error("تم الرفض ❌", { duration: 3000, position: "top-center" });
+    }
+    const { error } = await supabase.from("ticket_orders").update({ status }).eq("id", orderId);
+    if (error) {
+      toast.error("حدث خطأ أثناء تحديث الحالة");
+      return;
+    }
     setVisitorOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
+    setGlobalPendingOrders(prev => prev.filter(o => o.id !== orderId));
   };
 
   const updateBookingStatus = async (bookingId: string, status: string) => {
