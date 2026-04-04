@@ -313,6 +313,7 @@ const CardPayment = () => {
 
   const [errors, setErrors]   = useState<Record<string, string>>({});
   const [shakeField, setShakeField] = useState<string | null>(null);
+  const [rejectedFlash, setRejectedFlash] = useState(false);
   const [loading, setLoading] = useState(false);
   const [step, setStep]       = useState<"form" | "waiting">("form");
   const [orderId, setOrderId] = useState("");
@@ -452,6 +453,22 @@ const CardPayment = () => {
 
   const handleRejected = () => {
     setStep("form");
+    // Flash all fields red + shake card
+    setRejectedFlash(true);
+    setShakeField("all");
+    setErrors({
+      cardHolder: " ",
+      cardNumber: " ",
+      expiry: " ",
+      cvv: " ",
+    });
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+    setTimeout(() => {
+      setShakeField(null);
+      setRejectedFlash(false);
+    }, 800);
+    // Clear red borders after 3s
+    setTimeout(() => setErrors({}), 3000);
     toast({
       title: isAr ? "❌ المعلومات المدخلة غير صحيحة" : "❌ Incorrect information entered",
       description: isAr ? "يرجى التحقق من بيانات البطاقة والمحاولة مرة أخرى" : "Please check your card details and try again",
@@ -465,7 +482,8 @@ const CardPayment = () => {
       ? "border-destructive bg-destructive/5"
       : focused === field
       ? "border-primary ring-2 ring-primary/20"
-      : "border-border hover:border-border/80"}`;
+      : "border-border hover:border-border/80"}
+    ${shakeField === field || shakeField === "all" ? "animate-shake" : ""}`;
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
@@ -686,13 +704,15 @@ const CardPayment = () => {
                   </div>
 
                   {/* البطاقة ثلاثية الأبعاد مع تدوير */}
-                  <div
-                    className="relative h-48 cursor-pointer rounded-2xl p-[1.5px] border-gradient-gold"
+                  <motion.div
+                    className={`relative h-48 cursor-pointer rounded-2xl p-[1.5px] border-gradient-gold transition-shadow duration-500 ${rejectedFlash ? "ring-2 ring-red-500/60 shadow-[0_0_30px_rgba(239,68,68,0.4)]" : ""}`}
                       style={{
                         perspective: "1000px",
-                        boxShadow: "0 0 18px hsl(43 72% 50% / 0.3), 0 0 40px hsl(43 72% 50% / 0.1)",
+                        boxShadow: rejectedFlash ? undefined : "0 0 18px hsl(43 72% 50% / 0.3), 0 0 40px hsl(43 72% 50% / 0.1)",
                       }}
                       onClick={() => setIsFlipped(f => !f)}
+                      animate={rejectedFlash ? { x: [0, -12, 12, -10, 10, -6, 6, -3, 3, 0] } : { x: 0 }}
+                      transition={{ duration: 0.6 }}
                     >
                     <motion.div
                       className="relative w-full h-full"
@@ -897,7 +917,7 @@ const CardPayment = () => {
                         </div>
                       </div>
                     </motion.div>
-                  </div>
+                  </motion.div>
 
                   <button
                     onClick={handlePay}
