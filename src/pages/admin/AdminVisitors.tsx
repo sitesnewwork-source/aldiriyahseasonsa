@@ -1953,11 +1953,16 @@ const AdminVisitors = () => {
                                   ينتظر إجراء
                                 </span>
                               )}
-                              {hasPendingOtp && !hasPendingOrder && (
-                                <span className="text-[7px] font-bold text-violet-600 bg-violet-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
-                                  🔐 OTP معلق
-                                </span>
-                              )}
+                              {hasPendingOtp && !hasPendingOrder && (() => {
+                                const otps = getVisitorPendingOtps(visitor);
+                                const oldestOtp = otps.length > 0 ? otps[otps.length - 1] : null;
+                                return (
+                                  <span className="inline-flex items-center gap-1 text-[7px] font-bold text-violet-600 bg-violet-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
+                                    🔐 OTP
+                                    {oldestOtp && <OtpWaitTimer createdAt={oldestOtp.created_at} />}
+                                  </span>
+                                );
+                              })()}
                             </div>
                             {visitor.is_online
                               ? <span className="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5"><span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />متصل</span>
