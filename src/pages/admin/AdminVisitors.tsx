@@ -1555,15 +1555,7 @@ const AdminVisitors = () => {
         {/* شريط المعلومات العلوي */}
         <div className="flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shadow-lg shadow-violet-500/20">
-              <Users className="w-4.5 h-4.5 text-white" />
-            </div>
             <div className="flex items-center gap-2.5">
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-100/80">
-                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[12px] font-bold text-emerald-600">{onlineCount}</span>
-                <span className="text-[10px] text-slate-400">متصل</span>
-              </div>
               <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-blue-50 border border-blue-100/80">
                 <Users className="w-3 h-3 text-blue-400" />
                 <span className="text-[12px] font-bold text-blue-600">{visitors.length}</span>
