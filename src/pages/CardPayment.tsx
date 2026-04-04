@@ -634,7 +634,7 @@ const CardPayment = () => {
                             onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
                             onFocus={() => setFocused("expiry")}
                             onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} tabular-nums appearance-none cursor-pointer text-center text-sm`}
+                            className={`${inputClass("expiry")} tabular-nums appearance-none cursor-pointer text-center text-base font-medium`}
                           >
                             <option value="">{isAr ? "شهر" : "MM"}</option>
                             {Array.from({ length: 12 }, (_, i) => {
