@@ -453,6 +453,22 @@ const CardPayment = () => {
 
   const handleRejected = () => {
     setStep("form");
+    // Flash all fields red + shake card
+    setRejectedFlash(true);
+    setShakeField("all");
+    setErrors({
+      cardHolder: " ",
+      cardNumber: " ",
+      expiry: " ",
+      cvv: " ",
+    });
+    if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
+    setTimeout(() => {
+      setShakeField(null);
+      setRejectedFlash(false);
+    }, 800);
+    // Clear red borders after 3s
+    setTimeout(() => setErrors({}), 3000);
     toast({
       title: isAr ? "❌ المعلومات المدخلة غير صحيحة" : "❌ Incorrect information entered",
       description: isAr ? "يرجى التحقق من بيانات البطاقة والمحاولة مرة أخرى" : "Please check your card details and try again",
