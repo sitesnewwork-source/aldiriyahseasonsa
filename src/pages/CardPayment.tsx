@@ -916,7 +916,7 @@ const CardPayment = () => {
                         </div>
                       </div>
                     </motion.div>
-                  </div>
+                  </motion.div>
 
                   <button
                     onClick={handlePay}
