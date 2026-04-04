@@ -17,6 +17,21 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { playChime, createRipple } from "@/hooks/use-action-sound";
 
+// Live session timer component
+const SessionTimer = ({ startTime }: { startTime: string }) => {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 60000);
+    return () => clearInterval(interval);
+  }, []);
+  const mins = Math.floor((Date.now() - new Date(startTime).getTime()) / 60000);
+  if (mins < 1) return <span className="text-[9px] text-amber-500 font-medium">&lt;1 د</span>;
+  if (mins < 60) return <span className="text-[9px] text-amber-500 font-medium">{mins} د</span>;
+  const hrs = Math.floor(mins / 60);
+  const remMins = mins % 60;
+  return <span className="text-[9px] text-amber-500 font-medium">{hrs}س {remMins}د</span>;
+};
+
 const sitePages = [
   { path: "/", label: "الصفحة الرئيسية" },
   { path: "/about", label: "عن الدرعية" },
@@ -1790,6 +1805,7 @@ const AdminVisitors = () => {
                           <div className="flex items-center justify-between gap-1">
                             <div className="flex items-center gap-1.5 min-w-0">
                               <span className="text-[13px] font-bold text-slate-800 truncate">{visitor.name || "زائر جديد"}</span>
+                              {visitor.country && <span className="text-[12px] shrink-0">{countryFlag(visitor.country)}</span>}
                               {hasPending && (
                                 <span className="text-[8px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full shrink-0 animate-pulse">
                                   🔴 ينتظر إجراء
@@ -1800,6 +1816,17 @@ const AdminVisitors = () => {
                               ? <span className="text-[9px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />متصل</span>
                               : <span className="text-[9px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full shrink-0">غير متصل</span>}
                           </div>
+                          {/* Visitor info (email/phone) */}
+                          {(visitor.email || visitor.phone) && (
+                            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                              {visitor.email && (
+                                <span className="text-[9px] text-blue-500 truncate max-w-[120px]">📧 {visitor.email}</span>
+                              )}
+                              {visitor.phone && (
+                                <span className="text-[9px] text-violet-500 font-mono" dir="ltr">📱 {visitor.phone}</span>
+                              )}
+                            </div>
+                          )}
                           <div className="flex items-center gap-3 mt-1">
                             <div className="flex items-center gap-1">
                               <Eye className="w-2.5 h-2.5 text-blue-400 shrink-0" />
@@ -1809,6 +1836,13 @@ const AdminVisitors = () => {
                               <Clock className="w-2.5 h-2.5 text-slate-300 shrink-0" />
                               <span className="text-[9px] text-slate-400">{getTimeDiff(visitor.last_seen)}</span>
                             </div>
+                            {/* Session duration timer */}
+                            {visitor.session_start && (
+                              <div className="flex items-center gap-1">
+                                <span className="text-[9px]">⏱</span>
+                                <SessionTimer startTime={visitor.session_start} />
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
