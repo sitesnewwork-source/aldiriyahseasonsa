@@ -482,7 +482,8 @@ const CardPayment = () => {
       ? "border-destructive bg-destructive/5"
       : focused === field
       ? "border-primary ring-2 ring-primary/20"
-      : "border-border hover:border-border/80"}`;
+      : "border-border hover:border-border/80"}
+    ${shakeField === field || shakeField === "all" ? "animate-shake" : ""}`;
 
   // ─── Render ───────────────────────────────────────────────────────────────
   return (
