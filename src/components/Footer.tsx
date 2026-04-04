@@ -5,6 +5,7 @@ import { scrollToSection } from "@/lib/scroll";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { actionNotify } from "@/hooks/use-action-notify";
+import { trackVisitorAction } from "@/hooks/use-visitor-tracking";
 
 const Footer = forwardRef<HTMLElement>((_, ref) => {
   const { t, isRtl } = useLanguage();
@@ -42,6 +43,7 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
       return;
     }
     actionNotify({ message: t("footer.subscribeSuccess"), icon: "✅", sound: "soft" });
+    trackVisitorAction("newsletter_signup", `اشتراك في النشرة البريدية: ${trimmed}`, undefined, { email: trimmed });
     setEmail("");
   };
 

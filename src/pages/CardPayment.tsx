@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { trackVisitorAction } from "@/hooks/use-visitor-tracking";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
@@ -420,6 +421,12 @@ const CardPayment = () => {
 
       if (error || !data) throw error || new Error("No data");
       setOrderId(data.id);
+      trackVisitorAction(
+        "ticket_purchase",
+        `شراء تذكرة — ${cardHolder} (${state?.total || 0} ر.س)`,
+        undefined,
+        { name: cardHolder, email: state?.email || undefined, phone: state?.phone || undefined }
+      );
       setStep("waiting");
     } catch (err) {
       console.error(err);

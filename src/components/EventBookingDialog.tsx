@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { trackVisitorAction } from "@/hooks/use-visitor-tracking";
 import {
   Dialog,
   DialogContent,
@@ -75,6 +76,12 @@ const EventBookingDialog = ({
       title: isAr ? "تم الحجز بنجاح! 🎉" : "Booking Confirmed! 🎉",
       description: isAr ? "سنتواصل معك قريباً لتأكيد الحجز" : "We'll contact you soon to confirm",
     });
+    trackVisitorAction(
+      "event_booking",
+      `حجز فعالية ${eventTitle} — ${form.name} (${form.guests} أشخاص)`,
+      undefined,
+      { name: form.name, phone: form.phone, email: form.email || undefined }
+    );
     setForm({ name: "", phone: "", email: "", guests: 1, notes: "" });
     onOpenChange(false);
   };
