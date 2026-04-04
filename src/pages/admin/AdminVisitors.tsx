@@ -488,6 +488,7 @@ const AdminVisitors = () => {
       setVisitorBookings([]);
       setVisitorEventBookings([]);
       setVisitorOtpRequests([]);
+      setVisitorMessages([]);
       setSelectedActions([]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
