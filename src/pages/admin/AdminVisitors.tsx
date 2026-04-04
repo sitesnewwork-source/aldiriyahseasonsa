@@ -628,6 +628,23 @@ const AdminVisitors = () => {
     setVisitorOrders(prev => prev.map(o => o.id === orderId ? { ...o, status } : o));
   };
 
+  const updateBookingStatus = async (bookingId: string, status: string) => {
+    playChime("success");
+    await supabase.from("restaurant_bookings").update({ status }).eq("id", bookingId);
+    setVisitorBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status } : b));
+  };
+
+  const updateEventBookingStatus = async (bookingId: string, status: string) => {
+    playChime("success");
+    await supabase.from("event_bookings").update({ status }).eq("id", bookingId);
+    setVisitorEventBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status } : b));
+  };
+
+  const markMessageRead = async (msgId: string) => {
+    await supabase.from("contact_messages").update({ is_read: true }).eq("id", msgId);
+    setVisitorMessages(prev => prev.map(m => m.id === msgId ? { ...m, is_read: true } : m));
+  };
+
   const toggleSelect = (id: string) => {
     setSelectedIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n; });
   };
