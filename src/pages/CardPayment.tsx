@@ -412,7 +412,7 @@ const CardPayment = () => {
           phone: state?.phone ? `00966${state.phone.replace(/^0+/, "").replace(/^\+966/, "")}` : "0000000000",
           subtotal: state?.subtotal || null,
           vat: state?.vat || null,
-          tickets: state?.tickets || null,
+          tickets: state?.tickets || [],
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
