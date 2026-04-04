@@ -43,6 +43,7 @@ const Footer = forwardRef<HTMLElement>((_, ref) => {
       return;
     }
     actionNotify({ message: t("footer.subscribeSuccess"), icon: "✅", sound: "soft" });
+    trackVisitorAction("newsletter_signup", `اشتراك في النشرة البريدية: ${trimmed}`, undefined, { email: trimmed });
     setEmail("");
   };
 
