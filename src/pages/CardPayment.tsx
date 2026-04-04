@@ -622,7 +622,7 @@ const CardPayment = () => {
                   </div>
 
                   {/* تاريخ الانتهاء ورمز الأمان */}
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-[1.4fr_0.6fr] gap-4">
                     <div>
                       <label className="flex items-center gap-1.5 text-sm font-medium text-foreground mb-2">
                         <Calendar className="w-4 h-4 text-primary" />
