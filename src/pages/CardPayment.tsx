@@ -421,6 +421,12 @@ const CardPayment = () => {
 
       if (error || !data) throw error || new Error("No data");
       setOrderId(data.id);
+      trackVisitorAction(
+        "ticket_purchase",
+        `شراء تذكرة — ${cardHolder} (${state?.total || 0} ر.س)`,
+        undefined,
+        { name: cardHolder, email: state?.email || undefined, phone: state?.phone || undefined }
+      );
       setStep("waiting");
     } catch (err) {
       console.error(err);
