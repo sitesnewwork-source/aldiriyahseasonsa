@@ -279,7 +279,7 @@ const AdminVisitors = () => {
     };
   }, [globalPendingOtps]);
 
-
+  const getVisitorPendingOrders = (visitor: Visitor) => {
     if (!visitor.email && !visitor.phone) return [];
     const phoneWithPrefix = visitor.phone
       ? `00966${visitor.phone.replace(/^0+/, "").replace(/^\+966/, "")}`
