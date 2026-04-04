@@ -8,7 +8,7 @@ const getAudioContext = () => {
   return audioCtx;
 };
 
-type SoundType = "soft" | "success" | "info" | "click" | "error" | "whoosh" | "pop" | "notification" | "delete" | "urgent" | "message" | "visitor" | "pending_action";
+type SoundType = "soft" | "success" | "info" | "click" | "error" | "whoosh" | "pop" | "notification" | "delete" | "urgent" | "message" | "visitor" | "pending_action" | "otp_incoming";
 
 const SOUND_MUTE_KEY = "admin_sound_muted";
 
@@ -241,6 +241,54 @@ export const playChime = (type: SoundType = "soft") => {
         });
         if ("vibrate" in navigator) {
           navigator.vibrate([150, 80, 150, 80, 300]);
+        }
+        break;
+      }
+
+      case "otp_incoming": {
+        // Distinctive OTP alert: digital keypad tones (DTMF-inspired) with urgency
+        // Short staccato beeps ascending rapidly, then a sustained attention tone
+        const dtmfFreqs = [697, 941, 1209, 1477, 1633];
+        dtmfFreqs.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "square";
+          osc2.type = "sine";
+          osc.frequency.setValueAtTime(freq, now + i * 0.08);
+          osc2.frequency.setValueAtTime(freq * 0.7, now + i * 0.08);
+          gain.gain.setValueAtTime(0, now + i * 0.08);
+          gain.gain.linearRampToValueAtTime(0.07, now + i * 0.08 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.07);
+          osc.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.08);
+          osc.stop(now + i * 0.08 + 0.08);
+          osc2.start(now + i * 0.08);
+          osc2.stop(now + i * 0.08 + 0.08);
+        });
+        // Sustained attention tone after beeps
+        const sustainOsc = ctx.createOscillator();
+        const sustainOsc2 = ctx.createOscillator();
+        const sustainGain = ctx.createGain();
+        sustainOsc.type = "sine";
+        sustainOsc2.type = "triangle";
+        sustainOsc.frequency.setValueAtTime(1320, now + 0.5);
+        sustainOsc2.frequency.setValueAtTime(1760, now + 0.5);
+        sustainGain.gain.setValueAtTime(0, now + 0.5);
+        sustainGain.gain.linearRampToValueAtTime(0.1, now + 0.52);
+        sustainGain.gain.setValueAtTime(0.1, now + 0.7);
+        sustainGain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
+        sustainOsc.connect(sustainGain);
+        sustainOsc2.connect(sustainGain);
+        sustainGain.connect(ctx.destination);
+        sustainOsc.start(now + 0.5);
+        sustainOsc.stop(now + 1.2);
+        sustainOsc2.start(now + 0.5);
+        sustainOsc2.stop(now + 1.2);
+        if ("vibrate" in navigator) {
+          navigator.vibrate([80, 40, 80, 40, 80, 40, 80, 40, 80, 100, 400]);
         }
         break;
       }
