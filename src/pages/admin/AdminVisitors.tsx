@@ -1770,10 +1770,11 @@ const AdminVisitors = () => {
                           setSelected(isSelected ? null : visitor);
                         }
                       }}
-                      className={`bg-white rounded-xl border transition-all duration-200 p-2.5 cursor-pointer hover:shadow-sm ${
-                        isSelected ? "border-blue-400 bg-blue-50/40 shadow-sm" 
-                        : hasPending ? "border-amber-300 bg-amber-50/30 shadow-sm ring-1 ring-amber-200/50" 
-                        : "border-slate-100 hover:border-slate-200"
+                      className={`rounded-xl border transition-all duration-200 p-2.5 cursor-pointer hover:shadow-md ${
+                        isSelected ? "border-blue-400 bg-gradient-to-l from-blue-50 to-blue-100/60 shadow-md ring-1 ring-blue-300/40" 
+                        : hasPending ? "border-amber-300 bg-gradient-to-l from-amber-50 to-yellow-50/80 shadow-sm ring-1 ring-amber-200/50" 
+                        : visitor.is_online ? "border-emerald-200 bg-gradient-to-l from-emerald-50/50 to-white hover:border-emerald-300"
+                        : "border-slate-100 bg-gradient-to-l from-slate-50/50 to-white hover:border-slate-200"
                       } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
                     >
                       <div className="flex items-center gap-2">
