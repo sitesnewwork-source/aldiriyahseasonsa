@@ -1756,7 +1756,7 @@ const AdminVisitors = () => {
                   )}
                 </div>
 
-                {!showTrash && (filter !== "all" || filterCountry !== "all" || filterDevice !== "all") && filtered.length !== visitors.length && (
+                {!showTrash && (filter !== "all" || hasAnyFilter) && filtered.length !== visitors.length && (
                   <div className="flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-blue-50 border border-blue-100">
                     <span className="text-[10px] font-bold text-blue-600">{filtered.length}</span>
                     <span className="text-[10px] text-blue-400">من</span>
