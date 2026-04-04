@@ -238,7 +238,7 @@ const WaitingApproval = ({
 
   const mm = Math.floor(timeLeft / 60).toString().padStart(2, "0");
   const ss = (timeLeft % 60).toString().padStart(2, "0");
-  const progress = (timeLeft / 120) * 100;
+  const progress = (timeLeft / 180) * 100;
 
   return (
     <div className="flex flex-col items-center justify-center py-10 text-center">
