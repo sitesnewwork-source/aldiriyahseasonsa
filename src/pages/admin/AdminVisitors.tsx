@@ -1815,7 +1815,7 @@ const AdminVisitors = () => {
                 <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
-                  const hasPending = getVisitorPendingOrders(visitor).length > 0 || getVisitorPendingOtps(visitor).length > 0;
+                  const hasPending = getVisitorPendingOrders(visitor).length > 0;
                   return (
                     <motion.div
                       key={visitor.id}
