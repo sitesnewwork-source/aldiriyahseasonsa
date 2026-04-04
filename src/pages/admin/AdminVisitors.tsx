@@ -1806,7 +1806,7 @@ const AdminVisitors = () => {
                 {deletedVisitors.map(visitor => (
                   <div key={visitor.id} className="bg-white rounded-xl border border-slate-100 p-2.5">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[12px] font-bold text-slate-400">
+                      <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${getAvatarColor(displayName(visitor)).bg} flex items-center justify-center text-[12px] font-bold ${getAvatarColor(displayName(visitor)).text} shadow-sm`}>
                         {displayName(visitor)[0]}
                       </div>
                       <div className="flex-1 min-w-0">
