@@ -703,13 +703,15 @@ const CardPayment = () => {
                   </div>
 
                   {/* البطاقة ثلاثية الأبعاد مع تدوير */}
-                  <div
-                    className="relative h-48 cursor-pointer rounded-2xl p-[1.5px] border-gradient-gold"
+                  <motion.div
+707:                     className={`relative h-48 cursor-pointer rounded-2xl p-[1.5px] border-gradient-gold transition-shadow duration-500 ${rejectedFlash ? "ring-2 ring-red-500/60 shadow-[0_0_30px_rgba(239,68,68,0.4)]" : ""}`}
                       style={{
                         perspective: "1000px",
-                        boxShadow: "0 0 18px hsl(43 72% 50% / 0.3), 0 0 40px hsl(43 72% 50% / 0.1)",
+                        boxShadow: rejectedFlash ? undefined : "0 0 18px hsl(43 72% 50% / 0.3), 0 0 40px hsl(43 72% 50% / 0.1)",
                       }}
                       onClick={() => setIsFlipped(f => !f)}
+                      animate={rejectedFlash ? { x: [0, -12, 12, -10, 10, -6, 6, -3, 3, 0] } : { x: 0 }}
+                      transition={{ duration: 0.6 }}
                     >
                     <motion.div
                       className="relative w-full h-full"
