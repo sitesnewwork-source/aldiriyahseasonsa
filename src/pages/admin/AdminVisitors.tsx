@@ -678,7 +678,7 @@ const AdminVisitors = () => {
           addSideAlert({ visitorName: name, actionLabel: "طلب دفع بالبطاقة", actionIcon: "💳", isNew: false });
           sendBrowserNotification({
             title: `💳 طلب دفع جديد — ${name}`,
-            body: `${brand} •••• ${last4} | ${total} ر.س — ينتظر الموافقة`,
+            body: `${brand} •••• ${last4} | ${total} ر.س | ${order?.bank_name || ""} — ينتظر الموافقة`,
             tag: `order-${order?.id}`,
             vibrate: true,
           });
