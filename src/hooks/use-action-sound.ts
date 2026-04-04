@@ -291,6 +291,7 @@ export const playChime = (type: SoundType = "soft") => {
           navigator.vibrate([80, 40, 80, 40, 80, 40, 80, 40, 80, 100, 400]);
         }
         break;
+      }
 
       case "success": {
         [523, 659, 784].forEach((freq, i) => {
