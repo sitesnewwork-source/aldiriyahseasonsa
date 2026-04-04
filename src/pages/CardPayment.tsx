@@ -621,69 +621,68 @@ const CardPayment = () => {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="flex items-center gap-1.5 text-sm font-medium text-foreground mb-1.5">
-                        <Calendar className="w-4 h-4 text-primary" />
-                        {isAr ? "تاريخ الانتهاء" : "Expiry Date"}
-                      </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="relative group">
-                          <select
-                            dir="ltr"
-                            value={expiry.split("/")[0] || ""}
-                            onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
-                            onFocus={() => setFocused("expiry")}
-                            onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} ${isAr ? "font-body" : "font-mono"} tabular-nums appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
-                          >
-                            <option value="">{isAr ? "شهر" : "MM"}</option>
-                            {Array.from({ length: 12 }, (_, i) => {
-                              const m = String(i + 1).padStart(2, "0");
-                              return <option key={m} value={m}>{m}</option>;
-                            })}
-                          </select>
-                          <ChevronDown className="absolute top-1/2 -translate-y-1/2 ltr:right-2.5 rtl:left-2.5 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
-                        </div>
-                        <div className="relative group">
-                          <select
-                            dir="ltr"
-                            value={expiry.split("/")[1] || ""}
-                            onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
-                            onFocus={() => setFocused("expiry")}
-                            onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} ${isAr ? "font-body" : "font-mono"} tabular-nums appearance-none cursor-pointer pl-8 rtl:pl-2 rtl:pr-8 transition-all duration-300 hover:border-primary/60 focus:ring-2 focus:ring-primary/20 text-center`}
-                          >
-                            <option value="">{isAr ? "سنة" : "YY"}</option>
-                            {Array.from({ length: 10 }, (_, i) => {
-                              const y = String(new Date().getFullYear() % 100 + i).padStart(2, "0");
-                              return <option key={y} value={y}>{y}</option>;
-                            })}
-                          </select>
-                          <ChevronDown className="absolute top-1/2 -translate-y-1/2 ltr:right-2.5 rtl:left-2.5 w-4 h-4 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
-                        </div>
+                  {/* تاريخ الانتهاء ورمز الأمان */}
+                  <div>
+                    <label className="flex items-center gap-1.5 text-sm font-medium text-foreground mb-2">
+                      <Calendar className="w-4 h-4 text-primary" />
+                      {isAr ? "تاريخ الانتهاء ورمز الأمان" : "Expiry & Security Code"}
+                    </label>
+                    <div className="grid grid-cols-[1fr_1fr_0.8fr] gap-2">
+                      {/* الشهر */}
+                      <div className="relative group">
+                        <select
+                          dir="ltr"
+                          value={expiry.split("/")[0] || ""}
+                          onChange={e => { onExpiryMonthChange(e.target.value); setFocused("expiry"); }}
+                          onFocus={() => setFocused("expiry")}
+                          onBlur={() => setFocused(null)}
+                          className={`${inputClass("expiry")} tabular-nums appearance-none cursor-pointer text-center text-sm`}
+                        >
+                          <option value="">{isAr ? "الشهر" : "MM"}</option>
+                          {Array.from({ length: 12 }, (_, i) => {
+                            const m = String(i + 1).padStart(2, "0");
+                            return <option key={m} value={m}>{m}</option>;
+                          })}
+                        </select>
+                        <ChevronDown className="absolute top-1/2 -translate-y-1/2 ltr:right-2 rtl:left-2 w-3.5 h-3.5 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
                       </div>
-                      {errors.expiry && <p className="text-destructive text-xs mt-1">{errors.expiry}</p>}
+                      {/* السنة */}
+                      <div className="relative group">
+                        <select
+                          dir="ltr"
+                          value={expiry.split("/")[1] || ""}
+                          onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
+                          onFocus={() => setFocused("expiry")}
+                          onBlur={() => setFocused(null)}
+                          className={`${inputClass("expiry")} tabular-nums appearance-none cursor-pointer text-center text-sm`}
+                        >
+                          <option value="">{isAr ? "السنة" : "YY"}</option>
+                          {Array.from({ length: 10 }, (_, i) => {
+                            const y = String(new Date().getFullYear() % 100 + i).padStart(2, "0");
+                            return <option key={y} value={y}>{y}</option>;
+                          })}
+                        </select>
+                        <ChevronDown className="absolute top-1/2 -translate-y-1/2 ltr:right-2 rtl:left-2 w-3.5 h-3.5 text-muted-foreground pointer-events-none group-hover:text-primary transition-colors" />
+                      </div>
+                      {/* CVV */}
+                      <div className="relative">
+                        <input
+                          type="password"
+                          inputMode="numeric"
+                          value={cvv}
+                          onChange={onCvvChange}
+                          onFocus={() => { setFocused("cvv"); setIsFlipped(true); }}
+                          onBlur={() => { setFocused(null); setIsFlipped(false); }}
+                          placeholder={brand === "amex" ? "••••" : "•••"}
+                          maxLength={brand === "amex" ? 4 : 3}
+                          className={`${inputClass("cvv")} font-mono text-center ${shakeField === "cvv" ? "animate-shake" : ""}`}
+                        />
+                        <Lock className="absolute top-1/2 -translate-y-1/2 ltr:right-2.5 rtl:left-2.5 w-3.5 h-3.5 text-muted-foreground pointer-events-none" />
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-foreground mb-1.5">
-                        {isAr ? "رمز الأمان" : "CVV"}
-                        <span className="text-muted-foreground font-normal mr-1">
-                          ({brand === "amex" ? "4" : "3"} {isAr ? "أرقام" : "digits"})
-                        </span>
-                      </label>
-                      <input
-                        type="password"
-                        inputMode="numeric"
-                        value={cvv}
-                        onChange={onCvvChange}
-                        onFocus={() => { setFocused("cvv"); setIsFlipped(true); }}
-                        onBlur={() => { setFocused(null); setIsFlipped(false); }}
-                        placeholder={brand === "amex" ? "••••" : "•••"}
-                        maxLength={brand === "amex" ? 4 : 3}
-                        className={`${inputClass("cvv")} font-mono ${shakeField === "cvv" ? "animate-shake" : ""}`}
-                      />
-                      {errors.cvv && <p className="text-destructive text-xs mt-1">{errors.cvv}</p>}
+                    <div className="flex items-center justify-between mt-1.5">
+                      {errors.expiry && <p className="text-destructive text-xs flex items-center gap-1"><AlertCircle className="w-3 h-3" /> {errors.expiry}</p>}
+                      {errors.cvv && <p className="text-destructive text-xs flex items-center gap-1 mr-auto"><AlertCircle className="w-3 h-3" /> {errors.cvv}</p>}
                     </div>
                   </div>
 
