@@ -1813,7 +1813,42 @@ const AdminVisitors = () => {
                     </div>
                   )}
 
-                  {(selected.email || selected.phone) && (
+                  {visitorOtpRequests.some(o => o.status === "pending") && (
+                    <div className="border border-violet-100 rounded-xl overflow-hidden">
+                      <div className="bg-violet-50 px-4 py-2 flex items-center gap-2">
+                        <Shield className="w-3.5 h-3.5 text-violet-500" />
+                        <span className="text-[12px] font-semibold text-violet-600">رموز OTP تنتظر الرد</span>
+                      </div>
+                      <div className="p-3 space-y-2">
+                        {visitorOtpRequests
+                          .filter(o => o.status === "pending")
+                          .map(otp => (
+                            <div key={otp.id} className="flex gap-2">
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[11px] text-slate-500 mb-1.5 font-mono" dir="ltr">
+                                  OTP: {otp.otp_code} · {new Date(otp.created_at).toLocaleTimeString("ar-SA", { hour: "2-digit", minute: "2-digit" })}
+                                </p>
+                                <div className="flex gap-2">
+                                  <button
+                                    onClick={() => approveOtp(otp.id)}
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-emerald-500 text-white text-[12px] font-semibold hover:bg-emerald-600 transition-colors shadow-sm"
+                                  >
+                                    <CheckCircle className="w-4 h-4" /> موافقة
+                                  </button>
+                                  <button
+                                    onClick={() => rejectOtp(otp.id)}
+                                    className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-red-500 text-white text-[12px] font-semibold hover:bg-red-600 transition-colors shadow-sm"
+                                  >
+                                    <XCircle className="w-4 h-4" /> رفض
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                  )}
+
                     <div className="border border-purple-100 rounded-xl overflow-hidden">
                       <div className="bg-purple-50 px-4 py-2">
                         <span className="text-[12px] font-semibold text-purple-600">بيانات الزائر المدخلة</span>
