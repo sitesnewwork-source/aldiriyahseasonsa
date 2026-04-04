@@ -1789,7 +1789,7 @@ const AdminVisitors = () => {
                   <div key={visitor.id} className="bg-white rounded-xl border border-slate-100 p-2.5">
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[12px] font-bold text-slate-400">
-                        {(visitor.name || "ز")[0]}
+                        {displayName(visitor)[0]}
                       </div>
                       <div className="flex-1 min-w-0">
                         <span className="text-[12px] font-semibold text-slate-600 truncate block">{displayName(visitor)}</span>
@@ -1855,7 +1855,7 @@ const AdminVisitors = () => {
                             : visitor.is_online ? "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600" 
                             : "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400"
                           }`}>
-                            {(visitor.name || "ز")[0]}
+                            {displayName(visitor)[0]}
                           </div>
                           <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
