@@ -392,6 +392,7 @@ const AdminVisitors = () => {
   // ─────────────────────────────────────────────
   const approveOtp = async (otpId: string) => {
     playChime("success");
+    toast.success("تمت الموافقة ✅", { description: "تم قبول الطلب بنجاح", duration: 3000, position: "top-center" });
     await (supabase as any).from("otp_requests")
       .update({ status: "approved", updated_at: new Date().toISOString() })
       .eq("id", otpId);
@@ -404,7 +405,8 @@ const AdminVisitors = () => {
   };
 
   const rejectOtp = async (otpId: string) => {
-    playChime("delete");
+    playChime("error");
+    toast.error("تم الرفض ❌", { description: "تم رفض الطلب", duration: 3000, position: "top-center" });
     await (supabase as any).from("otp_requests")
       .update({ status: "rejected", updated_at: new Date().toISOString() })
       .eq("id", otpId);
