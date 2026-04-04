@@ -1855,7 +1855,7 @@ const AdminVisitors = () => {
                             : visitor.is_online ? "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600" 
                             : "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400"
                           }`}>
-                            {(visitor.name || "ز")[0]}
+                            {displayName(visitor)[0]}
                           </div>
                           <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
