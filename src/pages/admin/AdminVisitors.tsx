@@ -25,6 +25,24 @@ function displayName(v: { name?: string | null; session_id?: string }) {
   return "زائر مجهول";
 }
 
+// Avatar color palette based on name hash
+const AVATAR_COLORS = [
+  { bg: "from-blue-400 to-indigo-500", text: "text-white" },
+  { bg: "from-emerald-400 to-teal-500", text: "text-white" },
+  { bg: "from-violet-400 to-purple-500", text: "text-white" },
+  { bg: "from-rose-400 to-pink-500", text: "text-white" },
+  { bg: "from-amber-400 to-orange-500", text: "text-white" },
+  { bg: "from-cyan-400 to-sky-500", text: "text-white" },
+  { bg: "from-fuchsia-400 to-pink-600", text: "text-white" },
+  { bg: "from-lime-400 to-green-500", text: "text-white" },
+];
+
+function getAvatarColor(name: string) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
 // Live session timer component
 const SessionTimer = ({ startTime }: { startTime: string }) => {
   const [, setTick] = useState(0);
@@ -1788,7 +1806,7 @@ const AdminVisitors = () => {
                 {deletedVisitors.map(visitor => (
                   <div key={visitor.id} className="bg-white rounded-xl border border-slate-100 p-2.5">
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-[12px] font-bold text-slate-400">
+                      <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${getAvatarColor(displayName(visitor)).bg} flex items-center justify-center text-[12px] font-bold ${getAvatarColor(displayName(visitor)).text} shadow-sm`}>
                         {displayName(visitor)[0]}
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1852,8 +1870,7 @@ const AdminVisitors = () => {
                         <div className="relative shrink-0">
                           <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-bold shadow-sm ${
                             hasPending ? "bg-gradient-to-br from-red-100 to-orange-100 text-red-600"
-                            : visitor.is_online ? "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600" 
-                            : "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400"
+                            : `bg-gradient-to-br ${getAvatarColor(displayName(visitor)).bg} ${getAvatarColor(displayName(visitor)).text}`
                           }`}>
                             {displayName(visitor)[0]}
                           </div>
@@ -2098,10 +2115,8 @@ const AdminVisitors = () => {
                         <ArrowRight className="w-4 h-4" />
                       </button>
                       <div className="relative shrink-0">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[15px] font-bold ${
-                          selected.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
-                        }`}>
-                          {(selected.name || "ز")[0]}
+                        <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${getAvatarColor(displayName(selected)).bg} flex items-center justify-center text-[15px] font-bold ${getAvatarColor(displayName(selected)).text} shadow-sm`}>
+                          {displayName(selected)[0]}
                         </div>
                         <span className={`absolute -bottom-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-white ${
                           selected.is_online ? "bg-emerald-400" : "bg-slate-300"
