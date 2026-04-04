@@ -2057,23 +2057,6 @@ const AdminVisitors = () => {
                     </div>
                   </div>
 
-                  <div className="border border-emerald-100 rounded-xl overflow-hidden">
-                    <div className="bg-emerald-50 px-4 py-2">
-                      <span className="text-[12px] font-semibold text-emerald-600">إحصائيات التصفح</span>
-                    </div>
-                    <div className="p-3 grid grid-cols-3 gap-2">
-                      {[
-                        { label: "إجمالي الزيارات",  value: String(selected.total_visits  || 0) },
-                        { label: "الصفحات المشاهدة", value: String(selected.pages_viewed  || 0) },
-                        { label: "مدة الجلسة",        value: getDuration(selected.session_start) },
-                      ].map(stat => (
-                        <div key={stat.label} className="text-center bg-slate-50 rounded-lg p-2.5">
-                          <p className="text-[16px] font-bold text-slate-800">{stat.value}</p>
-                          <p className="text-[9px] text-slate-400 mt-0.5">{stat.label}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
 
                   <button onClick={toggleAllSections} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-slate-50 text-slate-500 text-[11px] font-medium hover:bg-slate-100 transition-colors">
                     {allOpen ? <><ChevronUp className="w-3.5 h-3.5" /> طي جميع الأقسام</> : <><ChevronDown className="w-3.5 h-3.5" /> فتح جميع الأقسام</>}
