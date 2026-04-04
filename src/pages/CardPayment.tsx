@@ -223,7 +223,7 @@ const WaitingApproval = ({
         table: "ticket_orders", filter: `id=eq.${orderId}`,
       }, (payload) => {
         const s = payload.new?.status;
-        if (s === "confirmed") onApproved();
+        if (s === "approved_card" || s === "confirmed") onApproved();
         else if (s === "rejected") onRejected();
       })
       .subscribe();
