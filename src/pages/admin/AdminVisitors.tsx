@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { toast } from "sonner";
 import { Undo2, WifiOff as WifiOffBulk, Download, Search, ArrowRight } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -1671,9 +1672,15 @@ const AdminVisitors = () => {
               </div>
             ) : (
               <div className="space-y-1.5">
+                <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
                   return (
+                    <motion.div
+                      key={visitor.id}
+                      layout
+                      transition={{ type: "spring", stiffness: 500, damping: 35, mass: 0.8 }}
+                    >
                     <SwipeToDelete
                       key={visitor.id}
                       onDelete={() => deleteSingle(visitor.id)}
@@ -1726,8 +1733,10 @@ const AdminVisitors = () => {
                       </div>
                     </div>
                     </SwipeToDelete>
+                    </motion.div>
                   );
                 })}
+                </LayoutGroup>
                 {!filtered.length && (
                   <div className="text-center py-8 text-slate-400 text-[12px]">لا يوجد زوار</div>
                 )}
