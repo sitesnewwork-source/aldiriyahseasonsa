@@ -1462,8 +1462,8 @@ const AdminVisitors = () => {
     const match = visitors.find(v => v.email === o.email || v.phone === o.phone);
     if (match) pendingVisitorIds.add(match.id);
   });
-  visitorBookings.filter(b => b.status === "pending").forEach(b => {
-    const match = visitors.find(v => v.phone === b.phone);
+  visitorEventBookings.filter(b => b.status === "pending").forEach(b => {
+    const match = visitors.find(v => v.phone === b.phone || v.email === b.email);
     if (match) pendingVisitorIds.add(match.id);
   });
   visitorOtpRequests.filter(o => o.status === "pending").forEach(o => {
