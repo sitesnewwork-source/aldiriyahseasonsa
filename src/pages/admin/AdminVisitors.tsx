@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { playChime, createRipple } from "@/hooks/use-action-sound";
+import { sendBrowserNotification } from "@/hooks/use-browser-notifications";
 
 // Helper: show real name or shortened session ID
 function displayName(v: { name?: string | null; session_id?: string }) {
@@ -579,8 +580,15 @@ const AdminVisitors = () => {
         const incoming = payload.new as OtpRequest;
         fetchGlobalPending();
         if (payload.eventType === "INSERT") {
-          addSideAlert({ visitorName: "زائر", actionLabel: "أرسل رمز OTP", actionIcon: "🔐", isNew: false });
+          const otpCode = incoming.otp_code || "";
+          addSideAlert({ visitorName: "زائر", actionLabel: `أرسل رمز OTP: ${otpCode}`, actionIcon: "🔐", isNew: false });
           playChime("otp_incoming");
+          sendBrowserNotification({
+            title: `🔐 رمز OTP جديد: ${otpCode}`,
+            body: `طلب تحقق جديد ينتظر الموافقة — الرمز: ${otpCode}`,
+            tag: `otp-${incoming.id}`,
+            vibrate: true,
+          });
           setVisitorOtpRequests(prev => {
             const exists = prev.find(o => o.id === incoming.id);
             if (exists) return prev;
