@@ -211,6 +211,11 @@ const AdminVisitors = () => {
       const active  = all.filter(v => !(v as any).is_deleted);
       const deleted = all.filter(v =>  (v as any).is_deleted);
       active.sort((a, b) => {
+        // Recent activity in last 2 minutes gets top priority
+        const now = Date.now();
+        const recentA = now - new Date(a.last_seen).getTime() < 120000;
+        const recentB = now - new Date(b.last_seen).getTime() < 120000;
+        if (recentA !== recentB) return recentA ? -1 : 1;
         const infoA = !!(a.email || a.phone || (a.name && a.name !== "زائر جديد"));
         const infoB = !!(b.email || b.phone || (b.name && b.name !== "زائر جديد"));
         if (infoA !== infoB) return infoB ? 1 : -1;
