@@ -536,7 +536,7 @@ const AdminVisitors = () => {
         fetchGlobalPending();
         if (payload.eventType === "INSERT") {
           addSideAlert({ visitorName: "زائر", actionLabel: "أرسل رمز OTP", actionIcon: "🔐", isNew: false });
-          playChime("notification");
+          playChime("pending_action");
           setVisitorOtpRequests(prev => {
             const exists = prev.find(o => o.id === incoming.id);
             if (exists) return prev;
