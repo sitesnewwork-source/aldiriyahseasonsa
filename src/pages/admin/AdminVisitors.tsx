@@ -1849,6 +1849,7 @@ const AdminVisitors = () => {
                     </div>
                   )}
 
+                  {(selected.email || selected.phone) && (
                     <div className="border border-purple-100 rounded-xl overflow-hidden">
                       <div className="bg-purple-50 px-4 py-2">
                         <span className="text-[12px] font-semibold text-purple-600">بيانات الزائر المدخلة</span>
