@@ -17,6 +17,13 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { playChime, createRipple } from "@/hooks/use-action-sound";
 
+// Helper: show real name or shortened session ID
+function displayName(v: { name?: string | null; session_id?: string }) {
+  if (v.name && v.name !== "زائر جديد") return v.name;
+  if (v.session_id) return `زائر #${v.session_id.slice(0, 6).toUpperCase()}`;
+  return "زائر مجهول";
+}
+
 // Live session timer component
 const SessionTimer = ({ startTime }: { startTime: string }) => {
   const [, setTick] = useState(0);
