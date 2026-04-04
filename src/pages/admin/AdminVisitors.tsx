@@ -522,7 +522,7 @@ const AdminVisitors = () => {
       .on("postgres_changes", { event: "*", schema: "public", table: "visitors" }, (payload: any) => {
         fetchVisitors();
         if (payload.eventType === "INSERT") {
-          addSideAlert({ visitorName: payload.new.name || "زائر جديد", actionLabel: "دخل الموقع", actionIcon: "👤", isNew: true });
+          addSideAlert({ visitorName: displayName(payload.new), actionLabel: "دخل الموقع", actionIcon: "👤", isNew: true });
         }
       })
       .on("postgres_changes", { event: "INSERT", schema: "public", table: "visitor_actions" }, (payload: any) => {
@@ -1514,7 +1514,7 @@ const AdminVisitors = () => {
     playChime("success");
     const headers = ["الاسم","البريد","الهاتف","الدولة","الجهاز","المتصفح","الصفحة الحالية","متصل","آخر ظهور","الزيارات","الصفحات","IP"];
     const rows = filtered.map(v => [
-      v.name || "زائر جديد",
+      displayName(v),
       v.email || "",
       v.phone || "",
       v.country || "",
@@ -1744,7 +1744,7 @@ const AdminVisitors = () => {
                         {(visitor.name || "ز")[0]}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="text-[12px] font-semibold text-slate-600 truncate block">{visitor.name || "زائر جديد"}</span>
+                        <span className="text-[12px] font-semibold text-slate-600 truncate block">{displayName(visitor)}</span>
                         <span className="text-[9px] text-slate-400">{visitor.device === "mobile" ? "Mobile" : "Desktop"}</span>
                       </div>
                       <div className="flex gap-1 shrink-0">
@@ -1826,7 +1826,7 @@ const AdminVisitors = () => {
                           {/* Name row */}
                           <div className="flex items-center justify-between gap-1">
                             <div className="flex items-center gap-1 min-w-0">
-                              <span className="text-[12px] font-bold text-slate-800 truncate">{visitor.name || "زائر جديد"}</span>
+                              <span className="text-[12px] font-bold text-slate-800 truncate">{displayName(visitor)}</span>
                               {visitor.country && <span className="text-[11px] shrink-0">{countryFlag(visitor.country)}</span>}
                               {hasPending && (
                                 <span className="text-[7px] font-bold text-red-600 bg-red-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
@@ -1961,7 +1961,7 @@ const AdminVisitors = () => {
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h2 className="text-[20px] font-bold text-slate-800">{selected.name || "زائر جديد"}</h2>
+                        <h2 className="text-[20px] font-bold text-slate-800">{displayName(selected)}</h2>
                         <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-2.5 py-1 rounded-full border ${
                           selected.is_online
                             ? "bg-emerald-50 text-emerald-600 border-emerald-200"
@@ -2087,7 +2087,7 @@ const AdminVisitors = () => {
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                          <h3 className="text-[14px] font-bold text-slate-800 truncate">{selected.name || "زائر جديد"}</h3>
+                          <h3 className="text-[14px] font-bold text-slate-800 truncate">{displayName(selected)}</h3>
                           <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 ${
                             selected.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"
                           }`}>
