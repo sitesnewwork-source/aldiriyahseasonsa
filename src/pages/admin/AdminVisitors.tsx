@@ -2223,8 +2223,8 @@ const AdminVisitors = () => {
                       {allOpen ? <><ChevronUp className="w-3 h-3" /> طي الكل</> : <><ChevronDown className="w-3 h-3" /> فتح الكل</>}
                     </button>
 
-                    {renderTimeline(true)}
-                    {renderRedirectDropdown(selected, true)}
+
+
 
                     <button
                       onClick={() => deleteSingle(selected.id)}
