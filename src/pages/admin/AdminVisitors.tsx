@@ -1874,7 +1874,6 @@ const AdminVisitors = () => {
                           }`}>
                             {displayName(visitor)[0]}
                           </div>
-                          </div>
                           <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
                           }`} />
