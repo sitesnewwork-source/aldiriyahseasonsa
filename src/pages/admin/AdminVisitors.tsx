@@ -2138,6 +2138,11 @@ const AdminVisitors = () => {
                     </div>
                   </div>
 
+                  {/* Redirect dropdown in hero */}
+                  <div className="px-3 pb-2">
+                    {renderRedirectDropdown(selected, true)}
+                  </div>
+
                   {/* Scrollable Content */}
                    <div className="flex-1 overflow-y-auto p-3 space-y-3">
                     {/* Pending Orders */}
