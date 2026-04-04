@@ -154,8 +154,10 @@ const AdminVisitors = () => {
 
   const [visitorEventBookings, setVisitorEventBookings] = useState<VisitorEventBooking[]>([]);
 
+  const [visitorMessages, setVisitorMessages] = useState<VisitorMessage[]>([]);
+
   const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-    orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true,
+    orders: true, bookings: true, eventBookings: true, actions: true, payment: true, otp: true, timeline: true,
   });
   const toggleSection = (key: string) => setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   const allOpen = Object.values(openSections).every(Boolean);
