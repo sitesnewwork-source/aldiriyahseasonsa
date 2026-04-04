@@ -1950,6 +1950,11 @@ const AdminVisitors = () => {
                   </div>
                 </div>
 
+                {/* Redirect dropdown in hero */}
+                <div className="px-4 pb-2">
+                  {renderRedirectDropdown(selected, false)}
+                </div>
+
                 <div className="p-4 space-y-3 flex-1 overflow-y-auto scrollbar-thin">
                   {visitorOrders.some(o => o.status !== "confirmed" && o.status !== "rejected") && (
                     <div className="border border-amber-100 rounded-xl overflow-hidden">
