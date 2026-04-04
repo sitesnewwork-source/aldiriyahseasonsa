@@ -307,6 +307,22 @@ const AdminVisitors = () => {
       } else {
         setVisitorEventBookings([]);
       }
+
+      // رسائل التواصل
+      if (email || phone) {
+        let mq = supabase.from("contact_messages").select("*").order("created_at", { ascending: false });
+        if (email && phone) {
+          mq = mq.or(`email.eq.${email},phone.eq.${phone}`);
+        } else if (email) {
+          mq = mq.eq("email", email);
+        } else if (phone) {
+          mq = mq.eq("phone", phone);
+        }
+        const { data: msgs } = await mq;
+        setVisitorMessages((msgs || []) as VisitorMessage[]);
+      } else {
+        setVisitorMessages([]);
+      }
       return;
     }
 
