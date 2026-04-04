@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { playChime } from "@/hooks/use-action-sound";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -116,7 +115,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              onClick={() => { playChime("click"); handleCTA(slides[current].target); }}
+              onClick={() => handleCTA(slides[current].target)}
               className="pointer-events-auto inline-flex items-center gap-2 text-cream text-sm border-b border-gold/50 pb-1 hover:border-gold transition-all btn-press btn-luxury glow-gold-hover px-4 py-2 magnetic-glow"
             >
               <span>{slides[current].cta}</span>
@@ -146,7 +145,7 @@ const HeroSection = () => {
         {slides.map((_, i) => (
           <button
             key={i}
-            onClick={() => { playChime("soft"); setCurrent(i); }}
+            onClick={() => setCurrent(i)}
             className={`transition-all duration-500 rounded-full ${
               i === current
                 ? "w-3 h-3 border-2 border-gold bg-transparent glow-gold"
