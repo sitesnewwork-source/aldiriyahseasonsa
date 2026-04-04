@@ -492,6 +492,7 @@ const AdminVisitors = () => {
   // ─────────────────────────────────────────────
   useEffect(() => {
     fetchVisitors();
+    fetchGlobalPending();
 
     const channel = supabase.channel("visitors-realtime")
       .on("postgres_changes", { event: "*", schema: "public", table: "visitors" }, (payload: any) => {
