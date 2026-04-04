@@ -30,63 +30,57 @@ const Index = () => {
 
       <MarqueeBanner />
 
-      <ScrollReveal animation="fade-up">
+      <ScrollReveal animation="fade">
         <EventsSection />
       </ScrollReveal>
 
       <SectionDivider />
 
-      <ScrollReveal animation="fade-up" delay={0.1}>
+      <ScrollReveal animation="fade">
         <ExperienceSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="fade">
-        <StatsSection />
-      </ScrollReveal>
+      <StatsSection />
 
-      <ScrollReveal animation="zoom" duration={0.9}>
-        <PromoBanner />
-      </ScrollReveal>
+      <PromoBanner />
 
-      <ScrollReveal animation="fade">
-        <HistoryBanner />
-      </ScrollReveal>
+      <HistoryBanner />
 
       <SectionDivider variant="gold" />
 
-      <ScrollReveal animation="fade-up">
+      <ScrollReveal animation="fade">
         <PlacesSection />
       </ScrollReveal>
 
       <SectionDivider />
 
-      <ScrollReveal animation="fade-up" delay={0.1}>
+      <ScrollReveal animation="fade">
         <RestaurantsPreview />
       </ScrollReveal>
 
-      <ScrollReveal animation="fade-right" duration={0.8}>
+      <ScrollReveal animation="fade">
         <SchoolBanner />
       </ScrollReveal>
 
       <MarqueeBanner />
 
-      <ScrollReveal animation="fade-up">
+      <ScrollReveal animation="fade">
         <InstagramSection />
       </ScrollReveal>
 
-      <ScrollReveal animation="fade-up">
+      <ScrollReveal animation="fade">
         <LatestArticles />
       </ScrollReveal>
 
       <SectionDivider variant="gold" />
 
-      <ScrollReveal animation="fade-up">
+      <ScrollReveal animation="fade">
         <FAQSection />
       </ScrollReveal>
 
       <PartnersSection />
 
-      <ScrollReveal animation="fade-up">
+      <ScrollReveal animation="fade">
         <CTABanner />
       </ScrollReveal>
 
