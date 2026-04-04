@@ -58,7 +58,7 @@ const CardOTP = () => {
         const newStatus = payload.new.status;
         if (newStatus === "approved") {
           setStatus("approved");
-          playChime("success");
+          
           if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
           setTimeout(() => {
             navigate("/order-confirmation", {
