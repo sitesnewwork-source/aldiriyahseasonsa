@@ -1456,23 +1456,8 @@ const AdminVisitors = () => {
   const uniqueBrowsers = [...new Set(visitors.map(v => v.browser))].filter(Boolean).sort();
   const searchLower = searchQuery.trim().toLowerCase();
 
-  // Build set of visitor IDs that have pending actions
-  const pendingVisitorIds = new Set<string>();
-  visitorOrders.filter(o => o.status === "pending").forEach(o => {
-    const match = visitors.find(v => v.email === o.email || v.phone === o.phone);
-    if (match) pendingVisitorIds.add(match.id);
-  });
-  visitorEventBookings.filter(b => b.status === "pending").forEach(b => {
-    const match = visitors.find(v => v.phone === b.phone || v.email === b.email);
-    if (match) pendingVisitorIds.add(match.id);
-  });
-  visitorOtpRequests.filter(o => o.status === "pending").forEach(o => {
-    const order = visitorOrders.find(ord => ord.id === o.order_id);
-    if (order) {
-      const match = visitors.find(v => v.email === order.email || v.phone === order.phone);
-      if (match) pendingVisitorIds.add(match.id);
-    }
-  });
+  const hasAnyFilter = filterCountry !== "all" || filterDevice !== "all" || filterBrowser !== "all" || filterHasPending;
+  const clearAllFilters = () => { setFilterCountry("all"); setFilterDevice("all"); setFilterBrowser("all"); setFilterHasPending(false); };
 
   const filtered = visitors.filter(v => {
     if (filter === "online" && !v.is_online) return false;
@@ -1480,7 +1465,7 @@ const AdminVisitors = () => {
     if (filterCountry !== "all" && v.country !== filterCountry) return false;
     if (filterDevice !== "all" && v.device !== filterDevice) return false;
     if (filterBrowser !== "all" && v.browser !== filterBrowser) return false;
-    if (filterHasPending && !pendingVisitorIds.has(v.id)) return false;
+    if (filterHasPending && !(getVisitorPendingOrders(v).length > 0 || getVisitorPendingOtps(v).length > 0)) return false;
     if (searchLower && !(
       (v.name || "").toLowerCase().includes(searchLower) ||
       (v.email || "").toLowerCase().includes(searchLower) ||
