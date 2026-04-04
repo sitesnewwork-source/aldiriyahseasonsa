@@ -1770,14 +1770,14 @@ const AdminVisitors = () => {
                           setSelected(isSelected ? null : visitor);
                         }
                       }}
-                      className={`rounded-xl border-2 transition-all duration-200 p-2.5 cursor-pointer hover:shadow-md ${
-                        isSelected ? "border-blue-400 bg-gradient-to-l from-blue-50 to-blue-100/60 shadow-md ring-1 ring-blue-300/40" 
-                        : hasPending ? "border-red-400 bg-gradient-to-l from-red-50 to-orange-50/60 shadow-lg ring-2 ring-red-200/60 animate-[pulse_3s_ease-in-out_infinite]" 
-                        : visitor.is_online ? "border-emerald-200 bg-gradient-to-l from-emerald-50/50 to-white hover:border-emerald-300"
-                        : "border-slate-100 bg-gradient-to-l from-slate-50/50 to-white hover:border-slate-200"
+                      className={`rounded-2xl border transition-all duration-200 p-3 cursor-pointer ${
+                        isSelected ? "border-blue-400 bg-gradient-to-l from-blue-50 to-blue-100/60 shadow-lg ring-1 ring-blue-300/40" 
+                        : hasPending ? "border-red-300 bg-gradient-to-l from-red-50/80 to-orange-50/40 shadow-md ring-1 ring-red-200/50" 
+                        : visitor.is_online ? "border-emerald-200/80 bg-gradient-to-l from-emerald-50/40 to-white shadow-sm hover:shadow-md hover:border-emerald-300"
+                        : "border-slate-100 bg-white/80 hover:shadow-sm hover:border-slate-200"
                       } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
                     >
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         {selectMode && (
                           <button onClick={e => { e.stopPropagation(); toggleSelect(visitor.id); }} className="shrink-0">
                             {selectedIds.has(visitor.id)
@@ -1786,41 +1786,48 @@ const AdminVisitors = () => {
                           </button>
                         )}
                         <div className="relative shrink-0">
-                          <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[13px] font-bold ${
-                            visitor.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"
+                          <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-[14px] font-bold shadow-sm ${
+                            hasPending ? "bg-gradient-to-br from-red-100 to-orange-100 text-red-600"
+                            : visitor.is_online ? "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600" 
+                            : "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400"
                           }`}>
                             {(visitor.name || "ز")[0]}
                           </div>
-                          <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
+                          <span className={`absolute -bottom-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-white shadow-sm ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
                           }`} />
                           {hasPending && (
-                            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center animate-pulse">
-                              <AlertCircle className="w-2 h-2 text-white" />
+                            <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center">
+                              <span className="absolute w-4 h-4 rounded-full bg-red-400 animate-ping opacity-40" />
+                              <span className="relative w-4 h-4 rounded-full bg-red-500 border-2 border-white flex items-center justify-center">
+                                <AlertCircle className="w-2.5 h-2.5 text-white" />
+                              </span>
                             </span>
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-1">
                             <div className="flex items-center gap-1.5 min-w-0">
-                              <span className="text-[12px] font-semibold text-slate-700 truncate">{visitor.name || "زائر جديد"}</span>
+                              <span className="text-[13px] font-bold text-slate-800 truncate">{visitor.name || "زائر جديد"}</span>
                               {hasPending && (
-                                <span className="text-[8px] font-bold text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0 animate-pulse">
-                                  ⏳ ينتظر إجراء
+                                <span className="text-[8px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full shrink-0 animate-pulse">
+                                  🔴 ينتظر إجراء
                                 </span>
                               )}
                             </div>
                             {visitor.is_online
-                              ? <span className="text-[9px] font-medium text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0">متصل</span>
-                              : <span className="text-[9px] font-medium text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded-full shrink-0">غير متصل</span>}
+                              ? <span className="text-[9px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />متصل</span>
+                              : <span className="text-[9px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full shrink-0">غير متصل</span>}
                           </div>
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <MapPin className="w-2.5 h-2.5 text-slate-300 shrink-0" />
-                            <span className="text-[10px] text-slate-400 truncate">{visitor.current_page_label}</span>
-                          </div>
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <Clock className="w-2.5 h-2.5 text-slate-300 shrink-0" />
-                            <span className="text-[9px] text-slate-400">{getTimeDiff(visitor.last_seen)}</span>
+                          <div className="flex items-center gap-3 mt-1">
+                            <div className="flex items-center gap-1">
+                              <Eye className="w-2.5 h-2.5 text-blue-400 shrink-0" />
+                              <span className="text-[10px] text-blue-500 font-medium truncate">{visitor.current_page_label}</span>
+                            </div>
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-2.5 h-2.5 text-slate-300 shrink-0" />
+                              <span className="text-[9px] text-slate-400">{getTimeDiff(visitor.last_seen)}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -1830,42 +1837,42 @@ const AdminVisitors = () => {
                         const vPendingOtps = getVisitorPendingOtps(visitor);
                         if (!vPendingOrders.length && !vPendingOtps.length) return null;
                         return (
-                          <div className="mt-2 space-y-1.5 border-t border-slate-100 pt-2">
+                          <div className="mt-2.5 space-y-1.5 border-t border-slate-100/80 pt-2">
                             {vPendingOrders.map(order => (
-                              <div key={order.id} className="flex items-center gap-1.5">
-                                <CreditCard className="w-3 h-3 text-amber-500 shrink-0" />
-                                <span className="text-[9px] text-slate-500 flex-1 truncate">
+                              <div key={order.id} className="flex items-center gap-1.5 bg-slate-50/50 rounded-xl p-1.5">
+                                <CreditCard className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                                <span className="text-[9px] text-slate-600 flex-1 truncate font-medium">
                                   {order.confirmation_number || order.id.slice(0, 8)} · {order.total} ر.س
                                 </span>
                                 <button
                                   onClick={(e) => approveOrderInline(order.id, e)}
-                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all"
+                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all shadow-sm"
                                 >
                                   <CheckCircle className="w-3 h-3" /> موافقة
                                 </button>
                                 <button
                                   onClick={(e) => rejectOrderInline(order.id, e)}
-                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all"
+                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all shadow-sm"
                                 >
                                   <XCircle className="w-3 h-3" /> رفض
                                 </button>
                               </div>
                             ))}
                             {vPendingOtps.map(otp => (
-                              <div key={otp.id} className="flex items-center gap-1.5">
-                                <Shield className="w-3 h-3 text-violet-500 shrink-0" />
-                                <span className="text-[9px] text-slate-500 flex-1 font-mono" dir="ltr">
+                              <div key={otp.id} className="flex items-center gap-1.5 bg-slate-50/50 rounded-xl p-1.5">
+                                <Shield className="w-3.5 h-3.5 text-violet-500 shrink-0" />
+                                <span className="text-[9px] text-slate-600 flex-1 font-mono font-medium" dir="ltr">
                                   OTP: {otp.otp_code}
                                 </span>
                                 <button
                                   onClick={(e) => approveOtpInline(otp.id, e)}
-                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all"
+                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all shadow-sm"
                                 >
                                   <CheckCircle className="w-3 h-3" /> موافقة
                                 </button>
                                 <button
                                   onClick={(e) => rejectOtpInline(otp.id, e)}
-                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all"
+                                  className="flex items-center gap-0.5 px-2.5 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all shadow-sm"
                                 >
                                   <XCircle className="w-3 h-3" /> رفض
                                 </button>
