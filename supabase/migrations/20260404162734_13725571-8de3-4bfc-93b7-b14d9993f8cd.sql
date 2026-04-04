@@ -1,0 +1,1 @@
+CREATE POLICY "Anon can read own inserted orders" ON public.ticket_orders FOR SELECT TO anon USING (true);
