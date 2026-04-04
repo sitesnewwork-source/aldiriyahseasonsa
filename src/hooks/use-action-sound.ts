@@ -8,7 +8,7 @@ const getAudioContext = () => {
   return audioCtx;
 };
 
-type SoundType = "soft" | "success" | "info" | "click" | "error" | "whoosh" | "pop" | "notification" | "delete" | "urgent" | "message" | "visitor";
+type SoundType = "soft" | "success" | "info" | "click" | "error" | "whoosh" | "pop" | "notification" | "delete" | "urgent" | "message" | "visitor" | "pending_action";
 
 const SOUND_MUTE_KEY = "admin_sound_muted";
 
