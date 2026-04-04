@@ -1748,6 +1748,7 @@ const AdminVisitors = () => {
                 <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
+                  const hasPending = getVisitorPendingOrders(visitor).length > 0 || getVisitorPendingOtps(visitor).length > 0;
                   return (
                     <motion.div
                       key={visitor.id}
@@ -1766,7 +1767,9 @@ const AdminVisitors = () => {
                         }
                       }}
                       className={`bg-white rounded-xl border transition-all duration-200 p-2.5 cursor-pointer hover:shadow-sm ${
-                        isSelected ? "border-blue-400 bg-blue-50/40 shadow-sm" : "border-slate-100 hover:border-slate-200"
+                        isSelected ? "border-blue-400 bg-blue-50/40 shadow-sm" 
+                        : hasPending ? "border-amber-300 bg-amber-50/30 shadow-sm ring-1 ring-amber-200/50" 
+                        : "border-slate-100 hover:border-slate-200"
                       } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
                     >
                       <div className="flex items-center gap-2">
