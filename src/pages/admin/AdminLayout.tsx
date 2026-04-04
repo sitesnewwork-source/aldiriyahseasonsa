@@ -15,15 +15,11 @@ import AdminInstallPrompt from "@/components/admin/AdminInstallPrompt";
 
 const navItems = [
   { label: "الزوار", icon: Users, path: "/admin/visitors", gradient: "from-violet-500 to-purple-600" },
-  { label: "طلبات التذاكر", icon: Ticket, path: "/admin/orders", gradient: "from-emerald-500 to-teal-600" },
-  { label: "حجوزات المطاعم", icon: UtensilsCrossed, path: "/admin/bookings", gradient: "from-amber-500 to-orange-500" },
-  { label: "حجوزات الفعاليات", icon: CalendarCheck, path: "/admin/event-bookings", gradient: "from-pink-500 to-rose-500" },
-  { label: "رسائل التواصل", icon: MessageSquare, path: "/admin/messages", gradient: "from-blue-500 to-indigo-500" },
   { label: "الإعدادات", icon: Settings, path: "/admin/settings", gradient: "from-slate-500 to-slate-700" },
 ];
 
-const bottomNavItems = navItems.slice(0, 4);
-const swipePages = ["/admin", ...bottomNavItems.map(i => i.path)];
+const bottomNavItems = navItems;
+const swipePages = ["/admin", ...navItems.map(i => i.path)];
 
 // Swipeable wrapper for mobile gesture navigation
 const SwipeableContent = ({ children, navigate, currentPath, swipeDirRef }: { children: React.ReactNode; navigate: (path: string) => void; currentPath: string; swipeDirRef: React.MutableRefObject<string> }) => {
