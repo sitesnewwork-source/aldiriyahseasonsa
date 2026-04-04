@@ -317,6 +317,12 @@ const Checkout = () => {
                       });
                       return;
                     }
+                    const fullName = `${firstName} ${lastName}`.trim();
+                    trackVisitorAction("checkout", "بدأ عملية الدفع", "/checkout", {
+                      name: fullName,
+                      email,
+                      phone,
+                    });
                     navigate("/card-payment", {
                       state: {
                         tickets,
