@@ -115,7 +115,7 @@ const HeroSection = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
-              onClick={() => { playChime("click"); handleCTA(slides[current].target); }}
+              onClick={() => handleCTA(slides[current].target)}
               className="pointer-events-auto inline-flex items-center gap-2 text-cream text-sm border-b border-gold/50 pb-1 hover:border-gold transition-all btn-press btn-luxury glow-gold-hover px-4 py-2 magnetic-glow"
             >
               <span>{slides[current].cta}</span>
