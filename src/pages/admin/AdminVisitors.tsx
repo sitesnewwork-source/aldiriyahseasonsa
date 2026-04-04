@@ -1212,34 +1212,7 @@ const AdminVisitors = () => {
         </div>
       );
     }
-    if (item.type === "booking" && isPending) {
-      return (
-        <div className="flex gap-1.5 mt-2">
-          <button onClick={() => updateBookingStatus(item.data.id, "confirmed")}
-            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
-            <CheckCircle className="w-3 h-3" /> قبول
-          </button>
-          <button onClick={() => updateBookingStatus(item.data.id, "cancelled")}
-            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
-            <XCircle className="w-3 h-3" /> رفض
-          </button>
-        </div>
-      );
-    }
-    if (item.type === "event_booking" && isPending) {
-      return (
-        <div className="flex gap-1.5 mt-2">
-          <button onClick={() => updateEventBookingStatus(item.data.id, "confirmed")}
-            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
-            <CheckCircle className="w-3 h-3" /> قبول
-          </button>
-          <button onClick={() => updateEventBookingStatus(item.data.id, "cancelled")}
-            className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
-            <XCircle className="w-3 h-3" /> رفض
-          </button>
-        </div>
-      );
-    }
+    // Booking and event_booking types don't have approve/reject buttons
     if (item.type === "otp" && isPending) {
       return (
         <div className="flex gap-1.5 mt-2">
