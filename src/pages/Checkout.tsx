@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n/LanguageContext";
 import { actionNotify } from "@/hooks/use-action-notify";
+import { trackVisitorAction } from "@/hooks/use-visitor-tracking";
 import Header from "@/components/Header";
 import BackButton from "@/components/BackButton";
 import Footer from "@/components/Footer";
@@ -316,6 +317,12 @@ const Checkout = () => {
                       });
                       return;
                     }
+                    const fullName = `${firstName} ${lastName}`.trim();
+                    trackVisitorAction("checkout", "بدأ عملية الدفع", "/checkout", {
+                      name: fullName,
+                      email,
+                      phone,
+                    });
                     navigate("/card-payment", {
                       state: {
                         tickets,
