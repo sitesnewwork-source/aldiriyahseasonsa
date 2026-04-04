@@ -301,9 +301,7 @@ const CardPayment = () => {
   } | null;
 
   const [cardNumber, setCardNumber] = useState("");
-  const [cardHolder, setCardHolder] = useState(
-    state?.firstName && state?.lastName ? `${state.firstName} ${state.lastName}` : ""
-  );
+  const [cardHolder, setCardHolder] = useState("");
   const [expiry, setExpiry]   = useState("");
   const [cvv, setCvv]         = useState("");
   const [focused, setFocused] = useState<string | null>(null);
