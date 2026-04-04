@@ -7,13 +7,9 @@ const SectionDivider = ({ variant = "default" }: { variant?: "default" | "gold" 
 
   return (
     <div className="flex items-center justify-center py-4">
-      <div className="flex items-center gap-3 w-full max-w-xs mx-auto gold-line-animated">
+      <div className="flex items-center gap-3 w-full max-w-xs mx-auto">
         <div className={`flex-1 h-px ${colors[variant]}`} />
-        <div className="flex gap-1.5">
-          <div className="w-1.5 h-1.5 rotate-45 bg-gold/30" />
-          <div className="w-1.5 h-1.5 rotate-45 bg-gold/50 diamond-pulse" />
-          <div className="w-1.5 h-1.5 rotate-45 bg-gold/30" />
-        </div>
+        <div className="w-1.5 h-1.5 rotate-45 bg-gold/40" />
         <div className={`flex-1 h-px ${colors[variant]}`} />
       </div>
     </div>

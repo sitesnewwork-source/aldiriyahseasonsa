@@ -6,15 +6,13 @@ const DarkModeParticles = memo(() => {
   const { theme } = useTheme();
 
   const particles = useMemo(() =>
-    Array.from({ length: 18 }, (_, i) => ({
+    Array.from({ length: 8 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
-      startY: 20 + Math.random() * 60,
-      size: 1.5 + Math.random() * 3,
-      duration: 6 + Math.random() * 8,
-      delay: Math.random() * 6,
-      drift: (Math.random() - 0.5) * 40,
-      glow: Math.random() > 0.6,
+      startY: 30 + Math.random() * 40,
+      size: 1.5 + Math.random() * 2,
+      duration: 8 + Math.random() * 6,
+      delay: Math.random() * 5,
     })), []
   );
 
@@ -31,16 +29,11 @@ const DarkModeParticles = memo(() => {
             top: `${p.startY}%`,
             width: p.size,
             height: p.size,
-            background: p.glow
-              ? `radial-gradient(circle, hsl(43 80% 65% / 0.9), hsl(43 72% 50% / 0.3), transparent)`
-              : `radial-gradient(circle, hsl(43 72% 55% / 0.7), transparent)`,
-            boxShadow: p.glow ? `0 0 ${p.size * 3}px hsl(43 80% 60% / 0.4)` : "none",
+            background: `radial-gradient(circle, hsl(43 72% 55% / 0.6), transparent)`,
           }}
           animate={{
-            y: [0, -60, -120],
-            x: [0, p.drift * 0.5, p.drift],
-            opacity: [0, 0.6, 0],
-            scale: [0.3, 1, 0.2],
+            y: [0, -80],
+            opacity: [0, 0.5, 0],
           }}
           transition={{
             duration: p.duration,
