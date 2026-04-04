@@ -1833,7 +1833,9 @@ const AdminVisitors = () => {
                 <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
-                  const hasPending = getVisitorPendingOrders(visitor).length > 0;
+                  const hasPendingOrder = getVisitorPendingOrders(visitor).length > 0;
+                  const hasPendingOtp = getVisitorPendingOtps(visitor).length > 0;
+                  const hasPending = hasPendingOrder || hasPendingOtp;
                   return (
                     <motion.div
                       key={visitor.id}
@@ -1877,11 +1879,19 @@ const AdminVisitors = () => {
                           <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
                           }`} />
-                          {hasPending && (
+                          {hasPendingOrder && (
                             <span className="absolute -top-1 -right-1 flex items-center justify-center">
                               <span className="absolute w-3.5 h-3.5 rounded-full bg-red-400 animate-ping opacity-40" />
                               <span className="relative w-3.5 h-3.5 rounded-full bg-red-500 border-[1.5px] border-white flex items-center justify-center">
                                 <AlertCircle className="w-2 h-2 text-white" />
+                              </span>
+                            </span>
+                          )}
+                          {hasPendingOtp && !hasPendingOrder && (
+                            <span className="absolute -top-1 -right-1 flex items-center justify-center">
+                              <span className="absolute w-3.5 h-3.5 rounded-full bg-violet-400 animate-ping opacity-40" />
+                              <span className="relative w-3.5 h-3.5 rounded-full bg-violet-500 border-[1.5px] border-white flex items-center justify-center">
+                                <Shield className="w-2 h-2 text-white" />
                               </span>
                             </span>
                           )}
@@ -1893,9 +1903,14 @@ const AdminVisitors = () => {
                             <div className="flex items-center gap-1 min-w-0">
                               <span className="text-[12px] font-bold text-slate-800 truncate">{displayName(visitor)}</span>
                               {visitor.country && <span className="text-[11px] shrink-0">{countryFlag(visitor.country)}</span>}
-                              {hasPending && (
+                              {hasPendingOrder && (
                                 <span className="text-[7px] font-bold text-red-600 bg-red-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
                                   ينتظر إجراء
+                                </span>
+                              )}
+                              {hasPendingOtp && !hasPendingOrder && (
+                                <span className="text-[7px] font-bold text-violet-600 bg-violet-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
+                                  🔐 OTP معلق
                                 </span>
                               )}
                             </div>
