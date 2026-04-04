@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { playChime } from "./use-action-sound";
+
 import { toast } from "sonner";
 
 const pageLabels: Record<string, string> = {
