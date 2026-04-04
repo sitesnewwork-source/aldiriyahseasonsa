@@ -194,8 +194,6 @@ export function useVisitorTracking() {
           
           const config = notifConfigs[notifType] || notifConfigs.info;
           
-          // Play notification sound
-          playChime(config.sound);
           
           // Build description: custom message or default
           const description = customMessage || `جاري الانتقال إلى: ${targetLabel}`;
