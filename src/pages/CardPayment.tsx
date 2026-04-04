@@ -213,7 +213,7 @@ const BankIconBadge = ({ bankName }: { bankName: string | null }) => {
 const WaitingApproval = ({
   orderId, onApproved, onRejected, isAr,
 }: { orderId: string; onApproved: () => void; onRejected: () => void; isAr: boolean }) => {
-  const [timeLeft, setTimeLeft] = useState(120);
+  const [timeLeft, setTimeLeft] = useState(180);
 
   useEffect(() => {
     const channel = supabase
