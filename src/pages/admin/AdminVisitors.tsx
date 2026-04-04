@@ -533,6 +533,7 @@ const AdminVisitors = () => {
       })
       .on("postgres_changes", { event: "*", schema: "public", table: "otp_requests" }, (payload: any) => {
         const incoming = payload.new as OtpRequest;
+        fetchGlobalPending();
         if (payload.eventType === "INSERT") {
           addSideAlert({ visitorName: "زائر", actionLabel: "أرسل رمز OTP", actionIcon: "🔐", isNew: false });
           playChime("notification");
@@ -545,9 +546,12 @@ const AdminVisitors = () => {
           setVisitorOtpRequests(prev => prev.map(o => o.id === incoming.id ? incoming : o));
         }
       })
+      .on("postgres_changes", { event: "*", schema: "public", table: "ticket_orders" }, () => {
+        fetchGlobalPending();
+      })
       .subscribe();
 
-    const interval = setInterval(fetchVisitors, 15000);
+    const interval = setInterval(() => { fetchVisitors(); fetchGlobalPending(); }, 15000);
     return () => {
       supabase.removeChannel(channel);
       clearInterval(interval);
