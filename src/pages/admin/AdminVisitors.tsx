@@ -1574,6 +1574,9 @@ const AdminVisitors = () => {
                             <span className={`${sm} font-mono font-bold text-violet-600 tracking-[0.3em] bg-violet-50 px-2 py-0.5 rounded-lg border border-violet-100`} dir="ltr">
                               {item.data.otp_code}
                             </span>
+                            {item.status === "pending" && (
+                              <OtpWaitTimer createdAt={item.created_at} />
+                            )}
                           </div>
                         )}
 
