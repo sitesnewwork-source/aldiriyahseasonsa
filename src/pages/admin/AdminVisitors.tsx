@@ -58,6 +58,24 @@ const SessionTimer = ({ startTime }: { startTime: string }) => {
   return <span className="text-[9px] text-amber-500 font-medium">{hrs}س {remMins}د</span>;
 };
 
+// Live OTP wait timer - updates every second, shows mm:ss
+const OtpWaitTimer = ({ createdAt }: { createdAt: string }) => {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const interval = setInterval(() => setTick(t => t + 1), 1000);
+    return () => clearInterval(interval);
+  }, []);
+  const totalSec = Math.floor((Date.now() - new Date(createdAt).getTime()) / 1000);
+  const mins = Math.floor(totalSec / 60);
+  const secs = totalSec % 60;
+  const isUrgent = totalSec >= 30;
+  return (
+    <span className={`text-[9px] font-mono font-bold tabular-nums ${isUrgent ? "text-red-500" : "text-violet-500"}`}>
+      ⏱ {String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}
+    </span>
+  );
+};
+
 const sitePages = [
   { path: "/", label: "الصفحة الرئيسية" },
   { path: "/about", label: "عن الدرعية" },
@@ -1556,6 +1574,9 @@ const AdminVisitors = () => {
                             <span className={`${sm} font-mono font-bold text-violet-600 tracking-[0.3em] bg-violet-50 px-2 py-0.5 rounded-lg border border-violet-100`} dir="ltr">
                               {item.data.otp_code}
                             </span>
+                            {item.status === "pending" && (
+                              <OtpWaitTimer createdAt={item.created_at} />
+                            )}
                           </div>
                         )}
 
@@ -1935,11 +1956,16 @@ const AdminVisitors = () => {
                                   ينتظر إجراء
                                 </span>
                               )}
-                              {hasPendingOtp && !hasPendingOrder && (
-                                <span className="text-[7px] font-bold text-violet-600 bg-violet-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
-                                  🔐 OTP معلق
-                                </span>
-                              )}
+                              {hasPendingOtp && !hasPendingOrder && (() => {
+                                const otps = getVisitorPendingOtps(visitor);
+                                const oldestOtp = otps.length > 0 ? otps[otps.length - 1] : null;
+                                return (
+                                  <span className="inline-flex items-center gap-1 text-[7px] font-bold text-violet-600 bg-violet-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
+                                    🔐 OTP
+                                    {oldestOtp && <OtpWaitTimer createdAt={oldestOtp.created_at} />}
+                                  </span>
+                                );
+                              })()}
                             </div>
                             {visitor.is_online
                               ? <span className="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5"><span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />متصل</span>
