@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { supabase } from "@/integrations/supabase/client";
 import { playChime, createRipple } from "@/hooks/use-action-sound";
+import { sendBrowserNotification } from "@/hooks/use-browser-notifications";
 
 // Helper: show real name or shortened session ID
 function displayName(v: { name?: string | null; session_id?: string }) {
