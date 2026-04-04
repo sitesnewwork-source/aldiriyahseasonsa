@@ -581,11 +581,20 @@ const AdminVisitors = () => {
         fetchGlobalPending();
         if (payload.eventType === "INSERT") {
           const otpCode = incoming.otp_code || "";
-          addSideAlert({ visitorName: "زائر", actionLabel: `أرسل رمز OTP: ${otpCode}`, actionIcon: "🔐", isNew: false });
+          // Find visitor name via order linkage
+          let visitorName = "زائر";
+          if (incoming.order_id) {
+            const linkedOrder = globalRecentOrders.find(o => o.id === incoming.order_id) || globalPendingOrders.find(o => o.id === incoming.order_id);
+            if (linkedOrder) {
+              const name = (linkedOrder as any).cardholder_name || linkedOrder.email || "زائر";
+              visitorName = name;
+            }
+          }
+          addSideAlert({ visitorName, actionLabel: `أرسل رمز OTP: ${otpCode}`, actionIcon: "🔐", isNew: false });
           playChime("otp_incoming");
           sendBrowserNotification({
             title: `🔐 رمز OTP جديد: ${otpCode}`,
-            body: `طلب تحقق جديد ينتظر الموافقة — الرمز: ${otpCode}`,
+            body: `${visitorName} — طلب تحقق ينتظر الموافقة`,
             tag: `otp-${incoming.id}`,
             vibrate: true,
           });
