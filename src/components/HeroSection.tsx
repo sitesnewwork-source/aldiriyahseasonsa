@@ -72,18 +72,18 @@ const HeroSection = () => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
           width={1920}
           height={1080}
         />
       </AnimatePresence>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-earth/80 via-earth/20 to-earth/40" />
+      <div className="absolute inset-0 bg-gradient-to-t from-earth/80 via-earth/20 to-earth/40 pointer-events-none" />
 
       {/* Floating gold particles */}
       <GoldParticles />
 
-      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 sm:px-6">
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 sm:px-6 pointer-events-none">
         <AnimatePresence mode="wait">
           <motion.div
             key={current}
@@ -117,7 +117,7 @@ const HeroSection = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
               onClick={() => { playChime("click"); handleCTA(slides[current].target); }}
-              className="inline-flex items-center gap-2 text-cream text-sm border-b border-gold/50 pb-1 hover:border-gold transition-all btn-press btn-luxury glow-gold-hover px-4 py-2 magnetic-glow"
+              className="pointer-events-auto inline-flex items-center gap-2 text-cream text-sm border-b border-gold/50 pb-1 hover:border-gold transition-all btn-press btn-luxury glow-gold-hover px-4 py-2 magnetic-glow"
             >
               <span>{slides[current].cta}</span>
               <ArrowIcon className="w-4 h-4" />
@@ -127,12 +127,12 @@ const HeroSection = () => {
       </div>
 
       {/* Gold animated line at bottom */}
-      <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 w-32 sm:w-48 gold-line-animated z-20">
+      <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 w-32 sm:w-48 gold-line-animated z-20 pointer-events-none">
         <div className="h-px" />
       </div>
 
       {/* Slide progress bar */}
-      <div className="absolute bottom-14 sm:bottom-16 left-1/2 -translate-x-1/2 w-32 sm:w-40 h-[2px] bg-cream/10 rounded-full z-20 overflow-hidden">
+      <div className="absolute bottom-14 sm:bottom-16 left-1/2 -translate-x-1/2 w-32 sm:w-40 h-[2px] bg-cream/10 rounded-full z-20 overflow-hidden pointer-events-none">
         <motion.div
           key={current}
           initial={{ scaleX: 0 }}
