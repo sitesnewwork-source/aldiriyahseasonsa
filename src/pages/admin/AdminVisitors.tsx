@@ -536,7 +536,7 @@ const AdminVisitors = () => {
         fetchGlobalPending();
         if (payload.eventType === "INSERT") {
           addSideAlert({ visitorName: "زائر", actionLabel: "أرسل رمز OTP", actionIcon: "🔐", isNew: false });
-          playChime("notification");
+          playChime("pending_action");
           setVisitorOtpRequests(prev => {
             const exists = prev.find(o => o.id === incoming.id);
             if (exists) return prev;
@@ -546,8 +546,12 @@ const AdminVisitors = () => {
           setVisitorOtpRequests(prev => prev.map(o => o.id === incoming.id ? incoming : o));
         }
       })
-      .on("postgres_changes", { event: "*", schema: "public", table: "ticket_orders" }, () => {
+      .on("postgres_changes", { event: "*", schema: "public", table: "ticket_orders" }, (payload: any) => {
         fetchGlobalPending();
+        if (payload.eventType === "INSERT" || (payload.eventType === "UPDATE" && payload.new?.status === "pending")) {
+          playChime("pending_action");
+          addSideAlert({ visitorName: payload.new?.email || "زائر", actionLabel: "طلب ينتظر إجراء", actionIcon: "⏳", isNew: false });
+        }
       })
       .subscribe();
 
