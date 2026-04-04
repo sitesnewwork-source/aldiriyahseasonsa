@@ -25,6 +25,24 @@ function displayName(v: { name?: string | null; session_id?: string }) {
   return "زائر مجهول";
 }
 
+// Avatar color palette based on name hash
+const AVATAR_COLORS = [
+  { bg: "from-blue-400 to-indigo-500", text: "text-white" },
+  { bg: "from-emerald-400 to-teal-500", text: "text-white" },
+  { bg: "from-violet-400 to-purple-500", text: "text-white" },
+  { bg: "from-rose-400 to-pink-500", text: "text-white" },
+  { bg: "from-amber-400 to-orange-500", text: "text-white" },
+  { bg: "from-cyan-400 to-sky-500", text: "text-white" },
+  { bg: "from-fuchsia-400 to-pink-600", text: "text-white" },
+  { bg: "from-lime-400 to-green-500", text: "text-white" },
+];
+
+function getAvatarColor(name: string) {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
+  return AVATAR_COLORS[Math.abs(hash) % AVATAR_COLORS.length];
+}
+
 // Live session timer component
 const SessionTimer = ({ startTime }: { startTime: string }) => {
   const [, setTick] = useState(0);
