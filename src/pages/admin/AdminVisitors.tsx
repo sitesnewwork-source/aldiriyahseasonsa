@@ -1086,13 +1086,13 @@ const AdminVisitors = () => {
                     {isPending ? (
                       <div className="flex gap-1.5">
                         <button
-                          onClick={() => updateOrderStatus(order.id, "confirmed")}
+                          onClick={(e) => updateOrderStatus(order.id, "confirmed", e)}
                           className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 ${xs} font-semibold hover:bg-emerald-100 transition-colors`}
                         >
                           <CheckCircle className="w-3 h-3" /> قبول
                         </button>
                         <button
-                          onClick={() => updateOrderStatus(order.id, "rejected")}
+                          onClick={(e) => updateOrderStatus(order.id, "rejected", e)}
                           className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-50 text-red-500 ${xs} font-semibold hover:bg-red-100 transition-colors`}
                         >
                           <XCircle className="w-3 h-3" /> رفض
