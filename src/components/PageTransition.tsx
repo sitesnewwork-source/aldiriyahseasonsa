@@ -8,9 +8,9 @@ interface PageTransitionProps {
 
 const LoadingScreen = () => (
   <motion.div
-    className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden"
+    className="fixed inset-0 z-[9999] flex items-center justify-center overflow-hidden pointer-events-none"
     style={{ background: "linear-gradient(160deg, hsl(30 10% 12%) 0%, hsl(30 15% 8%) 50%, hsl(30 10% 5%) 100%)" }}
-    initial={{ opacity: 1 }}
+    initial={{ opacity: 1, pointerEvents: "all" as any }}
     exit={{ opacity: 0, scale: 1.05 }}
     transition={{ duration: 0.5, ease: "easeInOut" }}
   >
