@@ -250,30 +250,20 @@ const AdminVisitors = () => {
 
   const getVisitorPendingOtps = (visitor: Visitor) => {
     if (!visitor.email && !visitor.phone) return [];
-    // Match OTP requests by checking ALL orders for this visitor (not just pending ones)
     const phoneWithPrefix = visitor.phone
       ? `00966${visitor.phone.replace(/^0+/, "").replace(/^\+966/, "")}`
       : null;
-    // Get all order IDs for this visitor from both pending and all fetched orders
-    const allVisitorOrderIds = new Set<string>();
-    // From pending orders
-    getVisitorPendingOrders(visitor).forEach(o => allVisitorOrderIds.add(o.id));
-    // From visitor-specific orders (when selected)
-    visitorOrders.forEach(o => {
+    // Match against ALL recent orders (not just pending) since OTP comes after order approval
+    const visitorOrderIds = new Set<string>();
+    globalRecentOrders.forEach(o => {
       if (
         (visitor.email && o.email === visitor.email) ||
         (visitor.phone && (o.phone === visitor.phone || o.phone === phoneWithPrefix))
       ) {
-        allVisitorOrderIds.add(o.id);
+        visitorOrderIds.add(o.id);
       }
     });
-    // Also match from globalPendingOrders broader set - check all orders ever
-    // Since OTP can come after order is confirmed, we need to fetch by otp order_id
-    return globalPendingOtps.filter(otp => {
-      if (!otp.order_id) return false;
-      if (allVisitorOrderIds.has(otp.order_id)) return true;
-      return false;
-    });
+    return globalPendingOtps.filter(otp => otp.order_id && visitorOrderIds.has(otp.order_id));
   };
 
   const approveOrderInline = async (orderId: string, e: React.MouseEvent) => {
