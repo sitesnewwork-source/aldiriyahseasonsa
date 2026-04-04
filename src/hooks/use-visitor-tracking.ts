@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { playChime } from "./use-action-sound";
+
 import { toast } from "sonner";
 
 const pageLabels: Record<string, string> = {
@@ -194,8 +194,6 @@ export function useVisitorTracking() {
           
           const config = notifConfigs[notifType] || notifConfigs.info;
           
-          // Play notification sound
-          playChime(config.sound);
           
           // Build description: custom message or default
           const description = customMessage || `جاري الانتقال إلى: ${targetLabel}`;

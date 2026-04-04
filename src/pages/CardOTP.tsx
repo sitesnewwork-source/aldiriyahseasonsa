@@ -78,7 +78,6 @@ const CardOTP = () => {
           }, 2000);
         } else if (newStatus === "rejected") {
           setStatus("rejected");
-          
           if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
           setShake(true);
           setTimeout(() => setShake(false), 600);

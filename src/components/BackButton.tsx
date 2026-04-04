@@ -9,7 +9,9 @@ const BackButton = () => {
 
   return (
     <button
-      onClick={() => navigate(-1)}
+      onClick={() => {
+        navigate(-1);
+      }}
       className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-foreground text-xs sm:text-sm transition-colors group mb-3"
     >
       <Icon className="w-3.5 h-3.5 transition-transform group-hover:rtl:translate-x-0.5 group-hover:ltr:-translate-x-0.5" />

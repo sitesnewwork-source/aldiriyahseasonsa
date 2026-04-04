@@ -1,11 +1,9 @@
 import { toast } from "sonner";
 
-type SoundType = "soft" | "success" | "info";
-
 interface NotifyOptions {
   message: string;
   description?: string;
-  sound?: SoundType;
+  sound?: string;
   icon?: string;
   duration?: number;
 }
