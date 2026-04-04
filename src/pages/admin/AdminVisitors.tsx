@@ -1830,6 +1830,7 @@ const AdminVisitors = () => {
               </div>
             ) : (
               <div className="space-y-2">
+                <AnimatePresence mode="popLayout">
                 <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
