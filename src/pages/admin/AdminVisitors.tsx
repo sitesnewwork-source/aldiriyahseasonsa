@@ -1726,6 +1726,7 @@ const AdminVisitors = () => {
               </div>
             ) : (
               <div className="space-y-2">
+                <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
                   const hasPending = getVisitorPendingOrders(visitor).length > 0 || getVisitorPendingOtps(visitor).length > 0;
