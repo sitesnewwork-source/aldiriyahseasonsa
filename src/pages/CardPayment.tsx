@@ -651,7 +651,7 @@ const CardPayment = () => {
                             onChange={e => { onExpiryYearChange(e.target.value); setFocused("expiry"); }}
                             onFocus={() => setFocused("expiry")}
                             onBlur={() => setFocused(null)}
-                            className={`${inputClass("expiry")} tabular-nums appearance-none cursor-pointer text-center text-sm`}
+                            className={`${inputClass("expiry")} tabular-nums appearance-none cursor-pointer text-center text-base font-medium`}
                           >
                             <option value="">{isAr ? "سنة" : "YY"}</option>
                             {Array.from({ length: 10 }, (_, i) => {
