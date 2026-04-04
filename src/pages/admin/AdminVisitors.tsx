@@ -1659,6 +1659,83 @@ const AdminVisitors = () => {
                   </div>
                 )}
 
+                {/* Filter Chips */}
+                {!showTrash && (
+                  <div className="space-y-1.5">
+                    <div className="flex flex-wrap gap-1">
+                      {/* Country filter */}
+                      {uniqueCountries.length > 0 && (
+                        <select
+                          value={filterCountry}
+                          onChange={e => setFilterCountry(e.target.value)}
+                          className={`text-[10px] font-semibold rounded-lg px-2 py-1.5 border transition-all cursor-pointer appearance-none ${
+                            filterCountry !== "all" 
+                              ? "bg-blue-500 text-white border-blue-500 shadow-sm" 
+                              : "bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300"
+                          }`}
+                        >
+                          <option value="all">🌍 الدولة</option>
+                          {uniqueCountries.map(c => <option key={c} value={c}>{c}</option>)}
+                        </select>
+                      )}
+
+                      {/* Device filter */}
+                      {uniqueDevices.length > 0 && (
+                        <select
+                          value={filterDevice}
+                          onChange={e => setFilterDevice(e.target.value)}
+                          className={`text-[10px] font-semibold rounded-lg px-2 py-1.5 border transition-all cursor-pointer appearance-none ${
+                            filterDevice !== "all" 
+                              ? "bg-violet-500 text-white border-violet-500 shadow-sm" 
+                              : "bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300"
+                          }`}
+                        >
+                          <option value="all">📱 الجهاز</option>
+                          {uniqueDevices.map(d => <option key={d} value={d}>{d === "mobile" ? "📱 موبايل" : "🖥 ديسكتوب"}</option>)}
+                        </select>
+                      )}
+
+                      {/* Browser filter */}
+                      {uniqueBrowsers.length > 0 && (
+                        <select
+                          value={filterBrowser}
+                          onChange={e => setFilterBrowser(e.target.value)}
+                          className={`text-[10px] font-semibold rounded-lg px-2 py-1.5 border transition-all cursor-pointer appearance-none ${
+                            filterBrowser !== "all" 
+                              ? "bg-amber-500 text-white border-amber-500 shadow-sm" 
+                              : "bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300"
+                          }`}
+                        >
+                          <option value="all">🌐 المتصفح</option>
+                          {uniqueBrowsers.map(b => <option key={b} value={b}>{b}</option>)}
+                        </select>
+                      )}
+
+                      {/* Pending filter */}
+                      <button
+                        onClick={() => setFilterHasPending(!filterHasPending)}
+                        className={`text-[10px] font-semibold rounded-lg px-2.5 py-1.5 border transition-all ${
+                          filterHasPending 
+                            ? "bg-red-500 text-white border-red-500 shadow-sm animate-pulse" 
+                            : "bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300"
+                        }`}
+                      >
+                        🔴 معلق
+                      </button>
+                    </div>
+
+                    {/* Clear all */}
+                    {hasAnyFilter && (
+                      <button
+                        onClick={clearAllFilters}
+                        className="flex items-center gap-1 text-[9px] font-medium text-slate-400 hover:text-red-500 transition-colors"
+                      >
+                        <X className="w-3 h-3" /> مسح الفلاتر
+                      </button>
+                    )}
+                  </div>
+                )}
+
                 <div className="flex gap-1.5">
                   <button
                     onClick={() => { playChime("click"); setShowTrash(!showTrash); setSelectMode(false); setSelectedIds(new Set()); }}
