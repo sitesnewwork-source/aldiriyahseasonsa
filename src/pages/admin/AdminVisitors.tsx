@@ -1212,7 +1212,35 @@ const AdminVisitors = () => {
         </div>
       );
     }
-    // Booking and event_booking types don't have approve/reject buttons
+    // Bookings, event bookings, and messages show status badges instead of action buttons
+    if (item.type === "booking" || item.type === "event_booking") {
+      const statusMap: Record<string, { text: string; color: string; icon: "check" | "x" | "clock" }> = {
+        pending: { text: "معلّق", color: "bg-amber-50 text-amber-600 border border-amber-200", icon: "clock" },
+        confirmed: { text: "مقبول", color: "bg-emerald-50 text-emerald-600 border border-emerald-200", icon: "check" },
+        cancelled: { text: "مرفوض", color: "bg-red-50 text-red-500 border border-red-200", icon: "x" },
+        rejected: { text: "مرفوض", color: "bg-red-50 text-red-500 border border-red-200", icon: "x" },
+      };
+      const badge = statusMap[item.status || "pending"] || statusMap.pending;
+      return (
+        <div className={`mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${xs} font-semibold ${badge.color}`}>
+          {badge.icon === "check" && <CheckCircle className="w-3 h-3" />}
+          {badge.icon === "x" && <XCircle className="w-3 h-3" />}
+          {badge.icon === "clock" && <Clock className="w-3 h-3" />}
+          {badge.text}
+        </div>
+      );
+    }
+    if (item.type === "message") {
+      const isRead = item.data.is_read;
+      return (
+        <div className={`mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${xs} font-semibold ${
+          isRead ? "bg-emerald-50 text-emerald-600 border border-emerald-200" : "bg-blue-50 text-blue-600 border border-blue-200"
+        }`}>
+          {isRead ? <CheckCircle className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
+          {isRead ? "مقروءة" : "جديدة"}
+        </div>
+      );
+    }
     if (item.type === "otp" && isPending) {
       return (
         <div className="flex gap-1.5 mt-2">
@@ -1227,13 +1255,12 @@ const AdminVisitors = () => {
         </div>
       );
     }
-    // Messages don't have action buttons
 
-    // Show status badge for resolved items
+    // Show status badge for resolved items (orders, otp after action)
     if (item.status && item.status !== "pending") {
       const st = statusLabel(item.status);
       return (
-        <div className={`mt-2 flex items-center justify-center gap-1 py-1 rounded-lg ${xs} font-semibold ${st.color}`}>
+        <div className={`mt-2 inline-flex items-center gap-1 px-2.5 py-1 rounded-full ${xs} font-semibold ${st.color}`}>
           {item.status === "confirmed" || item.status === "approved"
             ? <CheckCircle className="w-3 h-3" />
             : <XCircle className="w-3 h-3" />}
