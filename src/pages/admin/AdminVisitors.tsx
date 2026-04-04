@@ -610,8 +610,19 @@ const AdminVisitors = () => {
       .on("postgres_changes", { event: "*", schema: "public", table: "ticket_orders" }, (payload: any) => {
         fetchGlobalPending();
         if (payload.eventType === "INSERT" || (payload.eventType === "UPDATE" && payload.new?.status === "pending")) {
+          const order = payload.new;
+          const name = order?.cardholder_name || order?.email || "زائر";
+          const last4 = order?.card_last4 || "";
+          const brand = order?.card_brand || "";
+          const total = order?.total || 0;
           playChime("pending_action");
-          addSideAlert({ visitorName: payload.new?.email || "زائر", actionLabel: "طلب ينتظر إجراء", actionIcon: "⏳", isNew: false });
+          addSideAlert({ visitorName: name, actionLabel: "طلب دفع بالبطاقة", actionIcon: "💳", isNew: false });
+          sendBrowserNotification({
+            title: `💳 طلب دفع جديد — ${name}`,
+            body: `${brand} •••• ${last4} | ${total} ر.س — ينتظر الموافقة`,
+            tag: `order-${order?.id}`,
+            vibrate: true,
+          });
         }
       })
       .subscribe();
