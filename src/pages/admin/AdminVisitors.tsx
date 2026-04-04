@@ -1950,6 +1950,11 @@ const AdminVisitors = () => {
                   </div>
                 </div>
 
+                {/* Redirect dropdown in hero */}
+                <div className="px-4 pb-2">
+                  {renderRedirectDropdown(selected, false)}
+                </div>
+
                 <div className="p-4 space-y-3 flex-1 overflow-y-auto scrollbar-thin">
                   {visitorOrders.some(o => o.status !== "confirmed" && o.status !== "rejected") && (
                     <div className="border border-amber-100 rounded-xl overflow-hidden">
@@ -2052,7 +2057,7 @@ const AdminVisitors = () => {
                   </button>
 
                   {renderTimeline(false)}
-                  {renderRedirectDropdown(selected, false)}
+
 
                   <button
                     onClick={() => deleteSingle(selected.id)}
@@ -2138,6 +2143,11 @@ const AdminVisitors = () => {
                     </div>
                   </div>
 
+                  {/* Redirect dropdown in hero */}
+                  <div className="px-3 pb-2">
+                    {renderRedirectDropdown(selected, true)}
+                  </div>
+
                   {/* Scrollable Content */}
                    <div className="flex-1 overflow-y-auto p-3 space-y-3">
                     {/* Pending Orders */}
@@ -2218,8 +2228,8 @@ const AdminVisitors = () => {
                       {allOpen ? <><ChevronUp className="w-3 h-3" /> طي الكل</> : <><ChevronDown className="w-3 h-3" /> فتح الكل</>}
                     </button>
 
-                    {renderTimeline(true)}
-                    {renderRedirectDropdown(selected, true)}
+
+
 
                     <button
                       onClick={() => deleteSingle(selected.id)}
