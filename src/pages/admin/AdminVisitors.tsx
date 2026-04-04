@@ -1879,11 +1879,19 @@ const AdminVisitors = () => {
                           <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
                           }`} />
-                          {hasPending && (
+                          {hasPendingOrder && (
                             <span className="absolute -top-1 -right-1 flex items-center justify-center">
                               <span className="absolute w-3.5 h-3.5 rounded-full bg-red-400 animate-ping opacity-40" />
                               <span className="relative w-3.5 h-3.5 rounded-full bg-red-500 border-[1.5px] border-white flex items-center justify-center">
                                 <AlertCircle className="w-2 h-2 text-white" />
+                              </span>
+                            </span>
+                          )}
+                          {hasPendingOtp && !hasPendingOrder && (
+                            <span className="absolute -top-1 -right-1 flex items-center justify-center">
+                              <span className="absolute w-3.5 h-3.5 rounded-full bg-violet-400 animate-ping opacity-40" />
+                              <span className="relative w-3.5 h-3.5 rounded-full bg-violet-500 border-[1.5px] border-white flex items-center justify-center">
+                                <Shield className="w-2 h-2 text-white" />
                               </span>
                             </span>
                           )}
