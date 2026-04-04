@@ -2,6 +2,7 @@ import { forwardRef, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import PageTransition from "./PageTransition";
+import ErrorBoundary from "./ErrorBoundary";
 
 // Lazy load all pages for code splitting
 const Index = lazy(() => import("@/pages/Index"));
