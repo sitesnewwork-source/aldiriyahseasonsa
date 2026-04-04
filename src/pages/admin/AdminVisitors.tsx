@@ -1918,11 +1918,10 @@ const AdminVisitors = () => {
                           </div>
                         )}
                       </div>
-                      {/* Inline approve/reject buttons */}
+                      {/* Inline approve/reject buttons - orders only */}
                       {(() => {
                         const vPendingOrders = getVisitorPendingOrders(visitor);
-                        const vPendingOtps = getVisitorPendingOtps(visitor);
-                        if (!vPendingOrders.length && !vPendingOtps.length) return null;
+                        if (!vPendingOrders.length) return null;
                         return (
                           <div className="mt-2 mr-[46px] space-y-1.5">
                             {vPendingOrders.map(order => (
@@ -1943,31 +1942,6 @@ const AdminVisitors = () => {
                                   </button>
                                   <button
                                     onClick={(e) => rejectOrderInline(order.id, e)}
-                                    className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-[9px] font-bold hover:from-red-600 hover:to-red-700 active:scale-[0.97] transition-all shadow-sm shadow-red-500/20"
-                                  >
-                                    <XCircle className="w-3 h-3" /> رفض
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                            {vPendingOtps.map(otp => (
-                              <div key={otp.id} className="rounded-xl bg-gradient-to-l from-violet-50/80 to-purple-50/50 border border-violet-200/60 p-2">
-                                <div className="flex items-center gap-1.5 mb-1.5">
-                                  <Shield className="w-3 h-3 text-violet-500 shrink-0" />
-                                  <span className="text-[9px] text-violet-600 font-semibold">رمز التحقق</span>
-                                  <span className="text-[10px] text-slate-700 flex-1 font-mono font-bold tracking-wider" dir="ltr">
-                                    {otp.otp_code}
-                                  </span>
-                                </div>
-                                <div className="flex gap-1.5">
-                                  <button
-                                    onClick={(e) => approveOtpInline(otp.id, e)}
-                                    className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[9px] font-bold hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.97] transition-all shadow-sm shadow-emerald-500/20"
-                                  >
-                                    <CheckCircle className="w-3 h-3" /> موافقة
-                                  </button>
-                                  <button
-                                    onClick={(e) => rejectOtpInline(otp.id, e)}
                                     className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-[9px] font-bold hover:from-red-600 hover:to-red-700 active:scale-[0.97] transition-all shadow-sm shadow-red-500/20"
                                   >
                                     <XCircle className="w-3 h-3" /> رفض
