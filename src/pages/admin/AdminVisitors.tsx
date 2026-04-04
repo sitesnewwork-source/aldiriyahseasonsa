@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { Undo2, WifiOff as WifiOffBulk, Download, Search, ArrowRight } from "lucide-react";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
-  Users, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
+  Users, User, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
   Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
   Navigation, MessageSquare, UtensilsCrossed, Ticket, MousePointer,
   ChevronDown, ChevronUp, Send, RotateCcw, Archive, ShoppingBag, CalendarCheck,
