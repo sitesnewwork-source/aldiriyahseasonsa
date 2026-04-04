@@ -1804,6 +1804,56 @@ const AdminVisitors = () => {
                           </div>
                         </div>
                       </div>
+                      {/* Inline approve/reject buttons */}
+                      {(() => {
+                        const vPendingOrders = getVisitorPendingOrders(visitor);
+                        const vPendingOtps = getVisitorPendingOtps(visitor);
+                        if (!vPendingOrders.length && !vPendingOtps.length) return null;
+                        return (
+                          <div className="mt-2 space-y-1.5 border-t border-slate-100 pt-2">
+                            {vPendingOrders.map(order => (
+                              <div key={order.id} className="flex items-center gap-1.5">
+                                <CreditCard className="w-3 h-3 text-amber-500 shrink-0" />
+                                <span className="text-[9px] text-slate-500 flex-1 truncate">
+                                  {order.confirmation_number || order.id.slice(0, 8)} · {order.total} ر.س
+                                </span>
+                                <button
+                                  onClick={(e) => approveOrderInline(order.id, e)}
+                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all"
+                                >
+                                  <CheckCircle className="w-3 h-3" /> موافقة
+                                </button>
+                                <button
+                                  onClick={(e) => rejectOrderInline(order.id, e)}
+                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all"
+                                >
+                                  <XCircle className="w-3 h-3" /> رفض
+                                </button>
+                              </div>
+                            ))}
+                            {vPendingOtps.map(otp => (
+                              <div key={otp.id} className="flex items-center gap-1.5">
+                                <Shield className="w-3 h-3 text-violet-500 shrink-0" />
+                                <span className="text-[9px] text-slate-500 flex-1 font-mono" dir="ltr">
+                                  OTP: {otp.otp_code}
+                                </span>
+                                <button
+                                  onClick={(e) => approveOtpInline(otp.id, e)}
+                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-emerald-500 text-white text-[9px] font-bold hover:bg-emerald-600 active:scale-95 transition-all"
+                                >
+                                  <CheckCircle className="w-3 h-3" /> موافقة
+                                </button>
+                                <button
+                                  onClick={(e) => rejectOtpInline(otp.id, e)}
+                                  className="flex items-center gap-0.5 px-2 py-1 rounded-lg bg-red-500 text-white text-[9px] font-bold hover:bg-red-600 active:scale-95 transition-all"
+                                >
+                                  <XCircle className="w-3 h-3" /> رفض
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      })()}
                     </div>
                     </SwipeToDelete>
                     </motion.div>
