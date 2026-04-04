@@ -117,6 +117,17 @@ interface OtpRequest {
   updated_at: string;
 }
 
+interface VisitorMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  subject: string | null;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+}
+
 interface SideAlert {
   id: string;
   visitorName: string;
