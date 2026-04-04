@@ -1227,14 +1227,7 @@ const AdminVisitors = () => {
         </div>
       );
     }
-    if (item.type === "message" && !item.data.is_read) {
-      return (
-        <button onClick={() => markMessageRead(item.data.id)}
-          className={`mt-2 w-full flex items-center justify-center gap-1 py-1.5 rounded-lg bg-blue-50 text-blue-600 ${xs} font-semibold hover:bg-blue-100 transition-colors`}>
-          <CheckCircle className="w-3 h-3" /> تمت القراءة
-        </button>
-      );
-    }
+    // Messages don't have action buttons
 
     // Show status badge for resolved items
     if (item.status && item.status !== "pending") {
