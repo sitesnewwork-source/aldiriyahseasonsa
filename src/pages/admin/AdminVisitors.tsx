@@ -170,6 +170,8 @@ const AdminVisitors = () => {
   const [filter, setFilter]           = useState<"all" | "online" | "offline">("all");
   const [filterCountry, setFilterCountry] = useState<string>("all");
   const [filterDevice, setFilterDevice]   = useState<string>("all");
+  const [filterBrowser, setFilterBrowser] = useState<string>("all");
+  const [filterHasPending, setFilterHasPending] = useState(false);
   const [searchQuery, setSearchQuery]     = useState("");
   const [showTrash, setShowTrash]     = useState(false);
   const [selectMode, setSelectMode]   = useState(false);
