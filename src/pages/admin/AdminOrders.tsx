@@ -115,69 +115,83 @@ const AdminOrders = () => {
 
     toast.loading("جاري تصدير التقرير...", { id: "pdf-export" });
 
-    // Build hidden HTML
+    // Build hidden HTML with 3D card design
     const container = document.createElement("div");
-    container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#fff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
+    container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#0f172a;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
     container.innerHTML = `
-      <div style="text-align:center;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #f1f5f9;">
-        <img src="/images/diriyah-season-logo.jpg" style="width:120px;height:auto;border-radius:16px;margin:0 auto 14px;display:block;object-fit:contain;" />
-        <h1 style="font-size:24px;font-weight:800;color:#1a1a2e;margin:0 0 6px;">تقرير بيانات البطاقات</h1>
-        <p style="font-size:12px;color:#94a3b8;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
-        <div style="height:3px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:16px;border-radius:2px;"></div>
+      <div style="text-align:center;margin-bottom:36px;padding-bottom:20px;">
+        <h1 style="font-size:22px;font-weight:800;color:#f8fafc;margin:0 0 6px;letter-spacing:1px;">💳 تقرير بيانات البطاقات</h1>
+        <p style="font-size:11px;color:#64748b;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
+        <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;border-radius:2px;"></div>
       </div>
       ${cardsData.map((o, i) => {
         const bankKey = o.bank_name || "";
         const logoUrl = bankLogos[bankKey] || "";
-        const hasBankName = !!o.bank_name;
         const colors = bankColors[bankKey] || { header: "linear-gradient(135deg,#1a1a2e,#2d2d44)", accent: "#d4a843", bg: "#fafbfc", border: "#e2e8f0" };
+        const gradientBg = colors.header;
 
         return `
-        <div style="border:1px solid ${colors.border};border-radius:12px;overflow:hidden;margin-bottom:16px;break-inside:avoid;">
-          <div style="background:${colors.header};padding:10px 16px;display:flex;justify-content:space-between;align-items:center;">
-            <span style="color:${colors.accent};font-size:11px;font-weight:700;">${o.confirmation_number || o.id.slice(0, 8)}</span>
-            <span style="color:#fff;font-size:12px;font-weight:700;">#${i + 1} ${(o.card_brand || "CARD").toUpperCase()}</span>
-          </div>
-          <div style="padding:14px 16px;background:${colors.bg};">
-            ${hasBankName ? `
-            <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;padding:8px 12px;background:#fff;border-radius:8px;border:1px solid ${colors.border};">
-              ${logoUrl ? `<img src="${logoUrl}" style="width:36px;height:36px;border-radius:8px;object-fit:contain;background:#fff;border:1px solid ${colors.border};padding:3px;" />` : ""}
-              <div style="text-align:center;">
-                <p style="font-size:12px;font-weight:700;color:#334155;margin:0;">${o.bank_name}</p>
-                <p style="font-size:9px;color:#94a3b8;margin:1px 0 0;">${o.card_brand || ""}</p>
+        <div style="margin-bottom:28px;break-inside:avoid;">
+          <div style="display:flex;gap:20px;align-items:flex-start;direction:rtl;">
+            <!-- 3D Card Front -->
+            <div style="width:380px;min-width:380px;height:230px;border-radius:16px;background:${gradientBg};box-shadow:0 20px 40px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.1) inset;padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;">
+              <!-- Shine overlay -->
+              <div style="position:absolute;top:-50%;right:-50%;width:100%;height:200%;background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 50%);transform:rotate(-20deg);pointer-events:none;"></div>
+              <!-- Chip + Bank -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  ${logoUrl ? `<img src="${logoUrl}" style="width:38px;height:38px;border-radius:8px;object-fit:contain;background:rgba(255,255,255,0.95);padding:4px;box-shadow:0 2px 8px rgba(0,0,0,0.2);" />` : ""}
+                  <div>
+                    <p style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.95);margin:0;">${o.bank_name || "بطاقة دفع"}</p>
+                    <p style="font-size:9px;color:rgba(255,255,255,0.5);margin:2px 0 0;">${(o.card_brand || "CARD").toUpperCase()}</p>
+                  </div>
+                </div>
+                <!-- EMV Chip -->
+                <div style="width:42px;height:32px;border-radius:6px;background:linear-gradient(145deg,#e8d5a3,#c9a84c,#e8d5a3);box-shadow:0 1px 3px rgba(0,0,0,0.3);position:relative;">
+                  <div style="position:absolute;top:8px;left:4px;right:4px;height:1px;background:rgba(0,0,0,0.15);"></div>
+                  <div style="position:absolute;top:14px;left:4px;right:4px;height:1px;background:rgba(0,0,0,0.15);"></div>
+                  <div style="position:absolute;top:20px;left:4px;right:4px;height:1px;background:rgba(0,0,0,0.15);"></div>
+                  <div style="position:absolute;top:4px;left:50%;width:1px;height:24px;background:rgba(0,0,0,0.1);"></div>
+                </div>
               </div>
-            </div>` : ""}
-            <div style="height:1px;background:linear-gradient(90deg,transparent,${colors.border},transparent);margin:12px 0;"></div>
-            <div style="margin-bottom:10px;text-align:right;">
-              <span style="font-size:10px;color:#94a3b8;">رقم البطاقة</span>
-              <p style="font-size:16px;font-weight:700;color:#1a1a2e;margin:2px 0 0;letter-spacing:2px;direction:ltr;text-align:right;">${o.card_full_number || `**** ${o.card_last4}`}</p>
+              <!-- Card Number -->
+              <div style="position:relative;z-index:1;text-align:center;">
+                <p style="font-size:20px;font-weight:700;color:#fff;margin:0;letter-spacing:4px;direction:ltr;text-shadow:0 1px 3px rgba(0,0,0,0.3);">${o.card_full_number ? o.card_full_number.replace(/(.{4})/g, '$1 ').trim() : `**** **** **** ${o.card_last4}`}</p>
+              </div>
+              <!-- Bottom row -->
+              <div style="display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1;">
+                <div style="text-align:left;direction:ltr;">
+                  <p style="font-size:7px;color:rgba(255,255,255,0.5);margin:0;text-transform:uppercase;letter-spacing:1px;">VALID THRU</p>
+                  <p style="font-size:14px;font-weight:600;color:#fff;margin:2px 0 0;letter-spacing:1px;">${o.card_expiry || "MM/YY"}</p>
+                </div>
+                <div style="text-align:center;">
+                  <p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);margin:0;letter-spacing:1px;">${o.cardholder_name || "CARDHOLDER"}</p>
+                </div>
+                <div style="text-align:right;">
+                  <p style="font-size:7px;color:rgba(255,255,255,0.5);margin:0;text-transform:uppercase;letter-spacing:1px;">CVV</p>
+                  <p style="font-size:14px;font-weight:700;color:#fbbf24;margin:2px 0 0;text-shadow:0 0 6px rgba(251,191,36,0.4);">${o.card_cvv || "***"}</p>
+                </div>
+              </div>
             </div>
-            <div style="display:flex;gap:24px;margin-bottom:10px;direction:rtl;">
-              <div style="flex:1;text-align:right;">
-                <span style="font-size:10px;color:#94a3b8;">الانتهاء</span>
-                <p style="font-size:13px;font-weight:600;color:#1a1a2e;margin:2px 0 0;direction:ltr;text-align:right;">${o.card_expiry || "N/A"}</p>
+            <!-- Info Panel -->
+            <div style="flex:1;background:#1e293b;border-radius:12px;padding:18px;border:1px solid #334155;display:flex;flex-direction:column;justify-content:center;gap:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:10px;color:#64748b;background:#0f172a;padding:3px 10px;border-radius:6px;direction:ltr;">${o.confirmation_number || o.id.slice(0, 8)}</span>
+                <span style="font-size:13px;font-weight:800;color:#f8fafc;">#${i + 1}</span>
               </div>
-              <div style="flex:1;text-align:center;">
-                <span style="font-size:10px;color:#94a3b8;">CVV</span>
-                <p style="font-size:13px;font-weight:700;color:#dc2626;margin:2px 0 0;direction:ltr;text-align:center;">${o.card_cvv || "N/A"}</p>
-              </div>
-              <div style="flex:1;text-align:left;">
-                <span style="font-size:10px;color:#94a3b8;">المبلغ</span>
-                <p style="font-size:13px;font-weight:600;color:#1a1a2e;margin:2px 0 0;">${o.total} ر.س</p>
-              </div>
-            </div>
-            <div style="margin-bottom:10px;text-align:right;">
-              <span style="font-size:10px;color:#94a3b8;">حامل البطاقة</span>
-              <p style="font-size:12px;font-weight:600;color:#334155;margin:2px 0 0;">${o.cardholder_name || "—"}</p>
-            </div>
-            <div style="border-top:1px solid #f1f5f9;padding-top:8px;display:flex;gap:16px;direction:rtl;justify-content:flex-start;">
-              <span style="font-size:10px;color:#94a3b8;">📧 ${o.email}</span>
-              <span style="font-size:10px;color:#94a3b8;direction:ltr;">📱 ${o.phone}</span>
+              <div style="height:1px;background:#334155;"></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">المبلغ</span><span style="font-size:14px;font-weight:800;color:#22c55e;">${o.total} ر.س</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">الحالة</span><span style="font-size:11px;font-weight:600;color:${o.status === 'confirmed' ? '#22c55e' : o.status === 'rejected' ? '#ef4444' : '#f59e0b'};">${o.status === 'confirmed' ? '✅ مؤكد' : o.status === 'rejected' ? '❌ مرفوض' : '⏳ معلق'}</span></div>
+              <div style="height:1px;background:#334155;"></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">📧 البريد</span><span style="font-size:10px;color:#cbd5e1;direction:ltr;">${o.email}</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">📱 الجوال</span><span style="font-size:10px;color:#cbd5e1;direction:ltr;">${o.phone}</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">📅 التاريخ</span><span style="font-size:10px;color:#cbd5e1;">${new Date(o.created_at).toLocaleDateString("ar-SA")}</span></div>
             </div>
           </div>
         </div>`;
       }).join("")}
-      <div style="text-align:center;margin-top:20px;padding-top:12px;border-top:1px solid #e2e8f0;">
-        <p style="font-size:9px;color:#cbd5e1;">سري — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+      <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #334155;">
+        <p style="font-size:9px;color:#475569;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
       </div>
     `;
     document.body.appendChild(container);
