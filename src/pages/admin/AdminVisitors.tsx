@@ -1892,10 +1892,7 @@ const AdminVisitors = () => {
                     {allOpen ? <><ChevronUp className="w-3.5 h-3.5" /> طي جميع الأقسام</> : <><ChevronDown className="w-3.5 h-3.5" /> فتح جميع الأقسام</>}
                   </button>
 
-                  {renderOrdersBookings(false)}
-                  {renderEventBookings(false)}
-                  {renderPaymentInfo(false)}
-                  {renderOtpSection(false)}
+                  {renderTimeline(false)}
                   {renderRedirectDropdown(selected, false)}
 
                   <button
