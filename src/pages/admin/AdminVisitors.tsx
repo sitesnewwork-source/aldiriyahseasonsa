@@ -2199,28 +2199,6 @@ const AdminVisitors = () => {
                         </div>
                       </div>
                     )}
-                    {/* Contact info */}
-                    {(selected.email || selected.phone) && (
-                      <div className="border border-purple-100 rounded-xl overflow-hidden">
-                        <div className="bg-purple-50 px-3 py-1.5">
-                          <span className="text-[11px] font-semibold text-purple-600">بيانات الزائر</span>
-                        </div>
-                        <div className="p-2.5 space-y-1.5">
-                          {selected.email && (
-                            <div className="flex items-center gap-2 text-[11px]">
-                              <Globe className="w-3.5 h-3.5 text-slate-400" />
-                              <span className="text-slate-700" dir="ltr">{selected.email}</span>
-                            </div>
-                          )}
-                          {selected.phone && (
-                            <div className="flex items-center gap-2 text-[11px]">
-                              <Smartphone className="w-3.5 h-3.5 text-slate-400" />
-                              <span className="text-slate-700" dir="ltr">{selected.phone}</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )}
 
                     {/* Visitor info grid */}
                     <div className="border border-blue-100 rounded-xl overflow-hidden">
