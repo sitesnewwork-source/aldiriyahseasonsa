@@ -1924,6 +1924,22 @@ const AdminVisitors = () => {
                         <Eye className="w-3.5 h-3.5 text-blue-400" />
                         <span className="text-[13px] text-blue-500 font-medium">يتصفح: {selected.current_page_label}</span>
                       </div>
+                      {(selected.email || selected.phone) && (
+                        <div className="flex items-center gap-4 mt-1.5 flex-wrap">
+                          {selected.email && (
+                            <div className="flex items-center gap-1.5">
+                              <Globe className="w-3 h-3 text-slate-400" />
+                              <span className="text-[11px] text-slate-500" dir="ltr">{selected.email}</span>
+                            </div>
+                          )}
+                          {selected.phone && (
+                            <div className="flex items-center gap-1.5">
+                              <Smartphone className="w-3 h-3 text-slate-400" />
+                              <span className="text-[11px] text-slate-500" dir="ltr">{selected.phone}</span>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <button
                       onClick={() => deleteSingle(selected.id)}
@@ -2007,33 +2023,6 @@ const AdminVisitors = () => {
                     </div>
                   )}
 
-                  {(selected.email || selected.phone) && (
-                    <div className="border border-purple-100 rounded-xl overflow-hidden">
-                      <div className="bg-purple-50 px-4 py-2">
-                        <span className="text-[12px] font-semibold text-purple-600">بيانات الزائر المدخلة</span>
-                      </div>
-                      <div className="p-3 space-y-2">
-                        {selected.email && (
-                          <div className="flex items-center gap-2.5 bg-slate-50 rounded-lg p-2.5">
-                            <Globe className="w-3.5 h-3.5 text-slate-400" />
-                            <div>
-                              <p className="text-[10px] text-slate-400">البريد الإلكتروني</p>
-                              <p className="text-[12px] font-medium text-slate-700" dir="ltr">{selected.email}</p>
-                            </div>
-                          </div>
-                        )}
-                        {selected.phone && (
-                          <div className="flex items-center gap-2.5 bg-slate-50 rounded-lg p-2.5">
-                            <Smartphone className="w-3.5 h-3.5 text-slate-400" />
-                            <div>
-                              <p className="text-[10px] text-slate-400">رقم الجوال</p>
-                              <p className="text-[12px] font-medium text-slate-700" dir="ltr">{selected.phone}</p>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  )}
 
                   <div className="border border-blue-100 rounded-xl overflow-hidden">
                     <div className="bg-blue-50 px-4 py-2">
@@ -2123,6 +2112,22 @@ const AdminVisitors = () => {
                           <Eye className="w-2.5 h-2.5 text-blue-400" />
                           <span className="text-[10px] text-blue-500">{selected.current_page_label}</span>
                         </div>
+                        {(selected.email || selected.phone) && (
+                          <div className="flex items-center gap-3 mt-1 flex-wrap">
+                            {selected.email && (
+                              <div className="flex items-center gap-1">
+                                <Globe className="w-2.5 h-2.5 text-slate-400" />
+                                <span className="text-[9px] text-slate-500" dir="ltr">{selected.email}</span>
+                              </div>
+                            )}
+                            {selected.phone && (
+                              <div className="flex items-center gap-1">
+                                <Smartphone className="w-2.5 h-2.5 text-slate-400" />
+                                <span className="text-[9px] text-slate-500" dir="ltr">{selected.phone}</span>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
                       <button
                         onClick={() => deleteSingle(selected.id)}
@@ -2180,28 +2185,6 @@ const AdminVisitors = () => {
                               </div>
                             </div>
                           ))}
-                        </div>
-                      </div>
-                    )}
-                    {/* Contact info */}
-                    {(selected.email || selected.phone) && (
-                      <div className="border border-purple-100 rounded-xl overflow-hidden">
-                        <div className="bg-purple-50 px-3 py-1.5">
-                          <span className="text-[11px] font-semibold text-purple-600">بيانات الزائر</span>
-                        </div>
-                        <div className="p-2.5 space-y-1.5">
-                          {selected.email && (
-                            <div className="flex items-center gap-2 text-[11px]">
-                              <Globe className="w-3.5 h-3.5 text-slate-400" />
-                              <span className="text-slate-700" dir="ltr">{selected.email}</span>
-                            </div>
-                          )}
-                          {selected.phone && (
-                            <div className="flex items-center gap-2 text-[11px]">
-                              <Smartphone className="w-3.5 h-3.5 text-slate-400" />
-                              <span className="text-slate-700" dir="ltr">{selected.phone}</span>
-                            </div>
-                          )}
                         </div>
                       </div>
                     )}
