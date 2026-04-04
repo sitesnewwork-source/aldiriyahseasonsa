@@ -2249,12 +2249,18 @@ const AdminVisitors = () => {
                       <div className="px-3 pb-2 space-y-1.5">
                         {vPendingOrders.map(order => (
                           <div key={order.id} className="rounded-xl bg-gradient-to-l from-amber-50/80 to-orange-50/50 border border-amber-200/60 p-2.5">
-                            <div className="flex items-center gap-1.5 mb-2">
+                            <div className="flex items-center gap-1.5 mb-1">
                               <CreditCard className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                              <span className="text-[10px] text-slate-600 flex-1 truncate font-semibold">
-                                💳 {order.confirmation_number || order.id.slice(0, 8)}
+                              <span className="text-[10px] text-slate-700 flex-1 truncate font-bold">
+                                {order.cardholder_name || order.email || "زائر"}
                               </span>
                               <span className="text-[10px] font-bold text-amber-600">{order.total} ر.س</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 mb-2 mr-[22px]">
+                              <span className="text-[9px] text-slate-500">
+                                {order.card_brand} •••• {order.card_last4}
+                              </span>
+                              {order.bank_name && <span className="text-[9px] text-slate-400">| {order.bank_name}</span>}
                             </div>
                             <div className="flex gap-2">
                               <button
