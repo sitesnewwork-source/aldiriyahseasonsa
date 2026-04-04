@@ -1672,9 +1672,15 @@ const AdminVisitors = () => {
               </div>
             ) : (
               <div className="space-y-1.5">
+                <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
                   return (
+                    <motion.div
+                      key={visitor.id}
+                      layout
+                      transition={{ type: "spring", stiffness: 500, damping: 35, mass: 0.8 }}
+                    >
                     <SwipeToDelete
                       key={visitor.id}
                       onDelete={() => deleteSingle(visitor.id)}
