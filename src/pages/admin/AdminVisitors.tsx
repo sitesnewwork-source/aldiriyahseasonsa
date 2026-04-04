@@ -1659,34 +1659,8 @@ const AdminVisitors = () => {
                   </div>
                 )}
 
-                {/* Filter Chips */}
-                {!showTrash && (
-                  <div className="space-y-1.5">
-                    <div className="flex flex-wrap gap-1">
-                      {/* Pending filter */}
-                      <button
-                        onClick={() => setFilterHasPending(!filterHasPending)}
-                        className={`text-[10px] font-semibold rounded-lg px-2.5 py-1.5 border transition-all ${
-                          filterHasPending 
-                            ? "bg-red-500 text-white border-red-500 shadow-sm animate-pulse" 
-                            : "bg-slate-50 text-slate-500 border-slate-200 hover:border-slate-300"
-                        }`}
-                      >
-                        🔴 معلق
-                      </button>
-                    </div>
 
-                    {/* Clear all */}
-                    {hasAnyFilter && (
-                      <button
-                        onClick={clearAllFilters}
-                        className="flex items-center gap-1 text-[9px] font-medium text-slate-400 hover:text-red-500 transition-colors"
-                      >
-                        <X className="w-3 h-3" /> مسح الفلاتر
-                      </button>
-                    )}
-                  </div>
-                )}
+
 
                 <div className="flex gap-1.5">
                   <button
