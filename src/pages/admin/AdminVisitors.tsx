@@ -1449,20 +1449,6 @@ const AdminVisitors = () => {
     );
   };
 
-// Live session timer component
-const SessionTimer = ({ startTime }: { startTime: string }) => {
-  const [, setTick] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => setTick(t => t + 1), 60000);
-    return () => clearInterval(interval);
-  }, []);
-  const mins = Math.floor((Date.now() - new Date(startTime).getTime()) / 60000);
-  if (mins < 1) return <span className="text-[9px] text-amber-500 font-medium">&lt;1 د</span>;
-  if (mins < 60) return <span className="text-[9px] text-amber-500 font-medium">{mins} د</span>;
-  const hrs = Math.floor(mins / 60);
-  const remMins = mins % 60;
-  return <span className="text-[9px] text-amber-500 font-medium">{hrs}س {remMins}د</span>;
-};
 
   const onlineCount = visitors.filter(v => v.is_online).length;
   const uniqueCountries = [...new Set(visitors.map(v => v.country))].filter(Boolean).sort();
