@@ -26,7 +26,7 @@ function getDescription(table: TableName, payload: any): string {
     case "event_bookings":
       return `${payload.name} — ${payload.event_title} (${payload.guests} أشخاص)`;
     case "ticket_orders":
-      return `${payload.email} — ${payload.total} ر.س`;
+      return `${payload.cardholder_name || payload.email} — ${payload.total} ر.س`;
     case "visitors":
       return `${payload.name || "زائر جديد"} — ${payload.current_page_label || "الصفحة الرئيسية"} (${payload.device === "mobile" ? "جوال" : "كمبيوتر"} / ${payload.browser})`;
     case "otp_requests":
