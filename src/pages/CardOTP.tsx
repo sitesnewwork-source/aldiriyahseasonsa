@@ -93,7 +93,7 @@ const CardOTP = () => {
     if (code.length < 4) {
       setShake(true);
       setTimeout(() => setShake(false), 600);
-      playChime("error");
+      
       toast({
         title: isAr ? "⚠️ أدخل الرمز كاملاً" : "⚠️ Enter complete code",
         variant: "destructive",
