@@ -1315,11 +1315,11 @@ const AdminVisitors = () => {
     if (item.type === "order" && isPending) {
       return (
         <div className="flex gap-1.5 mt-2">
-          <button onClick={() => updateOrderStatus(item.data.id, "confirmed")}
+          <button onClick={(e) => updateOrderStatus(item.data.id, "confirmed", e)}
             className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-emerald-500 text-white ${xs} font-bold hover:bg-emerald-600 active:scale-95 transition-all`}>
             <CheckCircle className="w-3 h-3" /> موافقة
           </button>
-          <button onClick={() => updateOrderStatus(item.data.id, "rejected")}
+          <button onClick={(e) => updateOrderStatus(item.data.id, "rejected", e)}
             className={`flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg bg-red-500 text-white ${xs} font-bold hover:bg-red-600 active:scale-95 transition-all`}>
             <XCircle className="w-3 h-3" /> رفض
           </button>
