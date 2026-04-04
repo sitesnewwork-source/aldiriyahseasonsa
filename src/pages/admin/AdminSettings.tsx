@@ -8,6 +8,8 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { playChime, createRipple, isSoundMuted, setSoundMuted } from "@/hooks/use-action-sound";
 import { requestNotificationPermission, getNotificationPermission, isNotificationSupported } from "@/hooks/use-browser-notifications";
+import { bankLogos, bankColors } from "@/data/bankLogos";
+import html2canvas from "html2canvas";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
