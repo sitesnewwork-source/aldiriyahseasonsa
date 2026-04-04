@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { playChime } from "@/hooks/use-action-sound";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
