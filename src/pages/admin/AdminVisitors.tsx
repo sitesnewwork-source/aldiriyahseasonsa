@@ -1648,44 +1648,6 @@ const AdminVisitors = () => {
                       </button>
                     ))}
                   </div>
-                  <div className="flex gap-1.5">
-                    <select
-                      value={filterCountry}
-                      onChange={e => setFilterCountry(e.target.value)}
-                      className={`flex-1 py-1.5 px-2 rounded-lg text-[10px] font-medium border transition-all appearance-none cursor-pointer ${
-                        filterCountry !== "all"
-                          ? "bg-violet-50 border-violet-200 text-violet-600"
-                          : "bg-slate-50 border-slate-100 text-slate-500"
-                      }`}
-                    >
-                      <option value="all">🌍 كل الدول</option>
-                      {uniqueCountries.map(c => (
-                        <option key={c} value={c}>{countryFlag(c)} {c}</option>
-                      ))}
-                    </select>
-                    <select
-                      value={filterDevice}
-                      onChange={e => setFilterDevice(e.target.value)}
-                      className={`flex-1 py-1.5 px-2 rounded-lg text-[10px] font-medium border transition-all appearance-none cursor-pointer ${
-                        filterDevice !== "all"
-                          ? "bg-sky-50 border-sky-200 text-sky-600"
-                          : "bg-slate-50 border-slate-100 text-slate-500"
-                      }`}
-                    >
-                      <option value="all">📱 كل الأجهزة</option>
-                      <option value="mobile">📱 جوال</option>
-                      <option value="desktop">💻 كمبيوتر</option>
-                      <option value="tablet">📟 تابلت</option>
-                    </select>
-                  </div>
-                  {(filterCountry !== "all" || filterDevice !== "all") && (
-                    <button
-                      onClick={() => { setFilterCountry("all"); setFilterDevice("all"); }}
-                      className="w-full py-1.5 rounded-lg bg-slate-100 text-slate-500 text-[10px] font-medium hover:bg-slate-200 transition-colors flex items-center justify-center gap-1"
-                    >
-                      <X className="w-3 h-3" /> إزالة الفلاتر
-                    </button>
-                  )}
                   <button
                     onClick={e => { createRipple(e); exportFilteredCSV(); }}
                     className="w-full py-1.5 rounded-lg bg-emerald-50 text-emerald-600 text-[10px] font-medium hover:bg-emerald-100 transition-colors flex items-center justify-center gap-1 relative overflow-hidden border border-emerald-100"
