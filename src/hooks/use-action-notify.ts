@@ -3,6 +3,7 @@ import { toast } from "sonner";
 interface NotifyOptions {
   message: string;
   description?: string;
+  sound?: string;
   icon?: string;
   duration?: number;
 }
