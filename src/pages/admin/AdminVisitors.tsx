@@ -1766,14 +1766,15 @@ const AdminVisitors = () => {
                           setSelected(isSelected ? null : visitor);
                         }
                       }}
-                      className={`rounded-2xl border transition-all duration-200 p-3 cursor-pointer ${
+                      className={`rounded-2xl border transition-all duration-200 p-2.5 cursor-pointer ${
                         isSelected ? "border-blue-400 bg-gradient-to-l from-blue-50 to-blue-100/60 shadow-lg ring-1 ring-blue-300/40" 
                         : hasPending ? "border-red-300 bg-gradient-to-l from-red-50/80 to-orange-50/40 shadow-md ring-1 ring-red-200/50" 
                         : visitor.is_online ? "border-emerald-200/80 bg-gradient-to-l from-emerald-50/40 to-white shadow-sm hover:shadow-md hover:border-emerald-300"
                         : "border-slate-100 bg-white/80 hover:shadow-sm hover:border-slate-200"
                       } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
                     >
-                      <div className="flex items-center gap-3">
+                      {/* Row 1: Avatar + Name + Status */}
+                      <div className="flex items-center gap-2.5">
                         {selectMode && (
                           <button onClick={e => { e.stopPropagation(); toggleSelect(visitor.id); }} className="shrink-0">
                             {selectedIds.has(visitor.id)
@@ -1782,69 +1783,73 @@ const AdminVisitors = () => {
                           </button>
                         )}
                         <div className="relative shrink-0">
-                          <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-[14px] font-bold shadow-sm ${
+                          <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-[13px] font-bold shadow-sm ${
                             hasPending ? "bg-gradient-to-br from-red-100 to-orange-100 text-red-600"
                             : visitor.is_online ? "bg-gradient-to-br from-emerald-100 to-teal-100 text-emerald-600" 
                             : "bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400"
                           }`}>
                             {(visitor.name || "ز")[0]}
                           </div>
-                          <span className={`absolute -bottom-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-white shadow-sm ${
+                          <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
                           }`} />
                           {hasPending && (
-                            <span className="absolute -top-1.5 -right-1.5 flex items-center justify-center">
-                              <span className="absolute w-4 h-4 rounded-full bg-red-400 animate-ping opacity-40" />
-                              <span className="relative w-4 h-4 rounded-full bg-red-500 border-2 border-white flex items-center justify-center">
-                                <AlertCircle className="w-2.5 h-2.5 text-white" />
+                            <span className="absolute -top-1 -right-1 flex items-center justify-center">
+                              <span className="absolute w-3.5 h-3.5 rounded-full bg-red-400 animate-ping opacity-40" />
+                              <span className="relative w-3.5 h-3.5 rounded-full bg-red-500 border-[1.5px] border-white flex items-center justify-center">
+                                <AlertCircle className="w-2 h-2 text-white" />
                               </span>
                             </span>
                           )}
                         </div>
+
                         <div className="flex-1 min-w-0">
+                          {/* Name row */}
                           <div className="flex items-center justify-between gap-1">
-                            <div className="flex items-center gap-1.5 min-w-0">
-                              <span className="text-[13px] font-bold text-slate-800 truncate">{visitor.name || "زائر جديد"}</span>
-                              {visitor.country && <span className="text-[12px] shrink-0">{countryFlag(visitor.country)}</span>}
+                            <div className="flex items-center gap-1 min-w-0">
+                              <span className="text-[12px] font-bold text-slate-800 truncate">{visitor.name || "زائر جديد"}</span>
+                              {visitor.country && <span className="text-[11px] shrink-0">{countryFlag(visitor.country)}</span>}
                               {hasPending && (
-                                <span className="text-[8px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full shrink-0 animate-pulse">
-                                  🔴 ينتظر إجراء
+                                <span className="text-[7px] font-bold text-red-600 bg-red-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
+                                  ينتظر إجراء
                                 </span>
                               )}
                             </div>
                             {visitor.is_online
-                              ? <span className="text-[9px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />متصل</span>
-                              : <span className="text-[9px] font-medium text-slate-400 bg-slate-50 px-2 py-0.5 rounded-full shrink-0">غير متصل</span>}
+                              ? <span className="text-[8px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0 flex items-center gap-0.5"><span className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />متصل</span>
+                              : <span className="text-[8px] font-medium text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded-full shrink-0">غير متصل</span>}
                           </div>
-                          {/* Visitor info (email/phone) */}
+
+                          {/* Contact info */}
                           {(visitor.email || visitor.phone) && (
-                            <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                              {visitor.email && (
-                                <span className="text-[9px] text-blue-500 truncate max-w-[120px]">📧 {visitor.email}</span>
-                              )}
+                            <div className="flex items-center gap-1.5 mt-0.5">
                               {visitor.phone && (
-                                <span className="text-[9px] text-violet-500 font-mono" dir="ltr">📱 {visitor.phone}</span>
+                                <span className="text-[8px] text-violet-500 bg-violet-50 px-1.5 py-0.5 rounded font-mono" dir="ltr">📱{visitor.phone}</span>
+                              )}
+                              {visitor.email && (
+                                <span className="text-[8px] text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded truncate max-w-[100px]">📧{visitor.email}</span>
                               )}
                             </div>
                           )}
-                          <div className="flex items-center gap-3 mt-1">
-                            <div className="flex items-center gap-1">
-                              <Eye className="w-2.5 h-2.5 text-blue-400 shrink-0" />
-                              <span className="text-[10px] text-blue-500 font-medium truncate">{visitor.current_page_label}</span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-2.5 h-2.5 text-slate-300 shrink-0" />
-                              <span className="text-[9px] text-slate-400">{getTimeDiff(visitor.last_seen)}</span>
-                            </div>
-                            {/* Session duration timer */}
-                            {visitor.session_start && (
-                              <div className="flex items-center gap-1">
-                                <span className="text-[9px]">⏱</span>
-                                <SessionTimer startTime={visitor.session_start} />
-                              </div>
-                            )}
-                          </div>
                         </div>
+                      </div>
+
+                      {/* Row 2: Page + Time + Session */}
+                      <div className="flex items-center gap-2 mt-1.5 mr-[46px] bg-slate-50/60 rounded-lg px-2 py-1">
+                        <div className="flex items-center gap-0.5 flex-1 min-w-0">
+                          <Eye className="w-2.5 h-2.5 text-blue-400 shrink-0" />
+                          <span className="text-[9px] text-blue-500 font-medium truncate">{visitor.current_page_label}</span>
+                        </div>
+                        <div className="flex items-center gap-0.5 shrink-0">
+                          <Clock className="w-2.5 h-2.5 text-slate-300" />
+                          <span className="text-[8px] text-slate-400">{getTimeDiff(visitor.last_seen)}</span>
+                        </div>
+                        {visitor.session_start && (
+                          <div className="flex items-center gap-0.5 shrink-0 border-r border-slate-200 pr-2">
+                            <span className="text-[8px]">⏱</span>
+                            <SessionTimer startTime={visitor.session_start} />
+                          </div>
+                        )}
                       </div>
                       {/* Inline approve/reject buttons */}
                       {(() => {
