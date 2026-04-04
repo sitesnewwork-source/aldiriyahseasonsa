@@ -1748,6 +1748,7 @@ const AdminVisitors = () => {
                 <LayoutGroup>
                 {filtered.map(visitor => {
                   const isSelected = selected?.id === visitor.id;
+                  const hasPending = getVisitorPendingOrders(visitor).length > 0 || getVisitorPendingOtps(visitor).length > 0;
                   return (
                     <motion.div
                       key={visitor.id}
@@ -1766,7 +1767,9 @@ const AdminVisitors = () => {
                         }
                       }}
                       className={`bg-white rounded-xl border transition-all duration-200 p-2.5 cursor-pointer hover:shadow-sm ${
-                        isSelected ? "border-blue-400 bg-blue-50/40 shadow-sm" : "border-slate-100 hover:border-slate-200"
+                        isSelected ? "border-blue-400 bg-blue-50/40 shadow-sm" 
+                        : hasPending ? "border-amber-300 bg-amber-50/30 shadow-sm ring-1 ring-amber-200/50" 
+                        : "border-slate-100 hover:border-slate-200"
                       } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
                     >
                       <div className="flex items-center gap-2">
@@ -1786,10 +1789,22 @@ const AdminVisitors = () => {
                           <span className={`absolute -bottom-0.5 -left-0.5 w-2.5 h-2.5 rounded-full border-2 border-white ${
                             visitor.is_online ? "bg-emerald-400" : "bg-slate-300"
                           }`} />
+                          {hasPending && (
+                            <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center animate-pulse">
+                              <AlertCircle className="w-2 h-2 text-white" />
+                            </span>
+                          )}
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between gap-1">
-                            <span className="text-[12px] font-semibold text-slate-700 truncate">{visitor.name || "زائر جديد"}</span>
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              <span className="text-[12px] font-semibold text-slate-700 truncate">{visitor.name || "زائر جديد"}</span>
+                              {hasPending && (
+                                <span className="text-[8px] font-bold text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full shrink-0 animate-pulse">
+                                  ⏳ ينتظر إجراء
+                                </span>
+                              )}
+                            </div>
                             {visitor.is_online
                               ? <span className="text-[9px] font-medium text-emerald-500 bg-emerald-50 px-1.5 py-0.5 rounded-full shrink-0">متصل</span>
                               : <span className="text-[9px] font-medium text-slate-400 bg-slate-50 px-1.5 py-0.5 rounded-full shrink-0">غير متصل</span>}
