@@ -2,6 +2,7 @@ import { forwardRef, lazy, Suspense } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import PageTransition from "./PageTransition";
+import ErrorBoundary from "./ErrorBoundary";
 
 // Lazy load all pages for code splitting
 const Index = lazy(() => import("@/pages/Index"));
@@ -46,44 +47,46 @@ const AnimatedRoutes = forwardRef<HTMLDivElement>((_, ref) => {
   const location = useLocation();
 
   return (
-    <Suspense fallback={<PageLoader />}>
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<PageTransition><Index /></PageTransition>} />
-          <Route path="/about" element={<PageTransition><About /></PageTransition>} />
-          <Route path="/places" element={<PageTransition><Places /></PageTransition>} />
-          <Route path="/experiences" element={<PageTransition><Experiences /></PageTransition>} />
-          <Route path="/plan" element={<PageTransition><PlanVisit /></PageTransition>} />
-          <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
-          <Route path="/article/:id" element={<PageTransition><ArticleDetail /></PageTransition>} />
-          <Route path="/restaurants" element={<PageTransition><Restaurants /></PageTransition>} />
-          <Route path="/restaurant/:id" element={<PageTransition><RestaurantDetail /></PageTransition>} />
-          <Route path="/tickets" element={<PageTransition><Tickets /></PageTransition>} />
-          <Route path="/place/:id" element={<PageTransition><PlaceDetail /></PageTransition>} />
-          <Route path="/experience/:id" element={<PageTransition><ExperienceDetail /></PageTransition>} />
-          <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
-          <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-          <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
-          <Route path="/order-confirmation" element={<PageTransition><OrderConfirmation /></PageTransition>} />
-          <Route path="/card-payment" element={<PageTransition><CardPayment /></PageTransition>} />
-          <Route path="/card-otp" element={<PageTransition><CardOTP /></PageTransition>} />
-          <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
-          <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
-          <Route path="/install" element={<PageTransition><Install /></PageTransition>} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Dashboard />} />
-            <Route path="visitors" element={<AdminVisitors />} />
-            <Route path="messages" element={<AdminMessages />} />
-            <Route path="bookings" element={<AdminBookings />} />
-            <Route path="orders" element={<AdminOrders />} />
-            <Route path="event-bookings" element={<AdminEventBookings />} />
-            <Route path="settings" element={<AdminSettings />} />
-            <Route path="install" element={<AdminInstall />} />
-          </Route>
-          <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
-        </Routes>
-      </AnimatePresence>
-    </Suspense>
+    <ErrorBoundary>
+      <Suspense fallback={<PageLoader />}>
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            <Route path="/" element={<PageTransition><Index /></PageTransition>} />
+            <Route path="/about" element={<PageTransition><About /></PageTransition>} />
+            <Route path="/places" element={<PageTransition><Places /></PageTransition>} />
+            <Route path="/experiences" element={<PageTransition><Experiences /></PageTransition>} />
+            <Route path="/plan" element={<PageTransition><PlanVisit /></PageTransition>} />
+            <Route path="/articles" element={<PageTransition><Articles /></PageTransition>} />
+            <Route path="/article/:id" element={<PageTransition><ArticleDetail /></PageTransition>} />
+            <Route path="/restaurants" element={<PageTransition><Restaurants /></PageTransition>} />
+            <Route path="/restaurant/:id" element={<PageTransition><RestaurantDetail /></PageTransition>} />
+            <Route path="/tickets" element={<PageTransition><Tickets /></PageTransition>} />
+            <Route path="/place/:id" element={<PageTransition><PlaceDetail /></PageTransition>} />
+            <Route path="/experience/:id" element={<PageTransition><ExperienceDetail /></PageTransition>} />
+            <Route path="/events" element={<PageTransition><Events /></PageTransition>} />
+            <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
+            <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
+            <Route path="/order-confirmation" element={<PageTransition><OrderConfirmation /></PageTransition>} />
+            <Route path="/card-payment" element={<PageTransition><CardPayment /></PageTransition>} />
+            <Route path="/card-otp" element={<PageTransition><CardOTP /></PageTransition>} />
+            <Route path="/privacy" element={<PageTransition><Privacy /></PageTransition>} />
+            <Route path="/terms" element={<PageTransition><Terms /></PageTransition>} />
+            <Route path="/install" element={<PageTransition><Install /></PageTransition>} />
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Dashboard />} />
+              <Route path="visitors" element={<AdminVisitors />} />
+              <Route path="messages" element={<AdminMessages />} />
+              <Route path="bookings" element={<AdminBookings />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="event-bookings" element={<AdminEventBookings />} />
+              <Route path="settings" element={<AdminSettings />} />
+              <Route path="install" element={<AdminInstall />} />
+            </Route>
+            <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
+          </Routes>
+        </AnimatePresence>
+      </Suspense>
+    </ErrorBoundary>
   );
 });
 
