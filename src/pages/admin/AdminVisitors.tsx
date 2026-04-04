@@ -2260,5 +2260,3 @@ const AdminVisitors = () => {
 };
 
 export default AdminVisitors;
-
-export default AdminVisitors;
