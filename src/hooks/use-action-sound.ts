@@ -217,6 +217,34 @@ export const playChime = (type: SoundType = "soft") => {
         break;
       }
 
+      case "pending_action": {
+        // Attention-grabbing alert: rising two-tone bell with urgency
+        const bellFreqs = [659, 880, 1175, 880, 1175];
+        bellFreqs.forEach((freq, i) => {
+          const osc = ctx.createOscillator();
+          const osc2 = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = "sine";
+          osc2.type = "triangle";
+          osc.frequency.setValueAtTime(freq, now + i * 0.18);
+          osc2.frequency.setValueAtTime(freq * 1.5, now + i * 0.18);
+          gain.gain.setValueAtTime(0, now + i * 0.18);
+          gain.gain.linearRampToValueAtTime(0.1, now + i * 0.18 + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.18 + 0.35);
+          osc.connect(gain);
+          osc2.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + i * 0.18);
+          osc.stop(now + i * 0.18 + 0.4);
+          osc2.start(now + i * 0.18);
+          osc2.stop(now + i * 0.18 + 0.4);
+        });
+        if ("vibrate" in navigator) {
+          navigator.vibrate([150, 80, 150, 80, 300]);
+        }
+        break;
+      }
+
       case "success": {
         [523, 659, 784].forEach((freq, i) => {
           const osc = ctx.createOscillator();
