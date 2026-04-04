@@ -246,49 +246,65 @@ export const playChime = (type: SoundType = "soft") => {
       }
 
       case "otp_incoming": {
-        // Distinctive OTP alert: digital keypad tones (DTMF-inspired) with urgency
-        // Short staccato beeps ascending rapidly, then a sustained attention tone
-        const dtmfFreqs = [697, 941, 1209, 1477, 1633];
-        dtmfFreqs.forEach((freq, i) => {
+        // Urgent 3-tone siren: rising → falling → sustained high alert
+        // Phase 1: Rapid ascending chirps (alarm-like)
+        const chirpFreqs = [600, 900, 1200, 1500, 1800];
+        chirpFreqs.forEach((freq, i) => {
           const osc = ctx.createOscillator();
-          const osc2 = ctx.createOscillator();
           const gain = ctx.createGain();
-          osc.type = "square";
-          osc2.type = "sine";
-          osc.frequency.setValueAtTime(freq, now + i * 0.08);
-          osc2.frequency.setValueAtTime(freq * 0.7, now + i * 0.08);
-          gain.gain.setValueAtTime(0, now + i * 0.08);
-          gain.gain.linearRampToValueAtTime(0.07, now + i * 0.08 + 0.01);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.07);
+          osc.type = "sawtooth";
+          osc.frequency.setValueAtTime(freq, now + i * 0.06);
+          osc.frequency.exponentialRampToValueAtTime(freq * 1.3, now + i * 0.06 + 0.05);
+          gain.gain.setValueAtTime(0, now + i * 0.06);
+          gain.gain.linearRampToValueAtTime(0.08, now + i * 0.06 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.06 + 0.055);
           osc.connect(gain);
-          osc2.connect(gain);
           gain.connect(ctx.destination);
-          osc.start(now + i * 0.08);
-          osc.stop(now + i * 0.08 + 0.08);
-          osc2.start(now + i * 0.08);
-          osc2.stop(now + i * 0.08 + 0.08);
+          osc.start(now + i * 0.06);
+          osc.stop(now + i * 0.06 + 0.06);
         });
-        // Sustained attention tone after beeps
-        const sustainOsc = ctx.createOscillator();
-        const sustainOsc2 = ctx.createOscillator();
-        const sustainGain = ctx.createGain();
-        sustainOsc.type = "sine";
-        sustainOsc2.type = "triangle";
-        sustainOsc.frequency.setValueAtTime(1320, now + 0.5);
-        sustainOsc2.frequency.setValueAtTime(1760, now + 0.5);
-        sustainGain.gain.setValueAtTime(0, now + 0.5);
-        sustainGain.gain.linearRampToValueAtTime(0.1, now + 0.52);
-        sustainGain.gain.setValueAtTime(0.1, now + 0.7);
-        sustainGain.gain.exponentialRampToValueAtTime(0.001, now + 1.1);
-        sustainOsc.connect(sustainGain);
-        sustainOsc2.connect(sustainGain);
-        sustainGain.connect(ctx.destination);
-        sustainOsc.start(now + 0.5);
-        sustainOsc.stop(now + 1.2);
-        sustainOsc2.start(now + 0.5);
-        sustainOsc2.stop(now + 1.2);
+
+        // Phase 2: Two-tone urgent warble (police siren feel)
+        const warbleOsc = ctx.createOscillator();
+        const warbleOsc2 = ctx.createOscillator();
+        const warbleGain = ctx.createGain();
+        warbleOsc.type = "sine";
+        warbleOsc2.type = "triangle";
+        warbleOsc.frequency.setValueAtTime(1400, now + 0.35);
+        warbleOsc.frequency.linearRampToValueAtTime(800, now + 0.55);
+        warbleOsc.frequency.linearRampToValueAtTime(1400, now + 0.75);
+        warbleOsc2.frequency.setValueAtTime(1600, now + 0.35);
+        warbleOsc2.frequency.linearRampToValueAtTime(1000, now + 0.55);
+        warbleOsc2.frequency.linearRampToValueAtTime(1600, now + 0.75);
+        warbleGain.gain.setValueAtTime(0, now + 0.35);
+        warbleGain.gain.linearRampToValueAtTime(0.1, now + 0.38);
+        warbleGain.gain.setValueAtTime(0.1, now + 0.7);
+        warbleGain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+        warbleOsc.connect(warbleGain);
+        warbleOsc2.connect(warbleGain);
+        warbleGain.connect(ctx.destination);
+        warbleOsc.start(now + 0.35);
+        warbleOsc.stop(now + 0.9);
+        warbleOsc2.start(now + 0.35);
+        warbleOsc2.stop(now + 0.9);
+
+        // Phase 3: Final sustained high-pitch attention ping
+        const pingOsc = ctx.createOscillator();
+        const pingGain = ctx.createGain();
+        pingOsc.type = "sine";
+        pingOsc.frequency.setValueAtTime(2200, now + 0.9);
+        pingOsc.frequency.exponentialRampToValueAtTime(1800, now + 1.3);
+        pingGain.gain.setValueAtTime(0, now + 0.9);
+        pingGain.gain.linearRampToValueAtTime(0.12, now + 0.93);
+        pingGain.gain.setValueAtTime(0.12, now + 1.05);
+        pingGain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+        pingOsc.connect(pingGain);
+        pingGain.connect(ctx.destination);
+        pingOsc.start(now + 0.9);
+        pingOsc.stop(now + 1.5);
+
         if ("vibrate" in navigator) {
-          navigator.vibrate([80, 40, 80, 40, 80, 40, 80, 40, 80, 100, 400]);
+          navigator.vibrate([60, 30, 60, 30, 60, 30, 60, 30, 60, 80, 200, 80, 400]);
         }
         break;
       }
