@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ShieldCheck, Lock, RefreshCw, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { playChime } from "@/hooks/use-action-sound";
+
 
 const CardOTP = () => {
   const { lang } = useLanguage();
