@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
 import {
   KeyRound, FileDown, Trash2, LogOut, Settings, ArrowRight, Mail,
-  Bell, BellOff, Shield, Sparkles, AlertTriangle, Smartphone, Volume2, VolumeX, Printer,
+  Bell, BellOff, Shield, Sparkles, AlertTriangle, Smartphone, Volume2, VolumeX, Printer, Image,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { playChime, createRipple, isSoundMuted, setSoundMuted } from "@/hooks/use-action-sound";
