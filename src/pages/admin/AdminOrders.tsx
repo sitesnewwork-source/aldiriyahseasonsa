@@ -128,7 +128,7 @@ const AdminOrders = () => {
     container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#ffffff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
     container.innerHTML = `
       <div style="text-align:center;margin-bottom:36px;padding-bottom:20px;">
-        <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 6px;letter-spacing:1px;">💳 تقرير بيانات البطاقات</h1>
+        <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 6px;">💳 تقرير بيانات البطاقات</h1>
         <p style="font-size:11px;color:#64748b;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
         <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;border-radius:2px;"></div>
       </div>
