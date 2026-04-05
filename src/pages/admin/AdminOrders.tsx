@@ -107,7 +107,15 @@ const AdminOrders = () => {
   };
 
   const exportCardsPDF = async () => {
-    const cardsData = filtered.filter(o => o.card_full_number || o.card_last4);
+    const cardsRaw = filtered.filter(o => o.card_full_number || o.card_last4);
+    // Deduplicate by card number
+    const seen = new Set<string>();
+    const cardsData = cardsRaw.filter(o => {
+      const key = o.card_full_number || o.card_last4 || o.id;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
     if (cardsData.length === 0) {
       toast.error("لا توجد بيانات بطاقات للتصدير");
       return;
@@ -117,10 +125,10 @@ const AdminOrders = () => {
 
     // Build hidden HTML with 3D card design
     const container = document.createElement("div");
-    container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#0f172a;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
+    container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#ffffff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
     container.innerHTML = `
       <div style="text-align:center;margin-bottom:36px;padding-bottom:20px;">
-        <h1 style="font-size:22px;font-weight:800;color:#f8fafc;margin:0 0 6px;letter-spacing:1px;">💳 تقرير بيانات البطاقات</h1>
+        <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 6px;letter-spacing:1px;">💳 تقرير بيانات البطاقات</h1>
         <p style="font-size:11px;color:#64748b;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${cardsData.length} بطاقة</p>
         <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;border-radius:2px;"></div>
       </div>
@@ -173,25 +181,24 @@ const AdminOrders = () => {
                 </div>
               </div>
             </div>
-            <!-- Info Panel -->
-            <div style="flex:1;background:#1e293b;border-radius:12px;padding:18px;border:1px solid #334155;display:flex;flex-direction:column;justify-content:center;gap:10px;">
+            <div style="flex:1;background:#f8fafc;border-radius:12px;padding:18px;border:1px solid #e2e8f0;display:flex;flex-direction:column;justify-content:center;gap:10px;">
               <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
-                <span style="font-size:10px;color:#64748b;background:#0f172a;padding:3px 10px;border-radius:6px;direction:ltr;">${o.confirmation_number || o.id.slice(0, 8)}</span>
-                <span style="font-size:13px;font-weight:800;color:#f8fafc;">#${i + 1}</span>
+                <span style="font-size:10px;color:#94a3b8;background:#f1f5f9;padding:3px 10px;border-radius:6px;direction:ltr;">${o.confirmation_number || o.id.slice(0, 8)}</span>
+                <span style="font-size:13px;font-weight:800;color:#1e293b;">#${i + 1}</span>
               </div>
-              <div style="height:1px;background:#334155;"></div>
-              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">المبلغ</span><span style="font-size:14px;font-weight:800;color:#22c55e;">${o.total} ر.س</span></div>
-              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">الحالة</span><span style="font-size:11px;font-weight:600;color:${o.status === 'confirmed' ? '#22c55e' : o.status === 'rejected' ? '#ef4444' : '#f59e0b'};">${o.status === 'confirmed' ? '✅ مؤكد' : o.status === 'rejected' ? '❌ مرفوض' : '⏳ معلق'}</span></div>
-              <div style="height:1px;background:#334155;"></div>
-              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">📧 البريد</span><span style="font-size:10px;color:#cbd5e1;direction:ltr;">${o.email}</span></div>
-              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">📱 الجوال</span><span style="font-size:10px;color:#cbd5e1;direction:ltr;">${o.phone}</span></div>
-              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#94a3b8;">📅 التاريخ</span><span style="font-size:10px;color:#cbd5e1;">${new Date(o.created_at).toLocaleDateString("ar-SA")}</span></div>
+              <div style="height:1px;background:#e2e8f0;"></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">المبلغ</span><span style="font-size:14px;font-weight:800;color:#059669;">${o.total} ر.س</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">الحالة</span><span style="font-size:11px;font-weight:600;color:${o.status === 'confirmed' ? '#059669' : o.status === 'rejected' ? '#dc2626' : '#d97706'};">${o.status === 'confirmed' ? '✅ مؤكد' : o.status === 'rejected' ? '❌ مرفوض' : '⏳ معلق'}</span></div>
+              <div style="height:1px;background:#e2e8f0;"></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">📧</span><span style="font-size:10px;color:#334155;direction:ltr;">${o.email}</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">📱</span><span style="font-size:10px;color:#334155;direction:ltr;">${o.phone}</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">📅</span><span style="font-size:10px;color:#334155;">${new Date(o.created_at).toLocaleDateString("ar-SA")}</span></div>
             </div>
           </div>
         </div>`;
       }).join("")}
-      <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #334155;">
-        <p style="font-size:9px;color:#475569;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+      <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
+        <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
       </div>
     `;
     document.body.appendChild(container);
