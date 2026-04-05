@@ -93,7 +93,7 @@ const AdminSettings = () => {
     return `RPT-${d}-${t}-${rand}`;
   };
 
-
+  const handleExportPDF = async () => {
     playChime("info");
     toast({ title: "📄 جاري التصدير...", description: "يتم تجهيز ملف PDF" });
     try {
