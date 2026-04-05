@@ -1948,9 +1948,9 @@ const AdminVisitors = () => {
                         <div className="flex-1 min-w-0">
                           {/* Name row */}
                           <div className="flex items-center justify-between gap-1">
-                            <div className="flex items-center gap-1 min-w-0">
+                            <div className="flex items-center gap-1.5 min-w-0">
+                              {visitor.country && <span className="text-[14px] shrink-0 leading-none">{countryFlag(visitor.country)}</span>}
                               <span className="text-[12px] font-bold text-slate-800 truncate">{displayName(visitor)}</span>
-                              {visitor.country && <span className="text-[11px] shrink-0">{countryFlag(visitor.country)}</span>}
                               {hasPendingOrder && (
                                 <span className="text-[7px] font-bold text-red-600 bg-red-100 px-1 py-0.5 rounded-full shrink-0 animate-pulse">
                                   ينتظر إجراء
