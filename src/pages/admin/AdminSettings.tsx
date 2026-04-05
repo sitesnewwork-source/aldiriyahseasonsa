@@ -334,6 +334,7 @@ const AdminSettings = () => {
           <img src="${logoSrc}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 12px;" />
           <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;font-family:'Tajawal',sans-serif;">تقرير بيانات البطاقات</h1>
           <p style="font-size:12px;color:#64748b;margin-top:6px;font-family:'Tajawal',sans-serif;">📅 ${new Date().toLocaleDateString("ar-SA", {weekday:"long",year:"numeric",month:"long",day:"numeric"})} &nbsp;|&nbsp; 🕐 ${new Date().toLocaleTimeString("ar-SA", {hour:"2-digit",minute:"2-digit"})} &nbsp;|&nbsp; ${uniqueCards.length} بطاقة</p>
+          <p style="font-size:10px;color:#94a3b8;margin:6px 0 0;direction:ltr;font-family:'Tajawal',sans-serif;">📋 ${serialPrint}</p>
           <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;"></div>
         </div>
         ${cardHtml}
