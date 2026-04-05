@@ -512,6 +512,11 @@ const AdminSettings = () => {
       onClick: handleExportPDF,
     },
     {
+      icon: Image, label: "تصدير كصورة PNG",
+      gradient: "from-pink-500 to-rose-600", shadow: "shadow-pink-500/20",
+      onClick: handleExportPNG,
+    },
+    {
       icon: Printer, label: "طباعة التقرير مباشرة",
       gradient: "from-indigo-500 to-purple-600", shadow: "shadow-indigo-500/20",
       onClick: handlePrintReport,
