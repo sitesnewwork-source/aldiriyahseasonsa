@@ -323,6 +323,7 @@ const AdminSettings = () => {
         return;
       }
       const logoSrc = diriyahLogo.startsWith("data:") || diriyahLogo.startsWith("http") ? diriyahLogo : new URL(diriyahLogo, window.location.origin).href;
+      const serialPrint = generateReportSerial();
       printWindow.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>تقرير البطاقات</title>
         <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
         <style>
