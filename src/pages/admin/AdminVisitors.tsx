@@ -898,21 +898,50 @@ const AdminVisitors = () => {
 
   const countryFlag = (name: string) => {
     const map: Record<string, string> = {
+      // الخليج والشرق الأوسط
       "Saudi Arabia":"🇸🇦","United Arab Emirates":"🇦🇪","Kuwait":"🇰🇼","Bahrain":"🇧🇭",
       "Qatar":"🇶🇦","Oman":"🇴🇲","Egypt":"🇪🇬","Jordan":"🇯🇴","Iraq":"🇮🇶",
-      "Lebanon":"🇱🇧","Syria":"🇸🇾","Palestine":"🇵🇸","Yemen":"🇾🇪","Libya":"🇱🇾",
-      "Tunisia":"🇹🇳","Algeria":"🇩🇿","Morocco":"🇲🇦","Sudan":"🇸🇩","Somalia":"🇸🇴",
-      "United States":"🇺🇸","United Kingdom":"🇬🇧","Germany":"🇩🇪","France":"🇫🇷",
-      "Canada":"🇨🇦","Australia":"🇦🇺","India":"🇮🇳","China":"🇨🇳","Japan":"🇯🇵",
-      "South Korea":"🇰🇷","Turkey":"🇹🇷","Pakistan":"🇵🇰","Indonesia":"🇮🇩",
-      "Malaysia":"🇲🇾","Brazil":"🇧🇷","Mexico":"🇲🇽","Italy":"🇮🇹","Spain":"🇪🇸",
-      "Netherlands":"🇳🇱","Sweden":"🇸🇪","Norway":"🇳🇴","Denmark":"🇩🇰",
-      "Russia":"🇷🇺","South Africa":"🇿🇦","Nigeria":"🇳🇬","Singapore":"🇸🇬",
-      "Thailand":"🇹🇭","Philippines":"🇵🇭","Bangladesh":"🇧🇩","Sri Lanka":"🇱🇰",
-      "Iran":"🇮🇷","Afghanistan":"🇦🇫","Ireland":"🇮🇪","Switzerland":"🇨🇭",
-      "Austria":"🇦🇹","Belgium":"🇧🇪","Portugal":"🇵🇹","Greece":"🇬🇷","Poland":"🇵🇱",
-      "New Zealand":"🇳🇿","Argentina":"🇦🇷","Colombia":"🇨🇴","Chile":"🇨🇱",
-      "Finland":"🇫🇮","Czech Republic":"🇨🇿","Romania":"🇷🇴","Hungary":"🇭🇺",
+      "Lebanon":"🇱🇧","Syria":"🇸🇾","Palestine":"🇵🇸","Yemen":"🇾🇪","Iran":"🇮🇷",
+      "Turkey":"🇹🇷","Israel":"🇮🇱",
+      // شمال أفريقيا
+      "Libya":"🇱🇾","Tunisia":"🇹🇳","Algeria":"🇩🇿","Morocco":"🇲🇦","Sudan":"🇸🇩",
+      "South Sudan":"🇸🇸","Mauritania":"🇲🇷",
+      // أفريقيا
+      "Somalia":"🇸🇴","Nigeria":"🇳🇬","South Africa":"🇿🇦","Kenya":"🇰🇪","Ethiopia":"🇪🇹",
+      "Ghana":"🇬🇭","Tanzania":"🇹🇿","Uganda":"🇺🇬","Cameroon":"🇨🇲","Senegal":"🇸🇳",
+      "Ivory Coast":"🇨🇮","Cote d'Ivoire":"🇨🇮","Rwanda":"🇷🇼","Mozambique":"🇲🇿",
+      "Angola":"🇦🇴","Zimbabwe":"🇿🇼","Zambia":"🇿🇲","Mali":"🇲🇱","Niger":"🇳🇪",
+      "Congo":"🇨🇬","DR Congo":"🇨🇩","Madagascar":"🇲🇬","Botswana":"🇧🇼","Namibia":"🇳🇦",
+      // أوروبا
+      "United Kingdom":"🇬🇧","Germany":"🇩🇪","France":"🇫🇷","Italy":"🇮🇹","Spain":"🇪🇸",
+      "Netherlands":"🇳🇱","Belgium":"🇧🇪","Switzerland":"🇨🇭","Austria":"🇦🇹",
+      "Sweden":"🇸🇪","Norway":"🇳🇴","Denmark":"🇩🇰","Finland":"🇫🇮","Iceland":"🇮🇸",
+      "Ireland":"🇮🇪","Portugal":"🇵🇹","Greece":"🇬🇷","Poland":"🇵🇱",
+      "Czech Republic":"🇨🇿","Czechia":"🇨🇿","Romania":"🇷🇴","Hungary":"🇭🇺",
+      "Ukraine":"🇺🇦","Bulgaria":"🇧🇬","Croatia":"🇭🇷","Serbia":"🇷🇸",
+      "Slovakia":"🇸🇰","Slovenia":"🇸🇮","Lithuania":"🇱🇹","Latvia":"🇱🇻","Estonia":"🇪🇪",
+      "Luxembourg":"🇱🇺","Malta":"🇲🇹","Cyprus":"🇨🇾","Albania":"🇦🇱",
+      "Bosnia and Herzegovina":"🇧🇦","North Macedonia":"🇲🇰","Montenegro":"🇲🇪",
+      "Moldova":"🇲🇩","Belarus":"🇧🇾","Georgia":"🇬🇪","Armenia":"🇦🇲","Azerbaijan":"🇦🇿",
+      // أمريكا الشمالية والجنوبية
+      "United States":"🇺🇸","Canada":"🇨🇦","Mexico":"🇲🇽","Brazil":"🇧🇷",
+      "Argentina":"🇦🇷","Colombia":"🇨🇴","Chile":"🇨🇱","Peru":"🇵🇪","Venezuela":"🇻🇪",
+      "Ecuador":"🇪🇨","Bolivia":"🇧🇴","Paraguay":"🇵🇾","Uruguay":"🇺🇾",
+      "Cuba":"🇨🇺","Dominican Republic":"🇩🇴","Costa Rica":"🇨🇷","Panama":"🇵🇦",
+      "Guatemala":"🇬🇹","Honduras":"🇭🇳","El Salvador":"🇸🇻","Jamaica":"🇯🇲",
+      "Trinidad and Tobago":"🇹🇹","Puerto Rico":"🇵🇷",
+      // آسيا
+      "India":"🇮🇳","China":"🇨🇳","Japan":"🇯🇵","South Korea":"🇰🇷","North Korea":"🇰🇵",
+      "Pakistan":"🇵🇰","Bangladesh":"🇧🇩","Sri Lanka":"🇱🇰","Afghanistan":"🇦🇫",
+      "Indonesia":"🇮🇩","Malaysia":"🇲🇾","Singapore":"🇸🇬","Thailand":"🇹🇭",
+      "Philippines":"🇵🇭","Vietnam":"🇻🇳","Myanmar":"🇲🇲","Cambodia":"🇰🇭",
+      "Laos":"🇱🇦","Nepal":"🇳🇵","Uzbekistan":"🇺🇿","Kazakhstan":"🇰🇿",
+      "Turkmenistan":"🇹🇲","Tajikistan":"🇹🇯","Kyrgyzstan":"🇰🇬","Mongolia":"🇲🇳",
+      "Taiwan":"🇹🇼","Hong Kong":"🇭🇰","Macao":"🇲🇴","Brunei":"🇧🇳","Maldives":"🇲🇻",
+      // أوقيانوسيا
+      "Australia":"🇦🇺","New Zealand":"🇳🇿","Fiji":"🇫🇯","Papua New Guinea":"🇵🇬",
+      // أخرى
+      "Russia":"🇷🇺",
     };
     return map[name] || "🌍";
   };
