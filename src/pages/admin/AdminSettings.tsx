@@ -325,7 +325,7 @@ const AdminSettings = () => {
         </div>
       </body></html>`);
       printWindow.document.close();
-      setTimeout(() => { printWindow.print(); }, 500);
+      setTimeout(() => { printWindow.print(); }, 1500);
       playChime("success");
     } catch {
       playChime("error");
