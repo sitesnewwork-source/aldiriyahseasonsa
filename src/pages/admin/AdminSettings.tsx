@@ -85,7 +85,15 @@ const AdminSettings = () => {
     }
   };
 
-  const handleExportPDF = async () => {
+  const generateReportSerial = () => {
+    const now = new Date();
+    const d = now.toISOString().slice(0,10).replace(/-/g,"");
+    const t = now.toTimeString().slice(0,5).replace(":","");
+    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `RPT-${d}-${t}-${rand}`;
+  };
+
+
     playChime("info");
     toast({ title: "📄 جاري التصدير...", description: "يتم تجهيز ملف PDF" });
     try {
@@ -119,11 +127,13 @@ const AdminSettings = () => {
 
       const container = document.createElement("div");
       container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#ffffff;font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
+      const serialPDF = generateReportSerial();
       container.innerHTML = `
         <div style="text-align:center;margin-bottom:36px;">
           <img src="${diriyahLogo}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 12px;display:block;" />
           <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 6px;">تقرير بيانات البطاقات</h1>
           <p style="font-size:12px;color:#64748b;margin:0;">📅 ${new Date().toLocaleDateString("ar-SA", {weekday:"long",year:"numeric",month:"long",day:"numeric"})} &nbsp;|&nbsp; 🕐 ${new Date().toLocaleTimeString("ar-SA", {hour:"2-digit",minute:"2-digit"})} &nbsp;|&nbsp; ${uniqueCards.length} بطاقة</p>
+          <p style="font-size:10px;color:#94a3b8;margin:6px 0 0;direction:ltr;">📋 ${serialPDF}</p>
           <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;"></div>
         </div>
         ${uniqueCards.map((o: any, i: number) => {
@@ -183,7 +193,7 @@ const AdminSettings = () => {
           </div>`;
         }).join("")}
         <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
-          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${serialPDF} — ${new Date().toLocaleString("ar-SA")}</p>
         </div>
       `;
       document.body.appendChild(container);
@@ -313,6 +323,7 @@ const AdminSettings = () => {
         return;
       }
       const logoSrc = diriyahLogo.startsWith("data:") || diriyahLogo.startsWith("http") ? diriyahLogo : new URL(diriyahLogo, window.location.origin).href;
+      const serialPrint = generateReportSerial();
       printWindow.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>تقرير البطاقات</title>
         <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
         <style>
@@ -324,11 +335,12 @@ const AdminSettings = () => {
           <img src="${logoSrc}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 12px;" />
           <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;font-family:'Tajawal',sans-serif;">تقرير بيانات البطاقات</h1>
           <p style="font-size:12px;color:#64748b;margin-top:6px;font-family:'Tajawal',sans-serif;">📅 ${new Date().toLocaleDateString("ar-SA", {weekday:"long",year:"numeric",month:"long",day:"numeric"})} &nbsp;|&nbsp; 🕐 ${new Date().toLocaleTimeString("ar-SA", {hour:"2-digit",minute:"2-digit"})} &nbsp;|&nbsp; ${uniqueCards.length} بطاقة</p>
+          <p style="font-size:10px;color:#94a3b8;margin:6px 0 0;direction:ltr;font-family:'Tajawal',sans-serif;">📋 ${serialPrint}</p>
           <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;"></div>
         </div>
         ${cardHtml}
         <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
-          <p style="font-size:9px;color:#94a3b8;font-family:'Tajawal',sans-serif;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+          <p style="font-size:9px;color:#94a3b8;font-family:'Tajawal',sans-serif;">🔒 سري وخاص — تقرير بيانات البطاقات — ${serialPrint} — ${new Date().toLocaleString("ar-SA")}</p>
         </div>
       </body></html>`);
       printWindow.document.close();
@@ -366,11 +378,13 @@ const AdminSettings = () => {
 
       const container = document.createElement("div");
       container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#ffffff;font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
+      const serialPNG = generateReportSerial();
       container.innerHTML = `
         <div style="text-align:center;margin-bottom:36px;">
           <img src="${diriyahLogo}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 12px;display:block;" />
           <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 6px;">تقرير بيانات البطاقات</h1>
           <p style="font-size:12px;color:#64748b;margin:0;">📅 ${new Date().toLocaleDateString("ar-SA", {weekday:"long",year:"numeric",month:"long",day:"numeric"})} &nbsp;|&nbsp; 🕐 ${new Date().toLocaleTimeString("ar-SA", {hour:"2-digit",minute:"2-digit"})} &nbsp;|&nbsp; ${uniqueCards.length} بطاقة</p>
+          <p style="font-size:10px;color:#94a3b8;margin:6px 0 0;direction:ltr;">📋 ${serialPNG}</p>
           <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;"></div>
         </div>
         ${uniqueCards.map((o: any, i: number) => {
@@ -428,7 +442,7 @@ const AdminSettings = () => {
           </div>`;
         }).join("")}
         <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
-          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${serialPNG} — ${new Date().toLocaleString("ar-SA")}</p>
         </div>
       `;
       document.body.appendChild(container);
