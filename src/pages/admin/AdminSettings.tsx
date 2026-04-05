@@ -85,7 +85,15 @@ const AdminSettings = () => {
     }
   };
 
-  const handleExportPDF = async () => {
+  const generateReportSerial = () => {
+    const now = new Date();
+    const d = now.toISOString().slice(0,10).replace(/-/g,"");
+    const t = now.toTimeString().slice(0,5).replace(":","");
+    const rand = Math.random().toString(36).substring(2, 6).toUpperCase();
+    return `RPT-${d}-${t}-${rand}`;
+  };
+
+
     playChime("info");
     toast({ title: "📄 جاري التصدير...", description: "يتم تجهيز ملف PDF" });
     try {
