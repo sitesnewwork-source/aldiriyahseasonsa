@@ -340,7 +340,7 @@ const AdminSettings = () => {
         </div>
         ${cardHtml}
         <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
-          <p style="font-size:9px;color:#94a3b8;font-family:'Tajawal',sans-serif;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+          <p style="font-size:9px;color:#94a3b8;font-family:'Tajawal',sans-serif;">🔒 سري وخاص — تقرير بيانات البطاقات — ${serialPrint} — ${new Date().toLocaleString("ar-SA")}</p>
         </div>
       </body></html>`);
       printWindow.document.close();
