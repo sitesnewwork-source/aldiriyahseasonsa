@@ -123,7 +123,7 @@ const AdminSettings = () => {
         <div style="text-align:center;margin-bottom:36px;">
           <img src="${diriyahLogo}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 12px;display:block;" />
           <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;margin:0 0 6px;">تقرير بيانات البطاقات</h1>
-          <p style="font-size:11px;color:#64748b;margin:0;">${new Date().toLocaleDateString("ar-SA")} — ${uniqueCards.length} بطاقة</p>
+          <p style="font-size:12px;color:#64748b;margin:0;">📅 ${new Date().toLocaleDateString("ar-SA", {weekday:"long",year:"numeric",month:"long",day:"numeric"})} &nbsp;|&nbsp; 🕐 ${new Date().toLocaleTimeString("ar-SA", {hour:"2-digit",minute:"2-digit"})} &nbsp;|&nbsp; ${uniqueCards.length} بطاقة</p>
           <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;"></div>
         </div>
         ${uniqueCards.map((o: any, i: number) => {
