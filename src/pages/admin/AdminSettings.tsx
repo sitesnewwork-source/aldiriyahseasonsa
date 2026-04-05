@@ -397,6 +397,11 @@ const AdminSettings = () => {
       onClick: handleExportPDF,
     },
     {
+      icon: Printer, label: "طباعة التقرير مباشرة",
+      gradient: "from-indigo-500 to-purple-600", shadow: "shadow-indigo-500/20",
+      onClick: handlePrintReport,
+    },
+    {
       icon: Smartphone, label: "تثبيت لوحة التحكم",
       gradient: "from-amber-500 to-yellow-600", shadow: "shadow-amber-500/20",
       onClick: () => { playChime("pop"); navigate("/admin/install"); },
