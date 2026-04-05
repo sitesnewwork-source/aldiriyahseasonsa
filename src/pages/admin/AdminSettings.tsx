@@ -365,7 +365,7 @@ const AdminSettings = () => {
       }
 
       const container = document.createElement("div");
-      container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#ffffff;font-family:'Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
+      container.style.cssText = "position:fixed;left:-9999px;top:0;width:794px;background:#ffffff;font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif;direction:rtl;padding:40px;";
       container.innerHTML = `
         <div style="text-align:center;margin-bottom:36px;">
           <img src="${diriyahLogo}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 12px;display:block;" />
