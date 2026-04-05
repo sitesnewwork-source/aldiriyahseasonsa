@@ -305,7 +305,7 @@ const AdminSettings = () => {
         toast({ title: "❌ خطأ", description: "تم حظر النافذة المنبثقة. اسمح بالنوافذ المنبثقة وحاول مرة أخرى", variant: "destructive" });
         return;
       }
-      const logoSrc = new URL("/src/assets/diriyah-logo.png", window.location.origin).href;
+      const logoSrc = diriyahLogo.startsWith("data:") || diriyahLogo.startsWith("http") ? diriyahLogo : new URL(diriyahLogo, window.location.origin).href;
       printWindow.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>تقرير البطاقات</title>
         <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
         <style>
