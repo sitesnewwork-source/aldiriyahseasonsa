@@ -10,6 +10,7 @@ import { playChime, createRipple, isSoundMuted, setSoundMuted } from "@/hooks/us
 import { requestNotificationPermission, getNotificationPermission, isNotificationSupported } from "@/hooks/use-browser-notifications";
 import { bankLogos, bankColors } from "@/data/bankLogos";
 import html2canvas from "html2canvas";
+import diriyahLogo from "@/assets/diriyah-logo.png";
 
 const AdminSettings = () => {
   const navigate = useNavigate();
