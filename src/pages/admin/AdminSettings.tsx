@@ -303,19 +303,23 @@ const AdminSettings = () => {
         toast({ title: "❌ خطأ", description: "تم حظر النافذة المنبثقة. اسمح بالنوافذ المنبثقة وحاول مرة أخرى", variant: "destructive" });
         return;
       }
-      printWindow.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>تقرير البطاقات</title><style>
+      const logoSrc = new URL("/src/assets/diriyah-logo.png", window.location.origin).href;
+      printWindow.document.write(`<!DOCTYPE html><html dir="rtl"><head><meta charset="utf-8"><title>تقرير البطاقات</title>
+        <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;800&display=swap" rel="stylesheet">
+        <style>
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{font-family:'Segoe UI',Tahoma,Arial,sans-serif;background:#fff;padding:30px 40px;direction:rtl;}
+        body{font-family:'Tajawal','Segoe UI',Tahoma,Arial,sans-serif;background:#fff;padding:30px 40px;direction:rtl;}
         @media print{body{padding:10px 20px;}@page{size:A4 landscape;margin:10mm;}}
       </style></head><body>
         <div style="text-align:center;margin-bottom:30px;">
-          <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;">💳 تقرير بيانات البطاقات</h1>
-          <p style="font-size:11px;color:#64748b;margin-top:6px;">${new Date().toLocaleDateString("ar-SA")} — ${uniqueCards.length} بطاقة</p>
+          <img src="${logoSrc}" style="width:60px;height:60px;object-fit:contain;margin:0 auto 12px;" />
+          <h1 style="font-size:22px;font-weight:800;color:#1a1a2e;font-family:'Tajawal',sans-serif;">تقرير بيانات البطاقات</h1>
+          <p style="font-size:11px;color:#64748b;margin-top:6px;font-family:'Tajawal',sans-serif;">${new Date().toLocaleDateString("ar-SA")} — ${uniqueCards.length} بطاقة</p>
           <div style="height:2px;background:linear-gradient(90deg,transparent,#d4a843,transparent);margin-top:14px;"></div>
         </div>
         ${cardHtml}
         <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
-          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+          <p style="font-size:9px;color:#94a3b8;font-family:'Tajawal',sans-serif;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
         </div>
       </body></html>`);
       printWindow.document.close();
