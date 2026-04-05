@@ -442,7 +442,7 @@ const AdminSettings = () => {
           </div>`;
         }).join("")}
         <div style="text-align:center;margin-top:24px;padding-top:12px;border-top:1px solid #e2e8f0;">
-          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${new Date().toLocaleString("ar-SA")}</p>
+          <p style="font-size:9px;color:#94a3b8;">🔒 سري وخاص — تقرير بيانات البطاقات — ${serialPNG} — ${new Date().toLocaleString("ar-SA")}</p>
         </div>
       `;
       document.body.appendChild(container);
