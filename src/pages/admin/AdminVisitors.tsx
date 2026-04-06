@@ -5,7 +5,7 @@ import { Undo2, WifiOff as WifiOffBulk, Download, Search, ArrowRight } from "luc
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   Users, User, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
-  Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
+  Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus, Mail,
   Navigation, MessageSquare, UtensilsCrossed, Ticket, MousePointer,
   ChevronDown, ChevronUp, Send, RotateCcw, Archive, ShoppingBag, CalendarCheck,
   CreditCard, Shield, CheckCircle, XCircle, X, CalendarDays,
@@ -2243,177 +2243,223 @@ const AdminVisitors = () => {
           <Sheet open={!!selected && isMobile} onOpenChange={(open) => { if (!open) setSelected(null); }}>
             <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl p-0 overflow-hidden" dir="rtl">
               {selected && (
-                <div className="flex flex-col h-full">
-                  {/* Header */}
-                  <div className="p-4 border-b border-slate-100 shrink-0">
-                    <div className="flex items-center gap-3">
-                      <button
-                        onClick={() => setSelected(null)}
-                        className="p-1.5 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 transition-colors shrink-0"
-                      >
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                      <div className="relative shrink-0">
-                        <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${getAvatarColor(displayName(selected)).bg} flex items-center justify-center text-[15px] font-bold ${getAvatarColor(displayName(selected)).text} shadow-sm`}>
-                          {displayName(selected)[0]}
-                        </div>
-                        <span className={`absolute -bottom-0.5 -left-0.5 w-3 h-3 rounded-full border-2 border-white ${
-                          selected.is_online ? "bg-emerald-400" : "bg-slate-300"
-                        }`} />
+                <div className="flex flex-col h-full bg-slate-50/50">
+                  {/* Top gradient strip */}
+                  <div className={`h-1.5 bg-gradient-to-r ${selected.is_online ? "from-emerald-400 to-teal-400" : "from-slate-300 to-slate-400"}`} />
+
+                  {/* Card-style Header */}
+                  <div className="bg-white border-b border-slate-100/80 p-4 shrink-0">
+                    <div className="flex items-start gap-3">
+                      <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${selected.is_online ? "from-emerald-500 to-teal-500" : "from-slate-400 to-slate-500"} flex items-center justify-center shadow-md shrink-0`}>
+                        <span className="text-white text-[15px] font-bold">{displayName(selected)[0]}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <h3 className="text-[14px] font-bold text-slate-800 truncate">{displayName(selected)}</h3>
-                          <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded-full shrink-0 ${
-                            selected.is_online ? "bg-emerald-50 text-emerald-600" : "bg-slate-50 text-slate-400"
-                          }`}>
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="text-[14px] font-bold text-slate-800 truncate">{displayName(selected)}</span>
+                          <span className={`text-[9px] font-bold px-2.5 py-0.5 rounded-full bg-gradient-to-r ${
+                            selected.is_online ? "from-emerald-500 to-teal-500" : "from-slate-400 to-slate-500"
+                          } text-white shadow-sm whitespace-nowrap`}>
                             {selected.is_online ? "متصل" : "غير متصل"}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1 mt-0.5">
-                          <Eye className="w-2.5 h-2.5 text-blue-400" />
-                          <span className="text-[10px] text-blue-500">{selected.current_page_label}</span>
+                        <div className="flex items-center gap-3 mt-1.5">
+                          <span className="flex items-center gap-1 text-[11px] text-blue-500">
+                            <Eye className="w-3 h-3" />
+                            {selected.current_page_label}
+                          </span>
+                          <span className="text-[10px] text-slate-300">
+                            {getTimeDiff(selected.last_seen)}
+                          </span>
                         </div>
-                        {(selected.email || selected.phone) && (
-                          <div className="flex items-center gap-3 mt-1 flex-wrap">
-                            {selected.email && (
-                              <div className="flex items-center gap-1">
-                                <Globe className="w-2.5 h-2.5 text-slate-400" />
-                                <span className="text-[9px] text-slate-500" dir="ltr">{selected.email}</span>
-                              </div>
-                            )}
-                            {selected.phone && (
-                              <div className="flex items-center gap-1">
-                                <Smartphone className="w-2.5 h-2.5 text-slate-400" />
-                                <span className="text-[9px] text-slate-500" dir="ltr">{selected.phone}</span>
-                              </div>
-                            )}
-                          </div>
-                        )}
                       </div>
-                      <button
-                        onClick={() => deleteSingle(selected.id)}
-                        className="p-1.5 rounded-lg bg-red-50 text-red-400 hover:bg-red-100 transition-colors shrink-0"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Redirect dropdown in hero */}
-                  <div className="px-3 pb-1">
-                    {renderRedirectDropdown(selected, true)}
-                  </div>
-
-                  {/* Inline approve/reject buttons for pending orders */}
-                  {(() => {
-                    const vPendingOrders = getVisitorPendingOrders(selected);
-                    if (!vPendingOrders.length) return null;
-                    return (
-                      <div className="px-3 pb-2 space-y-1.5">
-                        {vPendingOrders.map(order => (
-                          <div key={order.id} className="rounded-xl bg-gradient-to-l from-amber-50/80 to-orange-50/50 border border-amber-200/60 p-2.5">
-                            <div className="flex items-center gap-1.5 mb-1">
-                              <CreditCard className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-                              <span className="text-[10px] text-slate-700 flex-1 truncate font-bold">
-                                {order.cardholder_name || order.email || "زائر"}
-                              </span>
-                              <span className="text-[10px] font-bold text-amber-600">{order.total} ر.س</span>
-                            </div>
-                            <div className="flex items-center gap-1.5 mb-2 mr-[22px]">
-                              <span className="text-[9px] text-slate-500">
-                                {order.card_brand} •••• {order.card_last4}
-                              </span>
-                              {order.bank_name && <span className="text-[9px] text-slate-400">| {order.bank_name}</span>}
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={(e) => approveOrderInline(order.id, e)}
-                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[10px] font-bold hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.97] transition-all shadow-sm shadow-emerald-500/20"
-                              >
-                                <CheckCircle className="w-3.5 h-3.5" /> موافقة
-                              </button>
-                              <button
-                                onClick={(e) => rejectOrderInline(order.id, e)}
-                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-bold hover:from-red-600 hover:to-red-700 active:scale-[0.97] transition-all shadow-sm shadow-red-500/20"
-                              >
-                                <XCircle className="w-3.5 h-3.5" /> رفض
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    );
-                  })()}
-
-                  {/* Inline OTP approve/reject buttons */}
-                  {(() => {
-                    const vPendingOtps = getVisitorPendingOtps(selected);
-                    if (!vPendingOtps.length) return null;
-                    return (
-                      <div className="px-3 pb-2 space-y-1.5">
-                        {vPendingOtps.map(otp => (
-                          <div key={otp.id} className="rounded-xl bg-gradient-to-l from-violet-50/80 to-purple-50/50 border border-violet-200/60 p-2.5">
-                            <div className="flex items-center gap-1.5 mb-2">
-                              <Shield className="w-3.5 h-3.5 text-violet-500 shrink-0" />
-                              <span className="text-[10px] text-slate-600 flex-1 font-semibold">
-                                🔐 OTP: {otp.otp_code}
-                              </span>
-                              <OtpWaitTimer createdAt={otp.created_at} />
-                            </div>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={(e) => approveOtpInline(otp.id, e)}
-                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-[10px] font-bold hover:from-emerald-600 hover:to-emerald-700 active:scale-[0.97] transition-all shadow-sm shadow-emerald-500/20"
-                              >
-                                <CheckCircle className="w-3.5 h-3.5" /> قبول
-                              </button>
-                              <button
-                                onClick={(e) => rejectOtpInline(otp.id, e)}
-                                className="flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg bg-gradient-to-r from-red-500 to-red-600 text-white text-[10px] font-bold hover:from-red-600 hover:to-red-700 active:scale-[0.97] transition-all shadow-sm shadow-red-500/20"
-                              >
-                                <XCircle className="w-3.5 h-3.5" /> رفض
-                              </button>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    );
-                  })()}
-
-                  {/* Visitor info in hero */}
-                  <div className="px-3 pb-2">
-                    <div className="grid grid-cols-4 gap-1">
-                      {[
-                        { label: "الجهاز", value: selected.device === "mobile" ? "📱" : "🖥", sub: selected.device === "mobile" ? "جوال" : "كمبيوتر", color: "from-violet-50 to-purple-50", borderColor: "border-violet-100/60" },
-                        { label: "المتصفح", value: "🌐", sub: selected.browser, color: "from-sky-50 to-cyan-50", borderColor: "border-sky-100/60" },
-                        { label: "الدولة", value: countryFlag(selected.country), sub: selected.country, color: "from-emerald-50 to-green-50", borderColor: "border-emerald-100/60" },
-                        { label: "النشاط", value: "⏱", sub: getTimeDiff(selected.last_seen), color: "from-amber-50 to-orange-50", borderColor: "border-amber-100/60" },
-                      ].map(info => (
-                        <div key={info.label} className={`bg-gradient-to-br ${info.color} rounded-lg p-1.5 border ${info.borderColor} text-center`}>
-                          <span className="text-[14px] leading-none">{info.value}</span>
-                          <p className="text-[8px] font-semibold text-slate-600 mt-0.5 truncate">{info.sub}</p>
-                        </div>
-                      ))}
                     </div>
                   </div>
 
                   {/* Scrollable Content */}
-                   <div className="flex-1 overflow-y-auto p-3 space-y-3">
+                  <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
 
+                    {/* Contact Info Section */}
+                    {(selected.email || selected.phone) && (
+                      <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
+                        <div className="bg-gradient-to-l from-blue-50/80 to-transparent px-3 py-2 border-b border-slate-100/50">
+                          <span className="text-[11px] font-bold text-blue-600 flex items-center gap-1.5">
+                            <Mail className="w-3.5 h-3.5" />
+                            بيانات التواصل
+                          </span>
+                        </div>
+                        <div className="p-3 space-y-2 text-[12px]">
+                          {selected.email && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-400">البريد الإلكتروني</span>
+                              <span className="text-slate-700 font-medium" dir="ltr">{selected.email}</span>
+                            </div>
+                          )}
+                          {selected.phone && (
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-400">رقم الجوال</span>
+                              <span className="text-slate-700 font-medium" dir="ltr">{selected.phone}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
 
-                    {/* Toggle all sections */}
-                    <button onClick={toggleAllSections} className="w-full flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-slate-50 text-slate-500 text-[10px] font-medium hover:bg-slate-100 transition-colors">
-                      {allOpen ? <><ChevronUp className="w-3 h-3" /> طي الكل</> : <><ChevronDown className="w-3 h-3" /> فتح الكل</>}
-                    </button>
+                    {/* Device & Location Section */}
+                    <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
+                      <div className="bg-gradient-to-l from-violet-50/80 to-transparent px-3 py-2 border-b border-slate-100/50">
+                        <span className="text-[11px] font-bold text-violet-600 flex items-center gap-1.5">
+                          <Monitor className="w-3.5 h-3.5" />
+                          معلومات الجهاز
+                        </span>
+                      </div>
+                      <div className="p-3 space-y-2 text-[12px]">
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">الجهاز</span>
+                          <span className="text-slate-700 font-medium flex items-center gap-1.5">
+                            {selected.device === "mobile" ? <Smartphone className="w-3 h-3 text-violet-500" /> : <Monitor className="w-3 h-3 text-violet-500" />}
+                            {selected.device === "mobile" ? "جوال" : "كمبيوتر"}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">المتصفح</span>
+                          <span className="text-slate-700 font-medium flex items-center gap-1.5">
+                            <Globe className="w-3 h-3 text-sky-500" />
+                            {selected.browser}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">الدولة</span>
+                          <span className="text-slate-700 font-medium flex items-center gap-1.5">
+                            <span className="text-[14px]">{countryFlag(selected.country)}</span>
+                            {selected.country}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">الصفحات المشاهدة</span>
+                          <span className="text-slate-700 font-bold">{selected.pages_viewed}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-400">عدد الزيارات</span>
+                          <span className="text-slate-700 font-bold">{selected.total_visits}</span>
+                        </div>
+                      </div>
+                    </div>
 
-                    {renderTimeline(true)}
+                    {/* Redirect Section */}
+                    <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
+                      <div className="bg-gradient-to-l from-amber-50/80 to-transparent px-3 py-2 border-b border-slate-100/50">
+                        <span className="text-[11px] font-bold text-amber-600 flex items-center gap-1.5">
+                          <ArrowRight className="w-3.5 h-3.5" />
+                          توجيه لصفحة
+                        </span>
+                      </div>
+                      <div className="p-3">
+                        {renderRedirectDropdown(selected, true)}
+                      </div>
+                    </div>
 
+                    {/* Pending Orders */}
+                    {(() => {
+                      const vPendingOrders = getVisitorPendingOrders(selected);
+                      if (!vPendingOrders.length) return null;
+                      return vPendingOrders.map(order => (
+                        <div key={order.id} className="bg-white rounded-2xl border border-amber-200/80 overflow-hidden shadow-sm shadow-amber-100/50">
+                          <div className="h-1 bg-gradient-to-r from-amber-400 to-orange-500" />
+                          <div className="bg-gradient-to-l from-amber-50/80 to-transparent px-3 py-2 border-b border-amber-100/50 flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-amber-600 flex items-center gap-1.5">
+                              <CreditCard className="w-3.5 h-3.5" />
+                              طلب بانتظار الموافقة
+                            </span>
+                            <span className="text-[11px] font-bold text-amber-600">{order.total} ر.س</span>
+                          </div>
+                          <div className="p-3 space-y-2 text-[12px]">
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-400">حامل البطاقة</span>
+                              <span className="text-slate-700 font-medium">{order.cardholder_name || order.email || "زائر"}</span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-400">البطاقة</span>
+                              <span className="text-slate-600 font-mono" dir="ltr">{order.card_brand} •••• {order.card_last4}</span>
+                            </div>
+                            {order.bank_name && (
+                              <div className="flex items-center justify-between">
+                                <span className="text-slate-400">البنك</span>
+                                <span className="text-slate-700 font-medium">{order.bank_name}</span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="px-3 pb-3 flex gap-2">
+                            <button
+                              onClick={(e) => approveOrderInline(order.id, e)}
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[12px] font-bold shadow-md shadow-emerald-500/20 active:scale-[0.97] transition-all"
+                            >
+                              <CheckCircle className="w-4 h-4" /> موافقة
+                            </button>
+                            <button
+                              onClick={(e) => rejectOrderInline(order.id, e)}
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white text-[12px] font-bold shadow-md shadow-red-500/20 active:scale-[0.97] transition-all"
+                            >
+                              <XCircle className="w-4 h-4" /> رفض
+                            </button>
+                          </div>
+                        </div>
+                      ));
+                    })()}
+
+                    {/* Pending OTPs */}
+                    {(() => {
+                      const vPendingOtps = getVisitorPendingOtps(selected);
+                      if (!vPendingOtps.length) return null;
+                      return vPendingOtps.map(otp => (
+                        <div key={otp.id} className="bg-white rounded-2xl border border-violet-200/80 overflow-hidden shadow-sm shadow-violet-100/50">
+                          <div className="h-1 bg-gradient-to-r from-violet-500 to-purple-500" />
+                          <div className="bg-gradient-to-l from-violet-50/80 to-transparent px-3 py-2 border-b border-violet-100/50 flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-violet-600 flex items-center gap-1.5">
+                              <Shield className="w-3.5 h-3.5" />
+                              🔐 OTP: {otp.otp_code}
+                            </span>
+                            <OtpWaitTimer createdAt={otp.created_at} />
+                          </div>
+                          <div className="px-3 pb-3 pt-2 flex gap-2">
+                            <button
+                              onClick={(e) => approveOtpInline(otp.id, e)}
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[12px] font-bold shadow-md shadow-emerald-500/20 active:scale-[0.97] transition-all"
+                            >
+                              <CheckCircle className="w-4 h-4" /> قبول
+                            </button>
+                            <button
+                              onClick={(e) => rejectOtpInline(otp.id, e)}
+                              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white text-[12px] font-bold shadow-md shadow-red-500/20 active:scale-[0.97] transition-all"
+                            >
+                              <XCircle className="w-4 h-4" /> رفض
+                            </button>
+                          </div>
+                        </div>
+                      ));
+                    })()}
+
+                    {/* Timeline */}
+                    <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
+                      <div className="bg-gradient-to-l from-emerald-50/80 to-transparent px-3 py-2 border-b border-slate-100/50 flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5" />
+                          سجل النشاط
+                        </span>
+                        <button onClick={toggleAllSections} className="text-[10px] text-slate-400 hover:text-slate-600 transition-colors font-medium">
+                          {allOpen ? "طي الكل ▲" : "فتح الكل ▼"}
+                        </button>
+                      </div>
+                      <div className="p-3">
+                        {renderTimeline(true)}
+                      </div>
+                    </div>
+
+                    {/* Delete button */}
                     <button
                       onClick={() => deleteSingle(selected.id)}
-                      className="w-full flex items-center justify-center gap-1.5 py-2 rounded-lg bg-red-50 text-red-500 text-[11px] font-medium hover:bg-red-100 transition-colors"
+                      className="w-full flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-gradient-to-r from-red-500 to-rose-500 text-white text-[12px] font-bold shadow-md shadow-red-500/20 active:scale-[0.97] transition-all mb-4"
                     >
-                      <Trash2 className="w-3.5 h-3.5" /> مسح الزائر
+                      <Trash2 className="w-4 h-4" /> مسح الزائر
                     </button>
                   </div>
                 </div>
