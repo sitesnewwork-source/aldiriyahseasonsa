@@ -2081,7 +2081,6 @@ const AdminVisitors = () => {
                       })()}
                     </div>
                     </motion.div>
-                    </motion.div>
                   );
                 })}
                 </LayoutGroup>
