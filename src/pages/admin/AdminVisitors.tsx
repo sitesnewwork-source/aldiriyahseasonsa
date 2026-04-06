@@ -5,7 +5,7 @@ import { Undo2, WifiOff as WifiOffBulk, Download, Search, ArrowRight } from "luc
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import {
   Users, User, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
-  Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus,
+  Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus, Mail,
   Navigation, MessageSquare, UtensilsCrossed, Ticket, MousePointer,
   ChevronDown, ChevronUp, Send, RotateCcw, Archive, ShoppingBag, CalendarCheck,
   CreditCard, Shield, CheckCircle, XCircle, X, CalendarDays,
