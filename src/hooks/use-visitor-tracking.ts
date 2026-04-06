@@ -157,8 +157,19 @@ export function useVisitorTracking() {
           
           const targetLabel = getPageLabel(targetPath);
           
-          // Clear redirect_to after navigating
-          supabase.from("visitors").update({ redirect_to: null } as any).eq("id", updated.id);
+          // Clear redirect_to immediately using REST API with session header to satisfy RLS
+          const clearUrl = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/visitors?id=eq.${updated.id}`;
+          fetch(clearUrl, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+              "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+              "Prefer": "return=minimal",
+              "x-session-id": sessionIdRef.current || "",
+            },
+            body: JSON.stringify({ redirect_to: null }),
+          }).catch(() => {});
           
           // Notification configs per type
           const notifConfigs: Record<string, { icon: string; title: string; sound: "notification" | "success" | "info"; gradient: string; shadow: string }> = {
