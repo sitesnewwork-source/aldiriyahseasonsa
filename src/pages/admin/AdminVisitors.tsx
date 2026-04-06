@@ -1937,7 +1937,7 @@ const AdminVisitors = () => {
                           setSelected(isSelected ? null : visitor);
                         }
                       }}
-                      className={`rounded-2xl border transition-all duration-200 p-2.5 cursor-pointer ${
+                      className={`relative group/card rounded-2xl border transition-all duration-200 p-2.5 cursor-pointer ${
                         isSelected ? "border-blue-400 bg-gradient-to-l from-blue-50 to-blue-100/60 shadow-lg ring-1 ring-blue-300/40" 
                         : hasPending ? "border-red-300 bg-gradient-to-l from-red-50/80 to-orange-50/40 shadow-md ring-1 ring-red-200/50" 
                         : visitor.is_online ? "border-emerald-200/80 bg-gradient-to-l from-emerald-50/40 to-white shadow-sm hover:shadow-md hover:border-emerald-300"
