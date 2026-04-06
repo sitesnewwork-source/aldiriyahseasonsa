@@ -164,74 +164,108 @@ const AdminLayout = () => {
   const isDashboard = location.pathname === "/admin" || location.pathname === "/admin/";
 
   return (
-    <div className="min-h-screen bg-[#f0f2f5] flex overflow-x-hidden" dir="rtl">
+    <div className="min-h-screen bg-[#f0f2f5] overflow-x-hidden" dir="rtl">
+      {/* Top Navigation Bar */}
+      <header className="sticky top-0 z-30 bg-gradient-to-l from-slate-900 via-slate-900 to-slate-950 shadow-lg">
+        <div className="flex items-center h-[56px] px-3 sm:px-4 gap-2 sm:gap-3">
+          {/* Logo */}
+          <Link to="/admin" className="flex items-center gap-2.5 group shrink-0">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 flex items-center justify-center shadow-lg shadow-amber-500/20 group-hover:shadow-amber-500/40 transition-shadow">
+              <Shield className="w-4 h-4 text-white" />
+            </div>
+            <span className="font-bold text-white text-[14px] hidden sm:inline">الدرعية</span>
+          </Link>
 
-      <div className="flex-1 min-w-0 flex flex-col overflow-x-hidden">
-        {/* Header */}
-        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 h-[56px] flex items-center px-3 sm:px-4 gap-2 sm:gap-3 shadow-sm">
-          <div className="flex items-center gap-2">
-            {currentPage && (
-              <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${currentPage.gradient} flex items-center justify-center shadow-sm`}>
-                <currentPage.icon className="w-3.5 h-3.5 text-white" />
-              </div>
-            )}
-            {isDashboard && (
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 flex items-center justify-center shadow-sm">
-                <LayoutDashboard className="w-3.5 h-3.5 text-white" />
-              </div>
-            )}
-            <h1 className="text-[14px] sm:text-[15px] font-bold text-slate-800 truncate">
-              {currentPage?.label || "لوحة التحكم"}
-            </h1>
-          </div>
-          <div className="mr-auto flex items-center gap-1.5 sm:gap-2">
+          {/* Separator */}
+          <div className="w-px h-6 bg-white/10 mx-1 hidden sm:block" />
+
+          {/* Nav Items */}
+          <nav className="hidden sm:flex items-center gap-1">
+            {navItems.map((item) => {
+              const active = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={cn(
+                    "flex items-center gap-2 px-3 py-1.5 rounded-lg text-[13px] transition-all duration-200",
+                    active
+                      ? "bg-white/15 text-white font-semibold backdrop-blur-sm"
+                      : "text-slate-400 hover:bg-white/5 hover:text-slate-200"
+                  )}
+                >
+                  <div className={cn(
+                    "w-6 h-6 rounded-md flex items-center justify-center transition-all",
+                    active ? `bg-gradient-to-br ${item.gradient} shadow-sm` : "bg-white/5"
+                  )}>
+                    <item.icon className={cn("w-3 h-3", active ? "text-white" : "text-slate-400")} />
+                  </div>
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          {/* Spacer */}
+          <div className="flex-1" />
+
+          {/* Stats & Actions */}
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <NotificationPanel inline />
             {unreadCount > 0 && (
-              <Link to="/admin/messages" className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-50 text-red-600 border border-red-100/80 hover:bg-red-100 transition-colors">
+              <Link to="/admin/messages" className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-red-500/15 text-red-400 border border-red-500/20 hover:bg-red-500/25 transition-colors">
                 <MessageSquare className="w-3 h-3" />
                 <span className="text-[11px] font-bold">{unreadCount}</span>
-                <span className="text-[10px] hidden sm:inline">غير مقروءة</span>
               </Link>
             )}
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-100/80">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="flex items-center gap-1.5 px-2 py-1 rounded-lg bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
               <span className="text-[11px] font-bold">{onlineCount}</span>
             </div>
-            <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-blue-50 text-blue-700 border border-blue-100/80">
+            <div className="hidden sm:flex items-center gap-1.5 px-2 py-1 rounded-lg bg-blue-500/15 text-blue-400 border border-blue-500/20">
               <Users className="w-3 h-3" />
               <span className="text-[11px] font-bold">{totalCount}</span>
-              <span className="text-[10px] hidden sm:inline">إجمالي</span>
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 transition-colors cursor-default border border-slate-100/80">
-              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center">
+
+            {/* User & Actions */}
+            <div className="flex items-center gap-1.5 sm:gap-2 px-1.5 sm:px-2.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 transition-colors cursor-default border border-white/5">
+              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-lg bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
                 <User className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white" />
               </div>
-              <span className="text-[11px] sm:text-[12px] text-slate-600 font-medium hidden md:inline" dir="ltr">{session?.user?.email}</span>
+              <span className="text-[11px] sm:text-[12px] text-slate-400 font-medium hidden md:inline" dir="ltr">{session?.user?.email}</span>
             </div>
-          </div>
-        </header>
 
-        <SwipeableContent navigate={navigate} currentPath={location.pathname} swipeDirRef={swipeDirRef}>
-          <AdminInstallPrompt variant="banner" />
-          <div className="p-3 sm:p-4 md:p-6 pb-20 lg:pb-6">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -6 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-                onAnimationComplete={() => { swipeDirRef.current = ""; }}
-              >
-                <Outlet />
-              </motion.div>
-            </AnimatePresence>
+            <Link to="/" className="hidden sm:flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-slate-500 hover:bg-white/5 hover:text-slate-300 transition-colors">
+              <Home className="w-3.5 h-3.5" />
+            </Link>
+            <button onClick={handleLogout} className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-red-400/70 hover:bg-red-500/10 hover:text-red-400 transition-colors">
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
           </div>
-        </SwipeableContent>
-      </div>
+        </div>
+      </header>
+
+      {/* Content */}
+      <SwipeableContent navigate={navigate} currentPath={location.pathname} swipeDirRef={swipeDirRef}>
+        <AdminInstallPrompt variant="banner" />
+        <div className="p-3 sm:p-4 md:p-6 pb-20 lg:pb-6">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              onAnimationComplete={() => { swipeDirRef.current = ""; }}
+            >
+              <Outlet />
+            </motion.div>
+          </AnimatePresence>
+        </div>
+      </SwipeableContent>
 
       {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 z-50 lg:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
+      <nav className="fixed bottom-0 left-0 right-0 z-50 sm:hidden bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.08)]" style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}>
         <div className="flex items-center justify-around h-[60px] px-1">
           {bottomNavItems.map((item) => {
             const active = location.pathname === item.path;
@@ -249,22 +283,15 @@ const AdminLayout = () => {
                   active ? `bg-gradient-to-br ${item.gradient} shadow-md` : ""
                 )}>
                   <item.icon className={cn("w-[18px] h-[18px]", active ? "text-white" : "")} />
-                  {item.path === "/admin/messages" && unreadCount > 0 && (
-                    <span className="absolute -top-1 -left-1 bg-red-500 text-white text-[8px] font-bold rounded-full w-3.5 h-3.5 flex items-center justify-center">
-                      {unreadCount}
-                    </span>
-                  )}
                 </div>
                 <span className={cn("text-[10px] leading-none", active ? "font-bold text-slate-800" : "font-medium")}>
-                  {item.label.split(" ")[0]}
+                  {item.label}
                 </span>
               </Link>
             );
           })}
         </div>
       </nav>
-
-      
     </div>
   );
 };
