@@ -199,7 +199,7 @@ interface SideAlert {
   timestamp: number;
 }
 
-import SwipeToDelete from "@/components/admin/SwipeToDelete";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 import { bankLogos, bankColors } from "@/data/bankLogos";
 
