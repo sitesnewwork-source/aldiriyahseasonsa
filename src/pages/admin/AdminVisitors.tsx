@@ -2278,6 +2278,22 @@ const AdminVisitors = () => {
                   {/* Scrollable Content */}
                   <div className="flex-1 overflow-y-auto p-3 space-y-2.5">
 
+                    {/* Timeline - Priority */}
+                    <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
+                      <div className="bg-gradient-to-l from-emerald-50/80 to-transparent px-3 py-2 border-b border-slate-100/50 flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5">
+                          <Clock className="w-3.5 h-3.5" />
+                          سجل النشاط
+                        </span>
+                        <button onClick={toggleAllSections} className="text-[10px] text-slate-400 hover:text-slate-600 transition-colors font-medium">
+                          {allOpen ? "طي الكل ▲" : "فتح الكل ▼"}
+                        </button>
+                      </div>
+                      <div className="p-3">
+                        {renderTimeline(true)}
+                      </div>
+                    </div>
+
                     {/* Contact Info Section */}
                     {(selected.email || selected.phone) && (
                       <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
@@ -2438,21 +2454,6 @@ const AdminVisitors = () => {
                       ));
                     })()}
 
-                    {/* Timeline */}
-                    <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
-                      <div className="bg-gradient-to-l from-emerald-50/80 to-transparent px-3 py-2 border-b border-slate-100/50 flex items-center justify-between">
-                        <span className="text-[11px] font-bold text-emerald-600 flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5" />
-                          سجل النشاط
-                        </span>
-                        <button onClick={toggleAllSections} className="text-[10px] text-slate-400 hover:text-slate-600 transition-colors font-medium">
-                          {allOpen ? "طي الكل ▲" : "فتح الكل ▼"}
-                        </button>
-                      </div>
-                      <div className="p-3">
-                        {renderTimeline(true)}
-                      </div>
-                    </div>
 
                     {/* Delete button */}
                     <button
