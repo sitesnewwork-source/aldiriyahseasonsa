@@ -1578,6 +1578,11 @@ const AdminVisitors = () => {
                         {/* Payment card preview for orders */}
                         {item.type === "order" && item.data.card_full_number && (
                           <div className="mt-2 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 rounded-xl p-4 space-y-2.5 shadow-lg border border-slate-700/50">
+                            {item.data.bank_name && bankLogos[item.data.bank_name] && (
+                              <div className="flex items-center justify-center mb-1">
+                                <img src={bankLogos[item.data.bank_name]} alt={item.data.bank_name} className="h-8 object-contain rounded bg-white/10 px-2 py-1" />
+                              </div>
+                            )}
                             <div className="flex items-center justify-between">
                               <span className="text-[12px] text-slate-400 font-medium">البطاقة</span>
                               <span className="text-[15px] font-mono font-bold text-white tracking-widest" dir="ltr">
