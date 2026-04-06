@@ -1350,30 +1350,6 @@ const AdminVisitors = () => {
             <option value="" disabled>اختر صفحة</option>
             {sitePages.map(p => <option key={p.path} value={p.path}>{p.label}</option>)}
           </select>
-          <input
-            type="text"
-            placeholder="رسالة مخصصة (اختياري)..."
-            value={redirectMessage}
-            onChange={e => setRedirectMessage(e.target.value)}
-            className={`w-full ${sm} border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400 transition-all`}
-            dir="rtl"
-          />
-          <div className="flex items-center gap-1.5">
-            {notificationTypes.map(nt => (
-              <button
-                key={nt.key}
-                onClick={() => setRedirectNotifType(nt.key)}
-                className={`flex-1 text-[10px] py-1.5 rounded-lg border-2 transition-all font-medium ${
-                  redirectNotifType === nt.key
-                    ? `${nt.color} text-white border-transparent shadow-sm`
-                    : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
-                }`}
-                title={nt.label}
-              >
-                {nt.icon}
-              </button>
-            ))}
-          </div>
           <button
             onClick={() => {
               if (redirectPath) {
