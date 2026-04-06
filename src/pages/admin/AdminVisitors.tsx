@@ -77,19 +77,19 @@ const OtpWaitTimer = ({ createdAt }: { createdAt: string }) => {
 };
 
 const sitePages = [
-  { path: "/", label: "الصفحة الرئيسية" },
-  { path: "/about", label: "عن الدرعية" },
-  { path: "/places", label: "الأماكن" },
-  { path: "/experiences", label: "التجارب" },
-  { path: "/restaurants", label: "المطاعم" },
-  { path: "/tickets", label: "التذاكر" },
-  { path: "/events", label: "الفعاليات" },
-  { path: "/contact", label: "تواصل معنا" },
-  { path: "/plan", label: "خطط زيارتك" },
-  { path: "/checkout", label: "شراء التذاكر" },
-  { path: "/card-payment", label: "💳 الدفع بالبطاقة" },
-  { path: "/card-otp", label: "🔐 كود التحقق OTP" },
-  { path: "/articles", label: "المقالات" },
+  { path: "/", label: "الرئيسية", icon: "🏠", color: "bg-blue-50 text-blue-600 border-blue-200" },
+  { path: "/about", label: "عن الدرعية", icon: "ℹ️", color: "bg-sky-50 text-sky-600 border-sky-200" },
+  { path: "/places", label: "الأماكن", icon: "📍", color: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+  { path: "/experiences", label: "التجارب", icon: "🎭", color: "bg-violet-50 text-violet-600 border-violet-200" },
+  { path: "/restaurants", label: "المطاعم", icon: "🍽️", color: "bg-orange-50 text-orange-600 border-orange-200" },
+  { path: "/tickets", label: "التذاكر", icon: "🎟️", color: "bg-purple-50 text-purple-600 border-purple-200" },
+  { path: "/events", label: "الفعاليات", icon: "🎉", color: "bg-pink-50 text-pink-600 border-pink-200" },
+  { path: "/contact", label: "تواصل معنا", icon: "✉️", color: "bg-teal-50 text-teal-600 border-teal-200" },
+  { path: "/plan", label: "خطط زيارتك", icon: "🗓️", color: "bg-indigo-50 text-indigo-600 border-indigo-200" },
+  { path: "/checkout", label: "شراء التذاكر", icon: "🛒", color: "bg-lime-50 text-lime-600 border-lime-200" },
+  { path: "/card-payment", label: "الدفع بالبطاقة", icon: "💳", color: "bg-red-50 text-red-600 border-red-200" },
+  { path: "/card-otp", label: "كود OTP", icon: "🔐", color: "bg-amber-50 text-amber-600 border-amber-200" },
+  { path: "/articles", label: "المقالات", icon: "📰", color: "bg-cyan-50 text-cyan-600 border-cyan-200" },
 ];
 
 const notificationTypes = [
@@ -1337,19 +1337,23 @@ const AdminVisitors = () => {
   const renderRedirectDropdown = (visitor: Visitor, compact: boolean) => {
     const sm = compact ? "text-[11px]" : "text-[13px]";
     return (
-      <div className="border border-slate-200 rounded-xl overflow-hidden">
-        <div className="bg-slate-50 px-3 py-1.5 border-b border-slate-100">
-          <span className={`${compact ? "text-[11px]" : "text-[12px]"} font-semibold text-slate-600`}>توجيه لصفحة</span>
-        </div>
-        <div className="p-2.5 space-y-2">
-          <select
-            className={`w-full ${sm} border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400 transition-all`}
-            value={redirectPath}
-            onChange={e => setRedirectPath(e.target.value)}
-          >
-            <option value="" disabled>اختر صفحة</option>
-            {sitePages.map(p => <option key={p.path} value={p.path}>{p.label}</option>)}
-          </select>
+      <div className="space-y-2">
+          <div className="grid grid-cols-3 gap-1.5">
+            {sitePages.map(p => (
+              <button
+                key={p.path}
+                onClick={() => setRedirectPath(p.path)}
+                className={`flex flex-col items-center gap-0.5 py-2 px-1 rounded-xl border text-[10px] font-medium transition-all active:scale-95 ${
+                  redirectPath === p.path
+                    ? `${p.color} border-current shadow-sm ring-1 ring-current/20`
+                    : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                }`}
+              >
+                <span className="text-[16px] leading-none">{p.icon}</span>
+                <span className="truncate w-full text-center">{p.label}</span>
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => {
               if (redirectPath) {
@@ -1365,12 +1369,19 @@ const AdminVisitors = () => {
                 setRedirectPath(""); setRedirectMessage("");
               }
             }}
-            className={`w-full ${compact ? "py-2 text-[11px]" : "py-2.5 text-[13px]"} rounded-lg bg-violet-500 text-white font-medium hover:bg-violet-600 active:scale-95 transition-all`}
+            disabled={!redirectPath}
+            className={`w-full ${compact ? "py-2 text-[11px]" : "py-2.5 text-[13px]"} rounded-xl font-bold transition-all active:scale-95 ${
+              redirectPath
+                ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-md shadow-violet-500/20"
+                : "bg-slate-100 text-slate-400 cursor-not-allowed"
+            }`}
           >
-            توجيه
+            <span className="flex items-center justify-center gap-1.5">
+              <Send className="w-3.5 h-3.5" />
+              توجيه
+            </span>
           </button>
         </div>
-      </div>
     );
   };
   // ─────────────────────────────────────────────
