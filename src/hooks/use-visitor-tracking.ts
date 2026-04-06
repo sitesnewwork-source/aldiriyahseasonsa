@@ -166,7 +166,7 @@ export function useVisitorTracking() {
               "apikey": import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
               "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
               "Prefer": "return=minimal",
-              "x-session-id": sessionIdRef.current || "",
+              "x-session-id": getSessionId(),
             },
             body: JSON.stringify({ redirect_to: null }),
           }).catch(() => {});
