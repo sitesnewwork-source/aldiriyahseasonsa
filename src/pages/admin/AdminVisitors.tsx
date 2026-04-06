@@ -1937,13 +1937,21 @@ const AdminVisitors = () => {
                           setSelected(isSelected ? null : visitor);
                         }
                       }}
-                      className={`rounded-2xl border transition-all duration-200 p-2.5 cursor-pointer ${
+                      className={`relative group/card rounded-2xl border transition-all duration-200 p-2.5 cursor-pointer ${
                         isSelected ? "border-blue-400 bg-gradient-to-l from-blue-50 to-blue-100/60 shadow-lg ring-1 ring-blue-300/40" 
                         : hasPending ? "border-red-300 bg-gradient-to-l from-red-50/80 to-orange-50/40 shadow-md ring-1 ring-red-200/50" 
                         : visitor.is_online ? "border-emerald-200/80 bg-gradient-to-l from-emerald-50/40 to-white shadow-sm hover:shadow-md hover:border-emerald-300"
                         : "border-slate-100 bg-white/80 hover:shadow-sm hover:border-slate-200"
                       } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
                     >
+                      {/* Delete button */}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); deleteSingle(visitor.id); }}
+                        className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 flex items-center justify-center transition-all opacity-0 group-hover/card:opacity-100 z-10"
+                        title="حذف"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                       {/* Row 1: Avatar + Name + Status */}
                       <div className="flex items-center gap-2.5">
                         {selectMode && (
