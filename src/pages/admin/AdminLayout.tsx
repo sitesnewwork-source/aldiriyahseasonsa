@@ -169,9 +169,6 @@ const AdminLayout = () => {
       <div className="flex-1 min-w-0 flex flex-col overflow-x-hidden">
         {/* Header */}
         <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 h-[56px] flex items-center px-3 sm:px-4 gap-2 sm:gap-3 shadow-sm">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-500 hover:text-slate-700 transition-colors">
-            <Menu className="w-5 h-5" />
-          </button>
           <div className="flex items-center gap-2">
             {currentPage && (
               <div className={`w-7 h-7 rounded-lg bg-gradient-to-br ${currentPage.gradient} flex items-center justify-center shadow-sm`}>
