@@ -2337,18 +2337,6 @@ const AdminVisitors = () => {
                       </div>
                     </div>
 
-                    {/* Redirect Section */}
-                    <div className="bg-white rounded-2xl border border-slate-100/80 overflow-hidden">
-                      <div className="bg-gradient-to-l from-amber-50/80 to-transparent px-3 py-2 border-b border-slate-100/50">
-                        <span className="text-[11px] font-bold text-amber-600 flex items-center gap-1.5">
-                          <ArrowRight className="w-3.5 h-3.5" />
-                          توجيه لصفحة
-                        </span>
-                      </div>
-                      <div className="p-3">
-                        {renderRedirectDropdown(selected, true)}
-                      </div>
-                    </div>
 
                     {/* Pending Orders */}
                     {(() => {
