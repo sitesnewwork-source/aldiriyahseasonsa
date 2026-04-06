@@ -468,10 +468,12 @@ const AdminSettings = () => {
     if (!window.confirm("⚠️ هل أنت متأكد من مسح جميع البيانات؟ هذا الإجراء لا يمكن التراجع عنه!")) return;
     setClearing(true);
     try {
+      await supabase.from("otp_requests").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       await supabase.from("visitor_actions").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       await supabase.from("visitors").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       await supabase.from("contact_messages").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       await supabase.from("restaurant_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
+      await supabase.from("event_bookings").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       await supabase.from("ticket_orders").delete().neq("id", "00000000-0000-0000-0000-000000000000");
       playChime("delete");
       toast({ title: "✅ تم", description: "تم مسح جميع البيانات بنجاح" });
@@ -554,7 +556,7 @@ const AdminSettings = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <button
-          onClick={() => { playChime("click"); navigate(-1 as any); }}
+          onClick={() => { playChime("click"); navigate(-1); }}
           className="w-9 h-9 rounded-xl bg-white border border-slate-200/80 flex items-center justify-center hover:bg-slate-50 transition-all shadow-sm"
         >
           <ArrowRight className="w-4 h-4 text-slate-500" />

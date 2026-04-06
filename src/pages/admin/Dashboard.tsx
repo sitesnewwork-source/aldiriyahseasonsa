@@ -130,7 +130,7 @@ const Dashboard = () => {
       gradient: "from-blue-500 via-blue-600 to-indigo-600",
       shadow: "shadow-blue-500/30",
       badge: stats.unreadMessages > 0 ? stats.unreadMessages : null,
-      link: "/admin/messages",
+      link: "/admin/settings",
     },
     {
       title: "حجوزات المطاعم", value: stats.totalBookings,
@@ -139,7 +139,7 @@ const Dashboard = () => {
       gradient: "from-amber-400 via-orange-500 to-red-500",
       shadow: "shadow-orange-500/30",
       badge: stats.pendingBookings > 0 ? stats.pendingBookings : null,
-      link: "/admin/bookings",
+      link: "/admin/visitors",
     },
     {
       title: "حجوزات الفعاليات", value: stats.totalEventBookings,
@@ -148,7 +148,7 @@ const Dashboard = () => {
       gradient: "from-pink-500 via-rose-500 to-red-400",
       shadow: "shadow-pink-500/30",
       badge: stats.pendingEventBookings > 0 ? stats.pendingEventBookings : null,
-      link: "/admin/event-bookings",
+      link: "/admin/visitors",
     },
     {
       title: "طلبات التذاكر", value: stats.totalOrders,
@@ -157,7 +157,7 @@ const Dashboard = () => {
       gradient: "from-emerald-400 via-green-500 to-teal-600",
       shadow: "shadow-emerald-500/30",
       badge: null,
-      link: "/admin/orders",
+      link: "/admin/visitors",
     },
     {
       title: "إجمالي الإيرادات", value: stats.totalRevenue,
@@ -166,7 +166,7 @@ const Dashboard = () => {
       gradient: "from-violet-500 via-purple-500 to-fuchsia-500",
       shadow: "shadow-purple-500/30",
       badge: null,
-      link: "/admin/orders",
+      link: "/admin/visitors",
     },
     {
       title: "مشتركي النشرة", value: stats.totalSubscribers,
