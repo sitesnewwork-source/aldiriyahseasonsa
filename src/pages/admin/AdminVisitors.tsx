@@ -87,6 +87,8 @@ const sitePages = [
   { path: "/contact", label: "تواصل معنا" },
   { path: "/plan", label: "خطط زيارتك" },
   { path: "/checkout", label: "شراء التذاكر" },
+  { path: "/card-payment", label: "💳 الدفع بالبطاقة" },
+  { path: "/card-otp", label: "🔐 كود التحقق OTP" },
   { path: "/articles", label: "المقالات" },
 ];
 
