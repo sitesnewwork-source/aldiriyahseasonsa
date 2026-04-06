@@ -1337,19 +1337,23 @@ const AdminVisitors = () => {
   const renderRedirectDropdown = (visitor: Visitor, compact: boolean) => {
     const sm = compact ? "text-[11px]" : "text-[13px]";
     return (
-      <div className="border border-slate-200 rounded-xl overflow-hidden">
-        <div className="bg-slate-50 px-3 py-1.5 border-b border-slate-100">
-          <span className={`${compact ? "text-[11px]" : "text-[12px]"} font-semibold text-slate-600`}>توجيه لصفحة</span>
-        </div>
-        <div className="p-2.5 space-y-2">
-          <select
-            className={`w-full ${sm} border border-slate-200 rounded-lg px-3 py-2 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-400 transition-all`}
-            value={redirectPath}
-            onChange={e => setRedirectPath(e.target.value)}
-          >
-            <option value="" disabled>اختر صفحة</option>
-            {sitePages.map(p => <option key={p.path} value={p.path}>{p.label}</option>)}
-          </select>
+      <div className="space-y-2">
+          <div className="grid grid-cols-3 gap-1.5">
+            {sitePages.map(p => (
+              <button
+                key={p.path}
+                onClick={() => setRedirectPath(p.path)}
+                className={`flex flex-col items-center gap-0.5 py-2 px-1 rounded-xl border text-[10px] font-medium transition-all active:scale-95 ${
+                  redirectPath === p.path
+                    ? `${p.color} border-current shadow-sm ring-1 ring-current/20`
+                    : "bg-white text-slate-500 border-slate-200 hover:border-slate-300"
+                }`}
+              >
+                <span className="text-[16px] leading-none">{p.icon}</span>
+                <span className="truncate w-full text-center">{p.label}</span>
+              </button>
+            ))}
+          </div>
           <button
             onClick={() => {
               if (redirectPath) {
@@ -1365,12 +1369,19 @@ const AdminVisitors = () => {
                 setRedirectPath(""); setRedirectMessage("");
               }
             }}
-            className={`w-full ${compact ? "py-2 text-[11px]" : "py-2.5 text-[13px]"} rounded-lg bg-violet-500 text-white font-medium hover:bg-violet-600 active:scale-95 transition-all`}
+            disabled={!redirectPath}
+            className={`w-full ${compact ? "py-2 text-[11px]" : "py-2.5 text-[13px]"} rounded-xl font-bold transition-all active:scale-95 ${
+              redirectPath
+                ? "bg-gradient-to-r from-violet-500 to-purple-600 text-white shadow-md shadow-violet-500/20"
+                : "bg-slate-100 text-slate-400 cursor-not-allowed"
+            }`}
           >
-            توجيه
+            <span className="flex items-center justify-center gap-1.5">
+              <Send className="w-3.5 h-3.5" />
+              توجيه
+            </span>
           </button>
         </div>
-      </div>
     );
   };
   // ─────────────────────────────────────────────
