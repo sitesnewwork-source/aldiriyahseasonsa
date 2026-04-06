@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { toast } from "sonner";
 import { Undo2, WifiOff as WifiOffBulk, Download, Search, ArrowRight } from "lucide-react";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import {
   Users, User, MapPin, Clock, Monitor, Smartphone, Globe, Wifi, WifiOff,
   Eye, Trash2, CheckSquare, Square, AlertCircle, Bell, UserPlus, Mail,
@@ -2217,7 +2217,8 @@ const AdminVisitors = () => {
 
           {/* Mobile Detail Sheet */}
           <Sheet open={!!selected && isMobile} onOpenChange={(open) => { if (!open) setSelected(null); }}>
-            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl p-0 overflow-hidden" dir="rtl">
+            <SheetContent side="bottom" className="h-[85vh] rounded-t-2xl p-0 overflow-hidden" dir="rtl" aria-describedby={undefined}>
+              <SheetTitle className="sr-only">تفاصيل الزائر</SheetTitle>
               {selected && (
                 <div className="flex flex-col h-full bg-slate-50/50">
                   {/* Top gradient strip */}
