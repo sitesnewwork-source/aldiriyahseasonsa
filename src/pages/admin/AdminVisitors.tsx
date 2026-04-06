@@ -1947,7 +1947,7 @@ const AdminVisitors = () => {
                       {/* Delete button */}
                       <button
                         onClick={(e) => { e.stopPropagation(); deleteSingle(visitor.id); }}
-                        className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 flex items-center justify-center transition-all opacity-0 group-hover/card:opacity-100 z-10"
+                        className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 flex items-center justify-center transition-all sm:opacity-0 sm:group-hover/card:opacity-100 z-10"
                         title="حذف"
                       >
                         <X className="w-3 h-3" />
