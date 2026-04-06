@@ -199,7 +199,7 @@ interface SideAlert {
 
 import SwipeToDelete from "@/components/admin/SwipeToDelete";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { bankLogos } from "@/data/bankLogos";
+import { bankLogos, bankColors } from "@/data/bankLogos";
 
 const AdminVisitors = () => {
   const isMobile = useIsMobile();
