@@ -64,7 +64,6 @@ const SwipeableContent = ({ children, navigate, currentPath, swipeDirRef }: { ch
 const AdminLayout = () => {
   const [session, setSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const swipeDirRef = useRef("");
   const location = useLocation();
