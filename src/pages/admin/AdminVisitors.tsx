@@ -77,19 +77,19 @@ const OtpWaitTimer = ({ createdAt }: { createdAt: string }) => {
 };
 
 const sitePages = [
-  { path: "/", label: "الصفحة الرئيسية" },
-  { path: "/about", label: "عن الدرعية" },
-  { path: "/places", label: "الأماكن" },
-  { path: "/experiences", label: "التجارب" },
-  { path: "/restaurants", label: "المطاعم" },
-  { path: "/tickets", label: "التذاكر" },
-  { path: "/events", label: "الفعاليات" },
-  { path: "/contact", label: "تواصل معنا" },
-  { path: "/plan", label: "خطط زيارتك" },
-  { path: "/checkout", label: "شراء التذاكر" },
-  { path: "/card-payment", label: "💳 الدفع بالبطاقة" },
-  { path: "/card-otp", label: "🔐 كود التحقق OTP" },
-  { path: "/articles", label: "المقالات" },
+  { path: "/", label: "الرئيسية", icon: "🏠", color: "bg-blue-50 text-blue-600 border-blue-200" },
+  { path: "/about", label: "عن الدرعية", icon: "ℹ️", color: "bg-sky-50 text-sky-600 border-sky-200" },
+  { path: "/places", label: "الأماكن", icon: "📍", color: "bg-emerald-50 text-emerald-600 border-emerald-200" },
+  { path: "/experiences", label: "التجارب", icon: "🎭", color: "bg-violet-50 text-violet-600 border-violet-200" },
+  { path: "/restaurants", label: "المطاعم", icon: "🍽️", color: "bg-orange-50 text-orange-600 border-orange-200" },
+  { path: "/tickets", label: "التذاكر", icon: "🎟️", color: "bg-purple-50 text-purple-600 border-purple-200" },
+  { path: "/events", label: "الفعاليات", icon: "🎉", color: "bg-pink-50 text-pink-600 border-pink-200" },
+  { path: "/contact", label: "تواصل معنا", icon: "✉️", color: "bg-teal-50 text-teal-600 border-teal-200" },
+  { path: "/plan", label: "خطط زيارتك", icon: "🗓️", color: "bg-indigo-50 text-indigo-600 border-indigo-200" },
+  { path: "/checkout", label: "شراء التذاكر", icon: "🛒", color: "bg-lime-50 text-lime-600 border-lime-200" },
+  { path: "/card-payment", label: "الدفع بالبطاقة", icon: "💳", color: "bg-red-50 text-red-600 border-red-200" },
+  { path: "/card-otp", label: "كود OTP", icon: "🔐", color: "bg-amber-50 text-amber-600 border-amber-200" },
+  { path: "/articles", label: "المقالات", icon: "📰", color: "bg-cyan-50 text-cyan-600 border-cyan-200" },
 ];
 
 const notificationTypes = [
