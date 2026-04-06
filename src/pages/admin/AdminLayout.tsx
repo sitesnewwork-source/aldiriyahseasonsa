@@ -3,8 +3,8 @@ import { Link, useLocation, useNavigate, Outlet } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  MessageSquare, LogOut, Menu, X, Home, User, Settings, Users,
-  Ticket, UtensilsCrossed, CalendarCheck, LayoutDashboard, Shield,
+  MessageSquare, LogOut, User, Settings, Users,
+  LayoutDashboard,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import AdminLogin from "./AdminLogin";
