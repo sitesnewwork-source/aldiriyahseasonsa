@@ -1930,10 +1930,6 @@ const AdminVisitors = () => {
                       exit={{ opacity: 0, scale: 0.9, y: -10 }}
                       transition={{ type: "spring", stiffness: 400, damping: 30, mass: 0.8, delay: Math.min(filtered.indexOf(visitor) * 0.05, 0.5) }}
                     >
-                    <SwipeToDelete
-                      key={visitor.id}
-                      onDelete={() => deleteSingle(visitor.id)}
-                    >
                     <div
                       onClick={() => {
                         if (!selectMode) {
