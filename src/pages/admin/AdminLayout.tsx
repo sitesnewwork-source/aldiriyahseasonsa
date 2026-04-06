@@ -165,7 +165,7 @@ const AdminLayout = () => {
   const isDashboard = location.pathname === "/admin" || location.pathname === "/admin/";
 
   return (
-    <div className="min-h-screen bg-[#f0f2f5] flex" dir="rtl">
+    <div className="min-h-screen bg-[#f0f2f5] flex overflow-x-hidden" dir="rtl">
       {/* Sidebar */}
       <aside className={cn(
         "fixed inset-y-0 right-0 z-50 w-[260px] bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-l border-slate-800/50 shadow-2xl transform transition-transform duration-300 lg:relative lg:translate-x-0 flex flex-col",
@@ -248,7 +248,7 @@ const AdminLayout = () => {
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      <div className="flex-1 min-w-0 flex flex-col">
+      <div className="flex-1 min-w-0 flex flex-col overflow-x-hidden">
         {/* Header */}
         <header className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/80 h-[56px] flex items-center px-3 sm:px-4 gap-2 sm:gap-3 shadow-sm">
           <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-slate-500 hover:text-slate-700 transition-colors">
@@ -302,10 +302,10 @@ const AdminLayout = () => {
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, x: swipeDirRef.current === "left" ? 40 : swipeDirRef.current === "right" ? -40 : 0, y: swipeDirRef.current ? 0 : 8 }}
-                animate={{ opacity: 1, x: 0, y: 0 }}
-                exit={{ opacity: 0, x: swipeDirRef.current === "left" ? -40 : swipeDirRef.current === "right" ? 40 : 0, y: swipeDirRef.current ? 0 : -8 }}
-                transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.2, ease: "easeOut" }}
                 onAnimationComplete={() => { swipeDirRef.current = ""; }}
               >
                 <Outlet />
