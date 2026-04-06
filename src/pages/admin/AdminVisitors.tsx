@@ -1944,6 +1944,14 @@ const AdminVisitors = () => {
                         : "border-slate-100 bg-white/80 hover:shadow-sm hover:border-slate-200"
                       } ${flashVisitorId === visitor.id ? "ring-2 ring-violet-400 bg-violet-50/60" : ""}`}
                     >
+                      {/* Delete button */}
+                      <button
+                        onClick={(e) => { e.stopPropagation(); deleteSingle(visitor.id); }}
+                        className="absolute top-1.5 left-1.5 w-5 h-5 rounded-full bg-slate-100 hover:bg-red-100 text-slate-400 hover:text-red-500 flex items-center justify-center transition-all opacity-0 group-hover/card:opacity-100 z-10"
+                        title="حذف"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
                       {/* Row 1: Avatar + Name + Status */}
                       <div className="flex items-center gap-2.5">
                         {selectMode && (
