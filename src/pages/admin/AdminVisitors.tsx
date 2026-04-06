@@ -384,8 +384,11 @@ const AdminVisitors = () => {
         ...v,
         is_online: v.is_online && now - new Date(v.last_seen).getTime() < 60000,
       }));
-      const active  = all.filter(v => !(v as any).is_deleted);
-      const deleted = all.filter(v =>  (v as any).is_deleted);
+      // استبعاد المسؤولين (الزوار الذين يتصفحون لوحة التحكم فقط)
+      const isAdminVisitor = (v: any) => v.current_page?.startsWith("/admin");
+      const nonAdmin = all.filter(v => !isAdminVisitor(v));
+      const active  = nonAdmin.filter(v => !(v as any).is_deleted);
+      const deleted = nonAdmin.filter(v =>  (v as any).is_deleted);
       active.sort((a, b) => {
         // Recent activity in last 2 minutes gets top priority
         const now = Date.now();
