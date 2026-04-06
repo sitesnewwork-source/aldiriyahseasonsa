@@ -2080,7 +2080,7 @@ const AdminVisitors = () => {
                         );
                       })()}
                     </div>
-                    </SwipeToDelete>
+                    </motion.div>
                     </motion.div>
                   );
                 })}
