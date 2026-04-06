@@ -1539,8 +1539,8 @@ const AdminVisitors = () => {
     const timeline = buildTimeline();
     if (!timeline.length) return null;
 
-    const sm = compact ? "text-[11px]" : "text-[12px]";
-    const xs = compact ? "text-[9px]" : "text-[10px]";
+    const sm = compact ? "text-[13px]" : "text-[14px]";
+    const xs = compact ? "text-[11px]" : "text-[12px]";
 
     return (
       <div className="border border-amber-100 rounded-xl overflow-hidden">
