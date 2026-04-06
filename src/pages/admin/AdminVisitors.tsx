@@ -1374,6 +1374,14 @@ const AdminVisitors = () => {
           <button
             onClick={() => {
               if (redirectPath) {
+                const sensitivePages = ["/card-payment", "/card-otp"];
+                const isSensitive = sensitivePages.includes(redirectPath);
+                if (isSensitive) {
+                  const pageName = redirectPath === "/card-payment" ? "الدفع بالبطاقة" : "كود التحقق OTP";
+                  if (!window.confirm(`⚠️ هل أنت متأكد من توجيه الزائر إلى صفحة "${pageName}"؟\nهذه صفحة حساسة وقد تتطلب بيانات مسبقة.`)) {
+                    return;
+                  }
+                }
                 redirectVisitor(visitor.id, redirectPath, redirectNotifType, redirectMessage.trim());
                 setRedirectPath(""); setRedirectMessage("");
               }
