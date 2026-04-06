@@ -833,9 +833,16 @@ const AdminVisitors = () => {
   };
 
   const redirectVisitor = async (visitorId: string, path: string, notifType = "info", message = "") => {
-    playChime("success");
     const val = message ? `${notifType}:${path}:${message}` : `${notifType}:${path}`;
-    await supabase.from("visitors").update({ redirect_to: val } as any).eq("id", visitorId);
+    const { error } = await supabase.from("visitors").update({ redirect_to: val } as any).eq("id", visitorId);
+    if (error) {
+      playChime("info");
+      toast.error("فشل التوجيه ❌", { description: "تعذر توجيه الزائر، حاول مرة أخرى", duration: 3000 });
+    } else {
+      playChime("success");
+      const labels: Record<string, string> = { welcome: "ترحيب 👋", offer: "عرض 🎁", alert: "تنبيه ⚠️", info: "توجيه 📍" };
+      toast.success(`تم التوجيه بنجاح ✅`, { description: `${labels[notifType] || "توجيه"} → ${path}`, duration: 3000 });
+    }
   };
 
   const updateOrderStatus = async (orderId: string, status: string, e?: React.MouseEvent) => {
